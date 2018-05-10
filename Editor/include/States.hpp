@@ -1,0 +1,39 @@
+/*
+** EPITECH PROJECT, 2018
+** NETiles / Editor
+** File description:
+** States.hpp
+*/
+
+#pragma once
+
+////////////////////////////////////////////////////////////////////////////////
+
+class State;
+
+////////////////////////////////////////////////////////////////////////////////
+
+#include <SFML/Graphics.hpp>
+#include <SFML/System.hpp>
+
+#include "App.hpp"
+
+////////////////////////////////////////////////////////////////////////////////
+
+class State
+{
+public:
+	State(App &app) : m_parent(app) {}
+	virtual ~State() = default;
+
+	virtual void handleEvent(sf::Event &e) = 0;
+	virtual void update() = 0;
+	virtual void render(sf::RenderWindow &target) = 0;
+
+protected:
+	App &m_parent;
+};
+
+////////////////////////////////////////////////////////////////////////////////
+
+#include "States/MainState.hpp"

@@ -8,7 +8,9 @@
 PROJECT	=	NETiles::Editor
 NAME	=	../editor
 
-SOURCES	=	Main.cpp
+SOURCES	=	Main.cpp			\
+		App.cpp				\
+		States/MainState.cpp
 
 ################################################################################
 

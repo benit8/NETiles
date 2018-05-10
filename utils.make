@@ -13,12 +13,16 @@ OBJS	=	$(SRCS:.cpp=.o)
 CPPFLAGS	+=	-W -Wall -Wextra
 CPPFLAGS	+=	-Iinclude
 
-LDFLAGS	+=
+LDFLAGS	+=	-lsfml-graphics
+LDFLAGS	+=	-lsfml-network
+LDFLAGS	+=	-lsfml-system
+LDFLAGS	+=	-lsfml-window
 
 ################################################################################
 
 SHELL	=	/bin/bash
 PRINT	=	printf "$(PROJECT):\t" ; printf
+CC	=	g++
 
 RESET	=	\033[0m
 RED	=	\033[0;31m

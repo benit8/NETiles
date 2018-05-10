@@ -5,11 +5,15 @@
 ** Main.cpp
 */
 
-#include "Editor.hpp"
+#include "App.hpp"
 
 int main(int argc, const char **argv)
 {
-	App app("NETiles Editor");
+	std::vector<std::string> args(argv, argv + argc);
 
-	return 0;
+	App *app = new App("NETiles Editor", args);
+	int exitCode = app->run();
+	delete app;
+
+	return exitCode;
 }

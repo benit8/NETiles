@@ -20,7 +20,6 @@ client:
 	@ make -sC $(CLIENT_DIR)
 
 editor:
-	@ echo $(pwd)
 	@ make -sC $(EDITOR_DIR)
 
 debug:
