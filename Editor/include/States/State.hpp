@@ -2,36 +2,46 @@
 ** EPITECH PROJECT, 2018
 ** NETiles / Editor
 ** File description:
-** States / MainState.hpp
+** States / State.hpp
 */
 
 #pragma once
 
 ////////////////////////////////////////////////////////////////////////////////
 
-class MainState;
+namespace States {
+	class State;
+}
 
 ////////////////////////////////////////////////////////////////////////////////
-
-#include <iostream>
 
 #include <SFML/Graphics.hpp>
 #include <SFML/System.hpp>
 
-#include "States.hpp"
-
 ////////////////////////////////////////////////////////////////////////////////
 
-class MainState : public State
+namespace States
 {
+
+class State
+{
+protected:
+	State() = default;
+
 public:
-	MainState(App &app);
-	~MainState() override;
+	virtual ~State() = default;
 
-	void handleEvent(sf::Event &e) override;
-	void update() override;
-	void render(sf::RenderWindow &target) override;
+	virtual void handleEvent(sf::Event &e) = 0;
+	virtual void update() = 0;
+	virtual void render(sf::RenderWindow &target) = 0;
 
-private:
-	void onKeydown(sf::Keyboard::Key key);
+	bool isRequestingClose()
+	{
+		return m_requestingClose;
+	}
+
+protected:
+	bool m_requestingClose = false;
 };
+
+}

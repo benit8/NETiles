@@ -10,7 +10,9 @@ NAME	=	../editor
 
 SOURCES	=	Main.cpp			\
 		App.cpp				\
-		States/MainState.cpp
+		Ressources/Manager.cpp		\
+		States/Main.cpp			\
+		States/Menu.cpp
 
 ################################################################################
 

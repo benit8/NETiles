@@ -17,6 +17,8 @@ App::App(const std::string &appName, std::vector<std::string> &appArgs)
 {
 	m_videoMode = sf::VideoMode::getDesktopMode();
 	m_settings = sf::ContextSettings(24, 8, 0, 3, 0);
+
+	pushState<States::Main>();
 }
 
 App::~App()
@@ -49,7 +51,7 @@ int App::run()
 			m_shouldPop = false;
 			m_states.pop_back();
 		}
-		if (m_shouldClose) {
+		if (m_shouldClose || currentState().isRequestingClose()) {
 			exitCode = EXIT_SUCCESS;
 			break;
 		}
@@ -61,20 +63,12 @@ int App::run()
 	return exitCode;
 }
 
-void App::requestClose()
-{
-	m_shouldClose = true;
-}
-
 ////////////////////////////////////////////////////////////////////////////////
 
 void App::launch()
 {
-	m_window.create(m_videoMode, "Voxel Engine", sf::Style::Default, m_settings);
-	m_window.setActive(true);
+	m_window.create(m_videoMode, "NETiles Editor", sf::Style::Default, m_settings);
 	m_window.setFramerateLimit(60);
-
-	pushState<MainState>();
 }
 
 void App::handleEvents()
@@ -85,7 +79,7 @@ void App::handleEvents()
 		switch (e.type) {
 			case sf::Event::Closed:
 				m_shouldClose = true;
-				break;
+				return;
 			default:
 				break;
 		}
@@ -97,7 +91,7 @@ void App::handleEvents()
 template<typename S, typename... Args>
 void App::pushState(Args&&... args)
 {
-	m_states.push_back(std::make_unique<S>(*this, std::forward<Args>(args)...));
+	m_states.push_back(std::make_unique<S>(std::forward<Args>(args)...));
 }
 
 void App::popState()
@@ -105,7 +99,7 @@ void App::popState()
 	m_shouldPop = true;
 }
 
-State &App::currentState()
+States::State &App::currentState()
 {
 	return *m_states.back();
 }

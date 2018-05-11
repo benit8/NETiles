@@ -2,38 +2,43 @@
 ** EPITECH PROJECT, 2018
 ** NETiles / Editor
 ** File description:
-** States.hpp
+** States / Menu.hpp
 */
 
 #pragma once
 
 ////////////////////////////////////////////////////////////////////////////////
 
-class State;
+namespace States {
+	class Menu;
+}
 
 ////////////////////////////////////////////////////////////////////////////////
+
+#include <iostream>
 
 #include <SFML/Graphics.hpp>
 #include <SFML/System.hpp>
 
-#include "App.hpp"
+#include "States/State.hpp"
+#include "Ressources/Manager.hpp"
 
 ////////////////////////////////////////////////////////////////////////////////
 
-class State
+namespace States
+{
+
+class Menu : public State
 {
 public:
-	State(App &app) : m_parent(app) {}
-	virtual ~State() = default;
+	Menu();
+	~Menu() override;
 
-	virtual void handleEvent(sf::Event &e) = 0;
-	virtual void update() = 0;
-	virtual void render(sf::RenderWindow &target) = 0;
+	void handleEvent(sf::Event &e) override;
+	void update() override;
+	void render(sf::RenderWindow &target) override;
 
-protected:
-	App &m_parent;
+private:
 };
 
-////////////////////////////////////////////////////////////////////////////////
-
-#include "States/MainState.hpp"
+}

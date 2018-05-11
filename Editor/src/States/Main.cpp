@@ -2,25 +2,30 @@
 ** EPITECH PROJECT, 2018
 ** NETiles / Editor
 ** File description:
-** States / MainState.cpp
+** States / Main.cpp
 */
 
-#include "States/MainState.hpp"
+#include "States/Main.hpp"
 
 ////////////////////////////////////////////////////////////////////////////////
 
-MainState::MainState(App &app)
-: State(app)
+namespace States
+{
+
+////////////////////////////////////////////////////////////////////////////////
+
+Main::Main()
+: State()
 {
 }
 
-MainState::~MainState()
+Main::~Main()
 {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 
-void MainState::handleEvent(sf::Event &e)
+void Main::handleEvent(sf::Event &e)
 {
 	switch (e.type) {
 		case sf::Event::KeyPressed:
@@ -31,23 +36,27 @@ void MainState::handleEvent(sf::Event &e)
 	}
 }
 
-void MainState::update()
+void Main::update()
 {
 }
 
-void MainState::render(sf::RenderWindow &target)
+void Main::render(sf::RenderWindow &target)
 {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 
-void MainState::onKeydown(sf::Keyboard::Key key)
+void Main::onKeydown(sf::Keyboard::Key key)
 {
 	switch (key) {
 		case sf::Keyboard::Escape:
-			m_parent.requestClose();
+			m_requestingClose = true;
 			break;
 		default:
 			break;
 	}
+}
+
+////////////////////////////////////////////////////////////////////////////////
+
 }

@@ -1,0 +1,14 @@
+Menu
+	Button
+		void onMouseDown(sf::Vector2u)
+		void onMouseUp(sf::Vector2u)
+		void onMouseIn(sf::Vector2u)
+		void onMouseOut(sf::Vector2u)
+
+	TextInput  /* Add TextInput *m_focusInput; to App */
+		void onMouseDown(sf::Vector2u)
+		void onMouseUp(sf::Vector2u)
+		void onMouseIn(sf::Vector2u)
+		void onMouseOut(sf::Vector2u)
+		void onKeyDown(sf::Keyboard::Key)
+		bool m_hasFocus

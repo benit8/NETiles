@@ -10,9 +10,11 @@ SRC_DIR	?=	src/
 SRCS	=	$(addprefix $(SRC_DIR),$(SOURCES))
 OBJS	=	$(SRCS:.cpp=.o)
 
+CPPFLAGS	+=	-std=c++14
 CPPFLAGS	+=	-W -Wall -Wextra
 CPPFLAGS	+=	-Iinclude
 
+LDFLAGS	+=	-lsfml-audio
 LDFLAGS	+=	-lsfml-graphics
 LDFLAGS	+=	-lsfml-network
 LDFLAGS	+=	-lsfml-system
@@ -63,7 +65,7 @@ re: fclean all
 de: fclean debug
 
 .cpp.o:
-	@ $(PRINT) "  [  ]  $(CYAN)%b$(RESET)\\r" $<
+	@ $(PRINT) "  [$(BLUE)--$(RESET)]  $(CYAN)%b$(RESET)\\r" $<
 	@ $(CC) -c $< -o $@ $(CPPFLAGS) && \
 	  ($(PRINT) "  [$(GREEN)OK$(RESET)]  $(CYAN)%b$(RESET)\n" $<) || \
 	  ($(PRINT) "  [$(RED)XX$(RESET)]  $(CYAN)%b$(RESET)\n" $< ; exit 1)

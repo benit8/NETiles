@@ -14,12 +14,13 @@ class App;
 ////////////////////////////////////////////////////////////////////////////////
 
 #include <iostream>
+#include <stdexcept>
 #include <string>
 #include <vector>
 
 #include <SFML/Graphics.hpp>
 
-#include "States.hpp"
+#include "States/All.hpp"
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -30,7 +31,6 @@ public:
 	~App();
 
 	int run();
-	void requestClose();
 
 private:
 	void launch();
@@ -39,7 +39,7 @@ private:
 	template<typename S, typename... Args>
 	void pushState(Args&&... args);
 	void popState();
-	State &currentState();
+	States::State &currentState();
 
 private:
 	bool m_shouldClose;
@@ -51,7 +51,7 @@ private:
 	sf::ContextSettings m_settings;
 	sf::RenderWindow m_window;
 
-	std::vector<std::unique_ptr<State>> m_states;
+	std::vector<std::unique_ptr<States::State>> m_states;
 
 	const sf::Time frameTime = sf::seconds(1 / 60.0f);
 };
