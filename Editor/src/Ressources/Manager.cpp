@@ -31,22 +31,22 @@ Manager &Manager::getInstance()
 
 ////////////////////////////////////////////////////////////////////////////////
 
-const sf::Font &Manager::getFont(const std::string& name, bool isFullPath)
+sf::Font &Manager::getFont(const std::string& name, bool isFullPath)
 {
 	return getInstance().m_fonts.get(name, isFullPath);
 }
 
-const sf::Image &Manager::getImage(const std::string& name, bool isFullPath)
+sf::Image &Manager::getImage(const std::string& name, bool isFullPath)
 {
 	return getInstance().m_images.get(name, isFullPath);
 }
 
-const sf::Texture &Manager::getTexture(const std::string& name, bool isFullPath)
+sf::Texture &Manager::getTexture(const std::string& name, bool isFullPath)
 {
 	return getInstance().m_textures.get(name, isFullPath);
 }
 
-const sf::SoundBuffer &Manager::getSoundBuffer(const std::string& name, bool isFullPath)
+sf::SoundBuffer &Manager::getSoundBuffer(const std::string& name, bool isFullPath)
 {
 	return getInstance().m_soundBuffers.get(name, isFullPath);
 }

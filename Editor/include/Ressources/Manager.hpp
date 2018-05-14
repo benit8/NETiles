@@ -38,10 +38,10 @@ class Manager : public Singleton
 public:
 	static Manager& getInstance();
 
-	static const sf::Font &getFont(const std::string& name, bool isFullPath = false);
-	static const sf::Image &getImage(const std::string& name, bool isFullPath = false);
-	static const sf::Texture &getTexture(const std::string& name, bool isFullPath = false);
-	static const sf::SoundBuffer &getSoundBuffer(const std::string& name, bool isFullPath = false);
+	static sf::Font &getFont(const std::string& name, bool isFullPath = false);
+	static sf::Image &getImage(const std::string& name, bool isFullPath = false);
+	static sf::Texture &getTexture(const std::string& name, bool isFullPath = false);
+	static sf::SoundBuffer &getSoundBuffer(const std::string& name, bool isFullPath = false);
 
 private:
 	Container<sf::Font> m_fonts;

@@ -26,7 +26,7 @@ public:
 	, m_ext(ext)
 	{}
 
-	const T& get(const std::string& filename, bool isFullPath = false)
+	T& get(const std::string& filename, bool isFullPath = false)
 	{
 		if (!exists(filename))
 			addResource(filename, isFullPath);

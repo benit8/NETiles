@@ -16,9 +16,8 @@ App::App(const std::string &appName, std::vector<std::string> &appArgs)
 , m_appArgs(appArgs)
 {
 	m_videoMode = sf::VideoMode::getDesktopMode();
+	// m_videoMode = sf::VideoMode(1280, 720);
 	m_settings = sf::ContextSettings(24, 8, 0, 3, 0);
-
-	pushState<States::Main>();
 }
 
 App::~App()
@@ -43,6 +42,7 @@ int App::run()
 		handleEvents();
 
 		currentState().update();
+
 		m_window.clear(sf::Color::Black);
 		currentState().render(m_window);
 		m_window.display();
@@ -69,6 +69,8 @@ void App::launch()
 {
 	m_window.create(m_videoMode, "NETiles Editor", sf::Style::Default, m_settings);
 	m_window.setFramerateLimit(60);
+
+	pushState<States::Main>(m_appArgs[1], m_window);
 }
 
 void App::handleEvents()
@@ -79,12 +81,11 @@ void App::handleEvents()
 		switch (e.type) {
 			case sf::Event::Closed:
 				m_shouldClose = true;
-				return;
+				break;
 			default:
+				currentState().handleEvent(e);
 				break;
 		}
-
-		currentState().handleEvent(e);
 	}
 }
 

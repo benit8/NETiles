@@ -12,7 +12,8 @@ SOURCES	=	Main.cpp			\
 		App.cpp				\
 		Ressources/Manager.cpp		\
 		States/Main.cpp			\
-		States/Menu.cpp
+		Tiles/Tile.cpp			\
+		Tiles/Map.cpp
 
 ################################################################################
 
