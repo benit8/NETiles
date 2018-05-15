@@ -117,40 +117,40 @@ void Map::render(sf::RenderWindow &target, bool displayTileTypes)
 	for (size_t i = 0; i < m_tiles.size(); ++i) {
 		// Top left
 		sf::Vertex tl;
-		tl.position.x = m_tiles[i].pos.x;
-		tl.position.y = m_tiles[i].pos.y;
-		tl.texCoords.x = m_tiles[i].tex.x * TILESET_TILESIZE;
-		tl.texCoords.y = m_tiles[i].tex.y * TILESET_TILESIZE;
+		tl.position.x = m_tiles[i].pos.x * TILEMAP_TILE_SIZE;
+		tl.position.y = m_tiles[i].pos.y * TILEMAP_TILE_SIZE;
+		tl.texCoords.x = m_tiles[i].tex.x * TILESET_TILE_SIZE;
+		tl.texCoords.y = m_tiles[i].tex.y * TILESET_TILE_SIZE;
 		if (displayTileTypes)
 			tl.color = m_tiles[i].getColorType();
 		va.append(tl);
 
 		// Top right
 		sf::Vertex tr;
-		tr.position.x = m_tiles[i].pos.x + 1;
-		tr.position.y = m_tiles[i].pos.y;
-		tr.texCoords.x = m_tiles[i].tex.x * TILESET_TILESIZE + TILESET_TILESIZE;
-		tr.texCoords.y = m_tiles[i].tex.y * TILESET_TILESIZE;
+		tr.position.x = m_tiles[i].pos.x * TILEMAP_TILE_SIZE + TILEMAP_TILE_SIZE;
+		tr.position.y = m_tiles[i].pos.y * TILEMAP_TILE_SIZE;
+		tr.texCoords.x = m_tiles[i].tex.x * TILESET_TILE_SIZE + TILESET_TILE_SIZE;
+		tr.texCoords.y = m_tiles[i].tex.y * TILESET_TILE_SIZE;
 		if (displayTileTypes)
 			tr.color = m_tiles[i].getColorType();
 		va.append(tr);
 
 		// Bottom right
 		sf::Vertex br;
-		br.position.x = m_tiles[i].pos.x + 1;
-		br.position.y = m_tiles[i].pos.y + 1;
-		br.texCoords.x = m_tiles[i].tex.x * TILESET_TILESIZE + TILESET_TILESIZE;
-		br.texCoords.y = m_tiles[i].tex.y * TILESET_TILESIZE + TILESET_TILESIZE;
+		br.position.x = m_tiles[i].pos.x * TILEMAP_TILE_SIZE + TILEMAP_TILE_SIZE;
+		br.position.y = m_tiles[i].pos.y * TILEMAP_TILE_SIZE + TILEMAP_TILE_SIZE;
+		br.texCoords.x = m_tiles[i].tex.x * TILESET_TILE_SIZE + TILESET_TILE_SIZE;
+		br.texCoords.y = m_tiles[i].tex.y * TILESET_TILE_SIZE + TILESET_TILE_SIZE;
 		if (displayTileTypes)
 			br.color = m_tiles[i].getColorType();
 		va.append(br);
 
 		// Bottom left
 		sf::Vertex bl;
-		bl.position.x = m_tiles[i].pos.x;
-		bl.position.y = m_tiles[i].pos.y + 1;
-		bl.texCoords.x = m_tiles[i].tex.x * TILESET_TILESIZE;
-		bl.texCoords.y = m_tiles[i].tex.y * TILESET_TILESIZE + TILESET_TILESIZE;
+		bl.position.x = m_tiles[i].pos.x * TILEMAP_TILE_SIZE;
+		bl.position.y = m_tiles[i].pos.y * TILEMAP_TILE_SIZE + TILEMAP_TILE_SIZE;
+		bl.texCoords.x = m_tiles[i].tex.x * TILESET_TILE_SIZE;
+		bl.texCoords.y = m_tiles[i].tex.y * TILESET_TILE_SIZE + TILESET_TILE_SIZE;
 		if (displayTileTypes)
 			bl.color = m_tiles[i].getColorType();
 		va.append(bl);
@@ -195,9 +195,9 @@ Tile *Map::getTile(int x, int y)
 	return getTile(sf::Vector2i(x, y));
 }
 
-sf::Vector2f Map::getCenterPoint()
+sf::Vector2i Map::getCenter()
 {
-	sf::Vector2f botRight;
+	sf::Vector2i botRight;
 
 	for (size_t i = 0; i < m_tiles.size(); ++i) {
 		if (m_tiles[i].pos.x > botRight.x)
@@ -205,7 +205,7 @@ sf::Vector2f Map::getCenterPoint()
 		if (m_tiles[i].pos.y > botRight.y)
 			botRight.y = m_tiles[i].pos.y;
 	}
-	return botRight / 2.f;
+	return botRight * TILEMAP_TILE_SIZE / 2;
 }
 
 const std::string &Map::getMapPath()

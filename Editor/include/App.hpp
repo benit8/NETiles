@@ -52,6 +52,4 @@ private:
 	sf::RenderWindow m_window;
 
 	std::vector<std::unique_ptr<States::State>> m_states;
-
-	const sf::Time frameTime = sf::seconds(1 / 60.0f);
 };

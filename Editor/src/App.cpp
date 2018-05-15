@@ -69,6 +69,7 @@ void App::launch()
 {
 	m_window.create(m_videoMode, "NETiles Editor", sf::Style::Default, m_settings);
 	m_window.setFramerateLimit(60);
+	m_window.setKeyRepeatEnabled(false);
 
 	pushState<States::Main>(m_appArgs[1], m_window);
 }

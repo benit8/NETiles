@@ -13,7 +13,8 @@ SOURCES	=	Main.cpp			\
 		Ressources/Manager.cpp		\
 		States/Main.cpp			\
 		Tiles/Tile.cpp			\
-		Tiles/Map.cpp
+		Tiles/Map.cpp			\
+		Tiles/Cursor.cpp		\
 
 ################################################################################
 

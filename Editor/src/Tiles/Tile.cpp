@@ -43,7 +43,6 @@ sf::Color Tile::getColorType()
 		return sf::Color::Green;
 	else
 		return sf::Color::Red;
-	// return sf::Color(128, 128, 128);
 }
 
 ////////////////////////////////////////////////////////////////////////////////

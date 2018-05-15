@@ -48,11 +48,12 @@ public:
 	void removeTile(const sf::Vector2i &pos);
 	Tile *getTile(const sf::Vector2i &pos);
 	Tile *getTile(int x, int y);
-	sf::Vector2f getCenterPoint();
+	sf::Vector2i getCenter();
 	const std::string &getMapPath();
 
 public:
-	static const int TILESET_TILESIZE = 16;
+	static const int TILESET_TILE_SIZE = 16;
+	static const int TILEMAP_TILE_SIZE = 32;
 
 private:
 	std::string m_mapPath;
