@@ -159,7 +159,7 @@ void Map::render(sf::RenderWindow &target, bool displayTileTypes)
 	target.draw(va, m_renderStates);
 }
 
-void Map::setTile(const sf::Vector2i &pos, const sf::Vector2u &tex)
+void Map::setTile(const sf::Vector2i &pos, const sf::Vector2i &tex)
 {
 	Tile *t = getTile(pos);
 	if (t) {

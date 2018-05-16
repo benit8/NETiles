@@ -19,13 +19,13 @@ Tile::Tile(const sf::Vector2i &pos_)
 {
 }
 
-Tile::Tile(const sf::Vector2i &pos_, const sf::Vector2u &tex_)
+Tile::Tile(const sf::Vector2i &pos_, const sf::Vector2i &tex_)
 : pos(pos_)
 , tex(tex_)
 {
 }
 
-Tile::Tile(const sf::Vector2i &pos_, const sf::Vector2u &tex_, const sf::Vector2i &telePos_)
+Tile::Tile(const sf::Vector2i &pos_, const sf::Vector2i &tex_, const sf::Vector2i &telePos_)
 : pos(pos_)
 , tex(tex_)
 , tele(true)

@@ -28,13 +28,13 @@ class Tile
 public:
 	Tile() = default;
 	Tile(const sf::Vector2i &);
-	Tile(const sf::Vector2i &, const sf::Vector2u &);
-	Tile(const sf::Vector2i &, const sf::Vector2u &, const sf::Vector2i &);
+	Tile(const sf::Vector2i &, const sf::Vector2i &);
+	Tile(const sf::Vector2i &, const sf::Vector2i &, const sf::Vector2i &);
 
 	sf::Color getColorType();
 
 	sf::Vector2i pos;
-	sf::Vector2u tex;
+	sf::Vector2i tex;
 	bool walkable = true;
 	bool tele = false;
 	sf::Vector2i telePos;

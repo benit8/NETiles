@@ -50,6 +50,7 @@ private:
 	void onMouseMoved(sf::Vector2i mousePos);
 
 	void actionToSelectionRegion(sf::IntRect tileRegion);
+	void copyCurrentTile();
 
 	sf::Vector2i mapWinToTileAbs(sf::Vector2i windowPos);
 	sf::Vector2i mapWinToTileRel(sf::Vector2i windowPos);

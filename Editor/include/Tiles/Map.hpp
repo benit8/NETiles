@@ -44,7 +44,7 @@ public:
 
 	void render(sf::RenderWindow &target, bool displayTileTypes);
 
-	void setTile(const sf::Vector2i &pos, const sf::Vector2u &tex);
+	void setTile(const sf::Vector2i &pos, const sf::Vector2i &tex);
 	void removeTile(const sf::Vector2i &pos);
 	Tile *getTile(const sf::Vector2i &pos);
 	Tile *getTile(int x, int y);
