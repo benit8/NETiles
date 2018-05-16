@@ -60,9 +60,6 @@ void Cursor::update(sf::Vector2i mouseTilePos)
 			abs(mouseTilePos.y - m_grabStartPos.y) + m_size
 		);
 	}
-	else if (m_textureSelect) {
-		m_texture.setPosition(sf::Vector2f(mouseTilePos) - getScaledTexturePos());
-	}
 	else {
 		setPosition(mouseTilePos);
 	}
@@ -175,6 +172,11 @@ void Cursor::startGrab(sf::Vector2i mouseTilePos, sf::Mouse::Button button)
 	m_grab = true;
 	m_grabButton = button;
 	m_grabStartPos = mouseTilePos;
+
+	if (button == sf::Mouse::Right) {
+		m_area.setTexture(NULL);
+		m_area.setFillColor(sf::Color(255, 0, 0, 50));
+	}
 }
 
 sf::IntRect Cursor::endGrab(sf::Vector2i mouseTilePos, sf::Mouse::Button button)
