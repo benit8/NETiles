@@ -90,15 +90,15 @@ void Main::onKeydown(sf::Keyboard::Key key)
 		case sf::Keyboard::Escape:
 			m_requestingClose = true;
 		break;
-		case sf::Keyboard::W:
-			if (!m_tileCursor.isGrabbing() && !m_tileCursor.isSelectingTexture())
-				m_tileTypesFilter = !m_tileTypesFilter;
-		break;
 		case sf::Keyboard::Tab:
 			m_tileCursor.enableTextureSelect();
 		break;
-		case sf::Keyboard::LShift:
+		case sf::Keyboard::A:
 			copyCurrentTile();
+		break;
+		case sf::Keyboard::W:
+			if (!m_tileCursor.isGrabbing() && !m_tileCursor.isSelectingTexture())
+				m_tileTypesFilter = !m_tileTypesFilter;
 		break;
 		case sf::Keyboard::Return:
 			if (m_tileMap.saveToFile())
