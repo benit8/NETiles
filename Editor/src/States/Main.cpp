@@ -90,7 +90,7 @@ void Main::onKeydown(sf::Keyboard::Key key)
 		case sf::Keyboard::Escape:
 			m_requestingClose = true;
 		break;
-		case sf::Keyboard::Space:
+		case sf::Keyboard::W:
 			if (!m_tileCursor.isGrabbing() && !m_tileCursor.isSelectingTexture())
 				m_tileTypesFilter = !m_tileTypesFilter;
 		break;
