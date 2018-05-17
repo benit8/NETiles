@@ -16,7 +16,6 @@ App::App(const std::string &appName, std::vector<std::string> &appArgs)
 , m_appArgs(appArgs)
 {
 	m_videoMode = sf::VideoMode::getDesktopMode();
-	// m_videoMode = sf::VideoMode(1280, 720);
 	m_settings = sf::ContextSettings(24, 8, 0, 3, 0);
 }
 
@@ -83,6 +82,9 @@ void App::handleEvents()
 			case sf::Event::Closed:
 				m_shouldClose = true;
 				break;
+			case sf::Event::Resized:
+				onResize(sf::Vector2i(e.size.width, e.size.height));
+				break;
 			default:
 				currentState().handleEvent(e);
 				break;
@@ -104,4 +106,13 @@ void App::popState()
 States::State &App::currentState()
 {
 	return *m_states.back();
+}
+
+////////////////////////////////////////////////////////////////////////////////
+
+void App::onResize(sf::Vector2i newSize)
+{
+	sf::View v = m_window.getView();
+	v.setSize(newSize.x, newSize.y);
+	m_window.setView(v);
 }

@@ -30,7 +30,7 @@ namespace Tiles
 class Cursor
 {
 public:
-	Cursor(int size);
+	Cursor();
 	~Cursor();
 
 	void reset();
@@ -40,6 +40,8 @@ public:
 
 	void setPosition(sf::Vector2i pos);
 	void setPosition(int x, int y);
+	void move(sf::Vector2i pos);
+	void move(int x, int y);
 	void setSize(sf::Vector2i size);
 	void setSize(int w, int h);
 	void setTexturePos(sf::Vector2i pos);
@@ -62,7 +64,6 @@ private:
 	sf::Vector2f getScaledTexturePos();
 
 private:
-	int m_size;
 	int m_scale;
 	sf::RectangleShape m_area;
 

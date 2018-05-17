@@ -14,14 +14,27 @@ namespace Tiles
 
 ////////////////////////////////////////////////////////////////////////////////
 
+Tile::Tile()
+: pos(0, 0)
+, tex(0, 0)
+, tele(false)
+, telePos(0, 0)
+{
+}
+
 Tile::Tile(const sf::Vector2i &pos_)
 : pos(pos_)
+, tex(0, 0)
+, tele(false)
+, telePos(0, 0)
 {
 }
 
 Tile::Tile(const sf::Vector2i &pos_, const sf::Vector2i &tex_)
 : pos(pos_)
 , tex(tex_)
+, tele(false)
+, telePos(0, 0)
 {
 }
 

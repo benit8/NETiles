@@ -46,23 +46,34 @@ bool Map::loadFromFile(const std::string &mapPath)
 		return false;
 	}
 
-	ifs.ignore(100, '\n');
+	std::string line;
+	if (!std::getline(ifs, line))
+		return (false);
+	if (line.compare(0, 3, "LVL") != 0) {
+		std::cerr << filepath << ": Unknown file format" << std::endl;
+		return (false);
+	}
 
-	while (ifs.good()) {
+	while (std::getline(ifs, line)) {
+		if (line.empty())
+			continue;
+
+		std::istringstream iss(line);
 		Tile t;
-		ifs >> t.pos.x;
-		ifs >> t.pos.y;
-		ifs >> t.tex.x;
-		ifs >> t.tex.y;
-		ifs >> t.walkable;
+		iss >> t.pos.x;
+		iss >> t.pos.y;
+		iss >> t.tex.x;
+		iss >> t.tex.y;
+		iss >> t.walkable;
 
-		if (ifs.peek() != '\n') {
+		if (iss.peek() != -1) {
+			printf("'%c' (%d) %d\n", iss.peek(), iss.peek(), iss.good());
 			t.tele = true;
-			ifs >> t.telePos.x;
-			ifs >> t.telePos.y;
+			iss >> t.telePos.x;
+			iss >> t.telePos.y;
 		}
 
-		ifs.ignore(100, '\n');
+		iss.ignore(100, '\n');
 		m_tiles.push_back(t);
 	}
 
@@ -88,11 +99,7 @@ bool Map::saveToFile(const std::string &mapPath)
 		return false;
 	}
 
-	std::sort(m_tiles.begin(), m_tiles.end(), [](Tile a, Tile b){
-		if (a.pos.x == b.pos.x)
-			return a.pos.y < b.pos.y;
-		return a.pos.x < b.pos.x;
-	});
+	reposition();
 
 	ofs << "LVL2" << std::endl;
 	for (size_t i = 0; i < m_tiles.size(); ++i) {
@@ -156,7 +163,8 @@ void Map::render(sf::RenderWindow &target, bool displayTileTypes)
 		va.append(bl);
 	}
 
-	target.draw(va, m_renderStates);
+	if (va.getVertexCount() > 0)
+		target.draw(va, m_renderStates);
 }
 
 void Map::setTile(const sf::Vector2i &pos, const sf::Vector2i &tex)
@@ -168,6 +176,7 @@ void Map::setTile(const sf::Vector2i &pos, const sf::Vector2i &tex)
 	}
 	else {
 		m_tiles.push_back(Tile(pos, tex));
+		m_sorted = false;
 	}
 }
 
@@ -215,4 +224,37 @@ const std::string &Map::getMapPath()
 
 ////////////////////////////////////////////////////////////////////////////////
 
+void Map::sortTiles()
+{
+	if (m_sorted)
+		return;
+
+	std::sort(m_tiles.begin(), m_tiles.end(), [](Tile a, Tile b){
+		if (a.pos.x == b.pos.x)
+			return a.pos.y < b.pos.y;
+		return a.pos.x < b.pos.x;
+	});
+
+	m_sorted = true;
 }
+
+void Map::reposition()
+{
+	sortTiles();
+
+	sf::Vector2i topLeft;
+	for (size_t i = 0; i < m_tiles.size(); ++i) {
+		if (m_tiles[i].pos.x < topLeft.x)
+			topLeft.x = m_tiles[i].pos.x;
+		if (m_tiles[i].pos.y < topLeft.y)
+			topLeft.y = m_tiles[i].pos.y;
+	}
+
+	for (std::vector<Tile>::reverse_iterator it = m_tiles.rbegin(); it != m_tiles.rend(); ++it) {
+		it->pos -= topLeft;
+	}
+}
+
+////////////////////////////////////////////////////////////////////////////////
+
+};

@@ -42,7 +42,6 @@ debug: CPPFLAGS += -g3
 debug: $(NAME)
 
 $(NAME): prebuild $(OBJS)
-	@ $(PRINT) "$(YELLOW)Building project binary$(RESET)\n"
 	@ $(PRINT) "  [  ]  $(BLUE)%b$(RESET)\\r" $(NAME)
 	@ $(CC) -o $(NAME) $(LDFLAGS) $(OBJS) && \
 	  ($(PRINT) "  [$(GREEN)OK$(RESET)]  $(CYAN)%b$(RESET)\n" $(NAME) ; exit 0) || \

@@ -19,6 +19,7 @@ namespace Tiles {
 #include <cerrno>
 #include <cstring>
 #include <fstream>
+#include <sstream>
 #include <iostream>
 #include <string>
 
@@ -51,6 +52,10 @@ public:
 	sf::Vector2i getCenter();
 	const std::string &getMapPath();
 
+private:
+	void sortTiles();
+	void reposition();
+
 public:
 	static const int TILESET_TILE_SIZE = 16;
 	static const int TILEMAP_TILE_SIZE = 32;
@@ -60,6 +65,8 @@ private:
 	std::vector<Tile> m_tiles;
 
 	sf::RenderStates m_renderStates;
+
+	bool m_sorted = false;
 };
 
 }

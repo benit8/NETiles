@@ -26,7 +26,7 @@ namespace Tiles
 class Tile
 {
 public:
-	Tile() = default;
+	Tile();
 	Tile(const sf::Vector2i &);
 	Tile(const sf::Vector2i &, const sf::Vector2i &);
 	Tile(const sf::Vector2i &, const sf::Vector2i &, const sf::Vector2i &);
@@ -35,8 +35,8 @@ public:
 
 	sf::Vector2i pos;
 	sf::Vector2i tex;
-	bool walkable = true;
-	bool tele = false;
+	bool walkable;
+	bool tele;
 	sf::Vector2i telePos;
 };
 

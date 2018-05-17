@@ -19,6 +19,7 @@ class App;
 #include <vector>
 
 #include <SFML/Graphics.hpp>
+#include <SFML/Window.hpp>
 
 #include "States/All.hpp"
 
@@ -35,6 +36,7 @@ public:
 private:
 	void launch();
 	void handleEvents();
+	void onResize(sf::Vector2i newSize);
 
 	template<typename S, typename... Args>
 	void pushState(Args&&... args);

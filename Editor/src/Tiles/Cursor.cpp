@@ -14,10 +14,9 @@ namespace Tiles
 
 ////////////////////////////////////////////////////////////////////////////////
 
-Cursor::Cursor(int size)
-: m_size(size)
-, m_scale(size / Map::TILESET_TILE_SIZE)
-, m_area(sf::Vector2f(m_size, m_size))
+Cursor::Cursor()
+: m_scale(Map::TILEMAP_TILE_SIZE / Map::TILESET_TILE_SIZE)
+, m_area(sf::Vector2f(Map::TILEMAP_TILE_SIZE, Map::TILEMAP_TILE_SIZE))
 , m_grab(false)
 , m_textureSelect(false)
 {
@@ -45,7 +44,7 @@ void Cursor::reset()
 	m_area.setOutlineColor(sf::Color::White);
 	m_area.setOutlineThickness(1);
 
-	setSize(m_size, m_size);
+	setSize(Map::TILEMAP_TILE_SIZE, Map::TILEMAP_TILE_SIZE);
 }
 
 void Cursor::update(sf::Vector2i mouseTilePos)
@@ -56,8 +55,8 @@ void Cursor::update(sf::Vector2i mouseTilePos)
 			std::min(mouseTilePos.y, m_grabStartPos.y)
 		);
 		setSize(
-			abs(mouseTilePos.x - m_grabStartPos.x) + m_size,
-			abs(mouseTilePos.y - m_grabStartPos.y) + m_size
+			abs(mouseTilePos.x - m_grabStartPos.x) + Map::TILEMAP_TILE_SIZE,
+			abs(mouseTilePos.y - m_grabStartPos.y) + Map::TILEMAP_TILE_SIZE
 		);
 	}
 	else {
@@ -70,12 +69,12 @@ void Cursor::update(sf::Vector2i mouseTilePos)
 void Cursor::updateText(sf::Vector2i mouseTilePos)
 {
 	std::ostringstream oss;
-	oss << "[" << (mouseTilePos.x / m_size) << "," << (mouseTilePos.y / m_size) << "]";
+	oss << "[" << (mouseTilePos.x / Map::TILEMAP_TILE_SIZE) << "," << (mouseTilePos.y / Map::TILEMAP_TILE_SIZE) << "]";
 
 	if (m_grab)
 		oss << "\n[" << getRegion().width << "," << getRegion().height << "]";
 
-	m_tilePosText.setPosition(mouseTilePos.x + m_size + 8, mouseTilePos.y);
+	m_tilePosText.setPosition(mouseTilePos.x + Map::TILEMAP_TILE_SIZE + 8, mouseTilePos.y);
 	m_tilePosText.setString(oss.str());
 }
 
@@ -99,6 +98,16 @@ void Cursor::setPosition(sf::Vector2i pos)
 void Cursor::setPosition(int x, int y)
 {
 	setPosition(sf::Vector2i(x, y));
+}
+
+void Cursor::move(sf::Vector2i pos)
+{
+	m_area.move(sf::Vector2f(pos));
+}
+
+void Cursor::move(int x, int y)
+{
+	move(sf::Vector2i(x, y));
 }
 
 void Cursor::setSize(sf::Vector2i size)
@@ -155,10 +164,10 @@ sf::Mouse::Button Cursor::getGrabButton()
 sf::IntRect Cursor::getRegion()
 {
 	return sf::IntRect(
-		m_area.getPosition().x / m_size,
-		m_area.getPosition().y / m_size,
-		m_area.getSize().x / m_size,
-		m_area.getSize().y / m_size
+		m_area.getPosition().x / Map::TILEMAP_TILE_SIZE,
+		m_area.getPosition().y / Map::TILEMAP_TILE_SIZE,
+		m_area.getSize().x / Map::TILEMAP_TILE_SIZE,
+		m_area.getSize().y / Map::TILEMAP_TILE_SIZE
 	);
 }
 
@@ -220,7 +229,7 @@ void Cursor::disableTextureSelect()
 	m_area.setFillColor(sf::Color(255, 255, 255, 128));
 	m_area.setOutlineColor(sf::Color::White);
 
-	setTexturePos(sf::Vector2i(m_area.getPosition() - m_texture.getPosition()) / m_size);
+	setTexturePos(sf::Vector2i(m_area.getPosition() - m_texture.getPosition()) / Map::TILEMAP_TILE_SIZE);
 }
 
 bool Cursor::isSelectingTexture()

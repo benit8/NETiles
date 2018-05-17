@@ -17,14 +17,15 @@ namespace States
 Main::Main(const std::string &mapPath, sf::RenderWindow &window)
 : State()
 , m_tileMap(mapPath)
-, m_tileCursor(Tiles::Map::TILEMAP_TILE_SIZE)
+, m_tileCursor()
 , m_tileTypesFilter(false)
 , m_window(window)
-, m_view(window.getView())
 {
 	m_tileMap.loadFromFile();
 
-	m_view.setCenter(sf::Vector2f(m_tileMap.getCenter()));
+	sf::View v = m_window.getView();
+	v.setCenter(sf::Vector2f(m_tileMap.getCenter()));
+	m_window.setView(v);
 }
 
 Main::~Main()
@@ -43,12 +44,7 @@ void Main::handleEvent(sf::Event &e)
 			onKeyup(e.key.code);
 		break;
 		case sf::Event::MouseWheelScrolled:
-			if (e.mouseWheelScroll.wheel == sf::Mouse::VerticalWheel) {
-				if (e.mouseWheelScroll.delta < 0)
-					m_view.zoom(2.0f);
-				else
-					m_view.zoom(0.5f);
-			}
+			onMouseScrolled(e.mouseWheelScroll);
 		break;
 		case sf::Event::MouseButtonPressed:
 			m_tileCursor.startGrab(
@@ -76,7 +72,7 @@ void Main::update()
 
 void Main::render(sf::RenderWindow &target)
 {
-	target.setView(m_view);
+	// target.setView(m_view);
 
 	m_tileMap.render(target, m_tileTypesFilter);
 	m_tileCursor.render(target);
@@ -126,10 +122,30 @@ void Main::onMouseMoved(sf::Vector2i mouseWindowPos)
 {
 	sf::Vector2i mouseTilePos = mapWinToTileAbs(mouseWindowPos);
 
-	if (m_tileCursor.isGrabbing() && m_tileCursor.getGrabButton() == sf::Mouse::Middle)
-		m_view.move(sf::Vector2f(m_tileCursor.getGrabStartPosition() - mouseTilePos));
+	if (m_tileCursor.isGrabbing() && m_tileCursor.getGrabButton() == sf::Mouse::Middle) {
+		sf::View v = m_window.getView();
+		v.move(sf::Vector2f(m_tileCursor.getGrabStartPosition() - mouseTilePos));
+		m_window.setView(v);
+	}
 
 	m_tileCursor.update(mouseTilePos);
+}
+
+void Main::onMouseScrolled(sf::Event::MouseWheelScrollEvent e)
+{
+	sf::View v = m_window.getView();
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::LControl)) {
+		if (e.wheel == sf::Mouse::VerticalWheel) {
+			if (e.delta < 0)
+				v.zoom(2.0f);
+			else
+				v.zoom(0.5f);
+		}
+	}
+	else {
+
+	}
+	m_window.setView(v);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -173,7 +189,7 @@ void Main::copyCurrentTile()
 
 sf::Vector2i Main::mapWinToTileAbs(sf::Vector2i windowPos)
 {
-	sf::Vector2f fpos(m_window.mapPixelToCoords(windowPos, m_view));
+	sf::Vector2f fpos(m_window.mapPixelToCoords(windowPos));
 	return sf::Vector2i(
 		floor(fpos.x / Tiles::Map::TILEMAP_TILE_SIZE) * Tiles::Map::TILEMAP_TILE_SIZE,
 		floor(fpos.y / Tiles::Map::TILEMAP_TILE_SIZE) * Tiles::Map::TILEMAP_TILE_SIZE
