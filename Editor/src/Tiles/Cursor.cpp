@@ -15,20 +15,39 @@ namespace Tiles
 ////////////////////////////////////////////////////////////////////////////////
 
 Cursor::Cursor()
-: m_scale(Map::TILEMAP_TILE_SIZE / Map::TILESET_TILE_SIZE)
-, m_area(sf::Vector2f(Map::TILEMAP_TILE_SIZE, Map::TILEMAP_TILE_SIZE))
+: m_cursor(sf::Vector2f(1, 1))
+, m_selection(sf::Vector2f(0, 0))
+, m_showClipboard(true)
 , m_grab(false)
 , m_textureSelect(false)
 {
-	reset();
-	setTexturePos(0, 0);
+	m_cursor.setFillColor(sf::Color::Transparent);
+	m_cursor.setOutlineColor(sf::Color::White);
+	m_cursor.setOutlineThickness(1 / float(Map::TILE_SIZE));
+
+	m_selection.setFillColor(sf::Color::Transparent);
+	m_selection.setOutlineColor(sf::Color::White);
+	m_selection.setOutlineThickness(1 / float(Map::TILE_SIZE));
+
+	m_clipboard.setClipboard(true);
+	m_clipboard.setTile(sf::Vector2i(0, 0), sf::Vector2i(49, 2));
+	m_clipboard.setTile(sf::Vector2i(0, 1), sf::Vector2i(49, 3));
 
 	m_tilePosText.setFont(Ressource::Manager::getFont("Consolas"));
-	m_tilePosText.setFillColor(sf::Color::White);
-	m_tilePosText.setCharacterSize(12);
+	m_tilePosText.setCharacterSize(24);
+	m_tilePosText.setPosition(8, 0);
 
 	m_texture.setTexture(Ressource::Manager::getTexture("tileset0"), true);
-	m_texture.scale(m_scale, m_scale);
+	m_texture.scale(sf::Vector2f(1 / float(Map::TILE_SIZE), 1 / float(Map::TILE_SIZE)));
+
+	m_tilePosTextBackground.setPosition(0, 0);
+	m_tilePosTextBackground.setFillColor(sf::Color(0, 0, 0, 125));
+
+
+	/// TODO:
+	/// When pressing Shift, copy the selection to the clipboard
+	/// Else, paste the selection (by default, a single tile)
+	/// Clear the clipboard by pressing Space
 }
 
 Cursor::~Cursor()
@@ -37,97 +56,88 @@ Cursor::~Cursor()
 
 ////////////////////////////////////////////////////////////////////////////////
 
-void Cursor::reset()
+void Cursor::update(const sf::Vector2i &mouseTilePos)
 {
-	m_area.setTexture(&Ressource::Manager::getTexture("tileset0"));
-	m_area.setFillColor(sf::Color(255, 255, 255, 128));
-	m_area.setOutlineColor(sf::Color::White);
-	m_area.setOutlineThickness(1);
-
-	setSize(Map::TILEMAP_TILE_SIZE, Map::TILEMAP_TILE_SIZE);
-}
-
-void Cursor::update(sf::Vector2i mouseTilePos)
-{
-	if (m_grab && m_grabButton != sf::Mouse::Middle) {
-		setPosition(
+	if (m_grab && m_grabType != Move) {
+		m_selection.setPosition(sf::Vector2f(
 			std::min(mouseTilePos.x, m_grabStartPos.x),
 			std::min(mouseTilePos.y, m_grabStartPos.y)
-		);
-		setSize(
-			abs(mouseTilePos.x - m_grabStartPos.x) + Map::TILEMAP_TILE_SIZE,
-			abs(mouseTilePos.y - m_grabStartPos.y) + Map::TILEMAP_TILE_SIZE
-		);
-	}
-	else {
-		setPosition(mouseTilePos);
+		));
+		m_selection.setSize(sf::Vector2f(
+			std::abs(mouseTilePos.x - m_grabStartPos.x) + 1,
+			std::abs(mouseTilePos.y - m_grabStartPos.y) + 1
+		));
 	}
 
-	updateText(mouseTilePos);
+	m_cursor.setPosition(sf::Vector2f(mouseTilePos));
+
+	updateText();
 }
 
-void Cursor::updateText(sf::Vector2i mouseTilePos)
+void Cursor::updateText()
 {
 	std::ostringstream oss;
-	oss << "[" << (mouseTilePos.x / Map::TILEMAP_TILE_SIZE) << "," << (mouseTilePos.y / Map::TILEMAP_TILE_SIZE) << "]";
 
-	if (m_grab)
-		oss << "\n[" << getRegion().width << "," << getRegion().height << "]";
+	oss << "Cursor:" << std::endl;
+	oss << "  at ["
+	    << (m_cursor.getPosition().x)
+	    << ","
+	    << (m_cursor.getPosition().y)
+	    << "]" << std::endl;
+	if (hasSelection()) {
+		oss << "Selection:" << std::endl;
+		oss << "  at ["
+		    << (m_selection.getPosition().x)
+		    << ","
+		    << (m_selection.getPosition().y)
+		    << "]" << std::endl;
+		oss << "size ["
+		    << (m_selection.getSize().x)
+		    << ","
+		    << (m_selection.getSize().y)
+		    << "]";
+	}
 
-	m_tilePosText.setPosition(mouseTilePos.x + Map::TILEMAP_TILE_SIZE + 8, mouseTilePos.y);
 	m_tilePosText.setString(oss.str());
+	m_tilePosTextBackground.setSize(sf::Vector2f(
+		m_tilePosText.getLocalBounds().width + m_tilePosText.getPosition().x + 20,
+		m_tilePosText.getLocalBounds().height + m_tilePosText.getPosition().y + 20
+	));
 }
 
 void Cursor::render(sf::RenderWindow &target)
 {
+	if (hasSelection()) {
+		if (m_showClipboard) {
+			m_clipboard.setOffset(sf::Vector2i(m_selection.getPosition()));
+			m_clipboard.renderRepeated(target, sf::Vector2i(m_selection.getSize()));
+		}
+		target.draw(m_selection);
+	}
+
 	if (m_textureSelect)
 		target.draw(m_texture);
-	else
-		target.draw(m_tilePosText);
 
-	target.draw(m_area);
+	if (m_showClipboard && !hasSelection()) {
+		m_clipboard.setOffset(sf::Vector2i(m_cursor.getPosition()));
+		m_clipboard.renderRepeated(target, sf::Vector2i(m_cursor.getSize()));
+	}
+
+	if (!m_grab)
+		target.draw(m_cursor);
+
+	if (!m_textureSelect) {
+		Display::drawAbsolute(m_tilePosTextBackground);
+		Display::drawAbsolute(m_tilePosText);
+	}
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 
-void Cursor::setPosition(sf::Vector2i pos)
+void Cursor::setTexturePos(const sf::Vector2i &texturePos)
 {
-	m_area.setPosition(sf::Vector2f(pos));
-}
-
-void Cursor::setPosition(int x, int y)
-{
-	setPosition(sf::Vector2i(x, y));
-}
-
-void Cursor::move(sf::Vector2i pos)
-{
-	m_area.move(sf::Vector2f(pos));
-}
-
-void Cursor::move(int x, int y)
-{
-	move(sf::Vector2i(x, y));
-}
-
-void Cursor::setSize(sf::Vector2i size)
-{
-	m_area.setSize(sf::Vector2f(size));
-}
-
-void Cursor::setSize(int w, int h)
-{
-	setSize(sf::Vector2i(w, h));
-}
-
-void Cursor::setTexturePos(sf::Vector2i texturePos)
-{
-	texturePos *= Map::TILESET_TILE_SIZE;
-
-	m_area.setTextureRect(sf::IntRect(
-		texturePos.x, texturePos.y,
-		Map::TILESET_TILE_SIZE, Map::TILESET_TILE_SIZE
-	));
+	// m_clipboard.setTile(sf::Vector2i(0, 0), texturePos);
+	m_cursor.setTextureRect(sf::IntRect(texturePos.x, texturePos.y, 1, 1));
 }
 
 void Cursor::setTexturePos(int x, int y)
@@ -138,17 +148,9 @@ void Cursor::setTexturePos(int x, int y)
 sf::Vector2i Cursor::getTexturePos()
 {
 	return sf::Vector2i(
-		m_area.getTextureRect().left,
-		m_area.getTextureRect().top
-	) / Map::TILESET_TILE_SIZE;
-}
-
-sf::Vector2f Cursor::getScaledTexturePos()
-{
-	return sf::Vector2f(
-		m_area.getTextureRect().left,
-		m_area.getTextureRect().top
-	) * float(m_scale);
+		m_cursor.getTextureRect().left,
+		m_cursor.getTextureRect().top
+	);
 }
 
 sf::Vector2i Cursor::getGrabStartPosition()
@@ -156,50 +158,75 @@ sf::Vector2i Cursor::getGrabStartPosition()
 	return m_grabStartPos;
 }
 
-sf::Mouse::Button Cursor::getGrabButton()
-{
-	return m_grabButton;
-}
-
-sf::IntRect Cursor::getRegion()
+sf::IntRect Cursor::getSelection()
 {
 	return sf::IntRect(
-		m_area.getPosition().x / Map::TILEMAP_TILE_SIZE,
-		m_area.getPosition().y / Map::TILEMAP_TILE_SIZE,
-		m_area.getSize().x / Map::TILEMAP_TILE_SIZE,
-		m_area.getSize().y / Map::TILEMAP_TILE_SIZE
+		m_selection.getPosition().x,
+		m_selection.getPosition().y,
+		m_selection.getSize().x,
+		m_selection.getSize().y
 	);
+}
+
+Cursor::GrabType Cursor::getGrabType()
+{
+	return m_grabType;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 
-void Cursor::startGrab(sf::Vector2i mouseTilePos, sf::Mouse::Button button)
+void Cursor::startGrab(const sf::Vector2i &mouseTilePos, GrabType type)
 {
 	if (m_textureSelect || m_grab)
 		return;
 
 	m_grab = true;
-	m_grabButton = button;
+	m_grabType = type;
 	m_grabStartPos = mouseTilePos;
 
-	if (button == sf::Mouse::Right) {
-		m_area.setTexture(NULL);
-		m_area.setFillColor(sf::Color(255, 0, 0, 50));
+	switch (type) {
+		case Move:
+			m_selection.setOutlineColor(sf::Color::Transparent);
+			showClipboard(false);
+		break;
+		case Delete:
+			m_selection.setFillColor(sf::Color(255, 0, 0, 50));
+			showClipboard(false);
+		break;
+		case Copy:
+			showClipboard(false);
+		break;
+		default:
+		break;
 	}
+
+	update(mouseTilePos);
 }
 
-sf::IntRect Cursor::endGrab(sf::Vector2i mouseTilePos, sf::Mouse::Button button)
+void Cursor::endGrab(const sf::Vector2i &mouseTilePos)
 {
-	if (!m_grab || m_grabButton != button)
-		return sf::IntRect();
+	if (!m_grab)
+		return;
 
 	m_grab = false;
 
-	sf::IntRect region = getRegion();
-	reset();
-	update(mouseTilePos);
+	switch (m_grabType) {
+		case Move:
+			m_selection.setOutlineColor(sf::Color::White);
+			showClipboard(true);
+		break;
+		case Delete:
+			m_selection.setFillColor(sf::Color::Transparent);
+			showClipboard(true);
+		break;
+		case Copy:
+			showClipboard(true);
+		break;
+		default:
+		break;
+	}
 
-	return region;
+	update(mouseTilePos);
 }
 
 bool Cursor::isGrabbing()
@@ -215,9 +242,14 @@ void Cursor::enableTextureSelect()
 		return;
 
 	m_textureSelect = true;
-	m_area.setFillColor(sf::Color(255, 255, 255, 0));
-	m_area.setOutlineColor(sf::Color::Red);
-	m_texture.setPosition(m_area.getPosition() - getScaledTexturePos());
+	m_cursor.setSize(sf::Vector2f(1, 1));
+	m_cursor.setOutlineColor(sf::Color::Red);
+
+	sf::Vector2f pos(m_cursor.getPosition());
+	Tile *t = m_clipboard.getTile(m_clipboard.getTopLeftPosition());
+	if (t)
+		pos -= sf::Vector2f(t->tex);
+	m_texture.setPosition(pos);
 }
 
 void Cursor::disableTextureSelect()
@@ -226,15 +258,67 @@ void Cursor::disableTextureSelect()
 		return;
 
 	m_textureSelect = false;
-	m_area.setFillColor(sf::Color(255, 255, 255, 128));
-	m_area.setOutlineColor(sf::Color::White);
-
-	setTexturePos(sf::Vector2i(m_area.getPosition() - m_texture.getPosition()) / Map::TILEMAP_TILE_SIZE);
+	m_cursor.setOutlineColor(sf::Color::White);
+	// setTexturePos(sf::Vector2i(m_cursor.getPosition() - m_texture.getPosition()));
+	m_clipboard.clear();
+	m_clipboard.setTile(sf::Vector2i(0, 0), sf::Vector2i(m_cursor.getPosition() - m_texture.getPosition()));
 }
 
 bool Cursor::isSelectingTexture()
 {
 	return m_textureSelect;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+
+Map &Cursor::getClipboard()
+{
+	return m_clipboard;
+}
+
+void Cursor::showClipboard(bool show)
+{
+	m_showClipboard = show;
+}
+
+bool Cursor::isClipboardShown()
+{
+	return m_showClipboard;
+}
+
+bool Cursor::hasSelection()
+{
+	sf::Vector2i size(m_selection.getSize());
+
+	return size.x > 0 && size.y > 0;
+}
+
+void Cursor::resetSelection()
+{
+	m_selection.setSize(sf::Vector2f(0, 0));
+}
+
+void Cursor::copySelection(Map &from)
+{
+	if (!hasSelection())
+		return;
+
+	sf::IntRect region = getSelection();
+	m_clipboard.clear();
+
+	for (int y = region.top; y < region.height + region.top; ++y) {
+		for (int x = region.left; x < region.width + region.left; ++x) {
+			Tile *t = from.getTile(x, y);
+			if (!t)
+				continue;
+			m_clipboard.setTile(
+				sf::Vector2i(x - region.left, y - region.top),
+				t->tex
+			);
+		}
+	}
+
+	resetSelection();
 }
 
 ////////////////////////////////////////////////////////////////////////////////

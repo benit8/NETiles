@@ -16,9 +16,11 @@ namespace Tiles {
 ////////////////////////////////////////////////////////////////////////////////
 
 #include <sstream>
+#include <math.h>
 
 #include <SFML/Graphics.hpp>
 
+#include "Display.hpp"
 #include "Ressources/Manager.hpp"
 #include "Tiles/Map.hpp"
 
@@ -30,51 +32,64 @@ namespace Tiles
 class Cursor
 {
 public:
+	enum GrabType
+	{
+		None = 0,
+		Move,
+		Fill,
+		Delete,
+		Copy
+	};
+
+public:
 	Cursor();
 	~Cursor();
 
-	void reset();
-	void update(sf::Vector2i mouseWindowPos);
-	void updateText(sf::Vector2i mouseWindowPos);
+	void update(const sf::Vector2i &mouseWindowPos);
+	void updateText();
 	void render(sf::RenderWindow &target);
 
-	void setPosition(sf::Vector2i pos);
-	void setPosition(int x, int y);
-	void move(sf::Vector2i pos);
-	void move(int x, int y);
-	void setSize(sf::Vector2i size);
-	void setSize(int w, int h);
-	void setTexturePos(sf::Vector2i pos);
+	void setTexturePos(const sf::Vector2i &pos);
 	void setTexturePos(int x, int y);
 
 	sf::Vector2i getTexturePos();
 	sf::Vector2i getGrabStartPosition();
-	sf::Mouse::Button getGrabButton();
-	sf::IntRect getRegion();
+	sf::IntRect getSelection();
+	GrabType getGrabType();
 
-	void startGrab(sf::Vector2i mouseTilePos, sf::Mouse::Button button);
-	sf::IntRect endGrab(sf::Vector2i mouseTilePos, sf::Mouse::Button button);
+	void startGrab(const sf::Vector2i &mouseTilePos, GrabType type);
+	void endGrab(const sf::Vector2i &mouseTilePos);
 	bool isGrabbing();
 
 	void enableTextureSelect();
 	void disableTextureSelect();
 	bool isSelectingTexture();
 
+	Map &getClipboard();
+	void showClipboard(bool show);
+	bool isClipboardShown();
+	bool hasSelection();
+	void resetSelection();
+	void copySelection(Map &from);
+
 private:
 	sf::Vector2f getScaledTexturePos();
 
 private:
-	int m_scale;
-	sf::RectangleShape m_area;
+	sf::RectangleShape m_cursor;
+	sf::RectangleShape m_selection;
+	Map m_clipboard;
+	bool m_showClipboard;
 
 	bool m_grab;
-	sf::Mouse::Button m_grabButton;
+	GrabType m_grabType;
 	sf::Vector2i m_grabStartPos;
 
 	bool m_textureSelect;
 	sf::Sprite m_texture;
 
 	sf::Text m_tilePosText;
+	sf::RectangleShape m_tilePosTextBackground;
 };
 
 }

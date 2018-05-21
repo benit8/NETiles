@@ -21,6 +21,7 @@ Map::Map()
 
 Map::Map(const std::string &mapPath)
 : m_mapPath(mapPath)
+, m_offset(0, 0)
 {
 	const sf::Texture &t = Ressource::Manager::getTexture("tileset0");
 	m_renderStates.texture = &t;
@@ -67,7 +68,6 @@ bool Map::loadFromFile(const std::string &mapPath)
 		iss >> t.walkable;
 
 		if (iss.peek() != -1) {
-			printf("'%c' (%d) %d\n", iss.peek(), iss.peek(), iss.good());
 			t.tele = true;
 			iss >> t.telePos.x;
 			iss >> t.telePos.y;
@@ -117,6 +117,13 @@ bool Map::saveToFile(const std::string &mapPath)
 	return true;
 }
 
+////////////////////////////////////////////////////////////////////////////////
+
+void Map::clear()
+{
+	m_tiles.clear();
+}
+
 void Map::render(sf::RenderWindow &target, bool displayTileTypes)
 {
 	sf::VertexArray va(sf::Quads);
@@ -124,47 +131,149 @@ void Map::render(sf::RenderWindow &target, bool displayTileTypes)
 	for (size_t i = 0; i < m_tiles.size(); ++i) {
 		// Top left
 		sf::Vertex tl;
-		tl.position.x = m_tiles[i].pos.x * TILEMAP_TILE_SIZE;
-		tl.position.y = m_tiles[i].pos.y * TILEMAP_TILE_SIZE;
-		tl.texCoords.x = m_tiles[i].tex.x * TILESET_TILE_SIZE;
-		tl.texCoords.y = m_tiles[i].tex.y * TILESET_TILE_SIZE;
-		if (displayTileTypes)
+		tl.position = sf::Vector2f(m_tiles[i].pos);
+		tl.position += sf::Vector2f(m_offset);
+		tl.texCoords = sf::Vector2f(m_tiles[i].tex) * float(TILE_SIZE);
+		if (m_isClipboard)
+			tl.color = sf::Color(255, 255, 255, 128);
+		else if (displayTileTypes)
 			tl.color = m_tiles[i].getColorType();
 		va.append(tl);
 
 		// Top right
 		sf::Vertex tr;
-		tr.position.x = m_tiles[i].pos.x * TILEMAP_TILE_SIZE + TILEMAP_TILE_SIZE;
-		tr.position.y = m_tiles[i].pos.y * TILEMAP_TILE_SIZE;
-		tr.texCoords.x = m_tiles[i].tex.x * TILESET_TILE_SIZE + TILESET_TILE_SIZE;
-		tr.texCoords.y = m_tiles[i].tex.y * TILESET_TILE_SIZE;
-		if (displayTileTypes)
+		tr.position = sf::Vector2f(m_tiles[i].pos);
+		tr.position += sf::Vector2f(1, 0);
+		tr.position += sf::Vector2f(m_offset);
+		tr.texCoords = sf::Vector2f(m_tiles[i].tex) * float(TILE_SIZE);
+		tr.texCoords += sf::Vector2f(TILE_SIZE, 0);
+		if (m_isClipboard)
+			tr.color = sf::Color(255, 255, 255, 128);
+		else if (displayTileTypes)
 			tr.color = m_tiles[i].getColorType();
 		va.append(tr);
 
 		// Bottom right
 		sf::Vertex br;
-		br.position.x = m_tiles[i].pos.x * TILEMAP_TILE_SIZE + TILEMAP_TILE_SIZE;
-		br.position.y = m_tiles[i].pos.y * TILEMAP_TILE_SIZE + TILEMAP_TILE_SIZE;
-		br.texCoords.x = m_tiles[i].tex.x * TILESET_TILE_SIZE + TILESET_TILE_SIZE;
-		br.texCoords.y = m_tiles[i].tex.y * TILESET_TILE_SIZE + TILESET_TILE_SIZE;
-		if (displayTileTypes)
+		br.position = sf::Vector2f(m_tiles[i].pos);
+		br.position += sf::Vector2f(1, 1);
+		br.position += sf::Vector2f(m_offset);
+		br.texCoords = sf::Vector2f(m_tiles[i].tex) * float(TILE_SIZE);
+		br.texCoords += sf::Vector2f(TILE_SIZE, TILE_SIZE);
+		if (m_isClipboard)
+			br.color = sf::Color(255, 255, 255, 128);
+		else if (displayTileTypes)
 			br.color = m_tiles[i].getColorType();
 		va.append(br);
 
 		// Bottom left
 		sf::Vertex bl;
-		bl.position.x = m_tiles[i].pos.x * TILEMAP_TILE_SIZE;
-		bl.position.y = m_tiles[i].pos.y * TILEMAP_TILE_SIZE + TILEMAP_TILE_SIZE;
-		bl.texCoords.x = m_tiles[i].tex.x * TILESET_TILE_SIZE;
-		bl.texCoords.y = m_tiles[i].tex.y * TILESET_TILE_SIZE + TILESET_TILE_SIZE;
-		if (displayTileTypes)
+		bl.position = sf::Vector2f(m_tiles[i].pos);
+		bl.position += sf::Vector2f(0, 1);
+		bl.position += sf::Vector2f(m_offset);
+		bl.texCoords = sf::Vector2f(m_tiles[i].tex) * float(TILE_SIZE);
+		bl.texCoords += sf::Vector2f(0, TILE_SIZE);
+		if (m_isClipboard)
+			bl.color = sf::Color(255, 255, 255, 128);
+		else if (displayTileTypes)
 			bl.color = m_tiles[i].getColorType();
 		va.append(bl);
 	}
 
 	if (va.getVertexCount() > 0)
 		target.draw(va, m_renderStates);
+}
+
+void Map::renderRepeated(sf::RenderWindow &target, const sf::Vector2i &area, bool displayTileTypes)
+{
+	sf::VertexArray va(sf::Quads);
+	sf::Vector2i size = getSize();
+
+	for (int y = 0; y < area.y || y < 1; ++y) {
+		for (int x = 0; x < area.x || x < 1; ++x) {
+			Tile *t = getTile(x % size.x, y % size.y);
+			if (!t)
+				continue;
+
+			// Top left
+			sf::Vertex tl;
+			tl.position = sf::Vector2f(x, y);
+			tl.position += sf::Vector2f(m_offset);
+			tl.texCoords = sf::Vector2f(t->tex) * float(TILE_SIZE);
+			if (m_isClipboard)
+				tl.color = sf::Color(255, 255, 255, 128);
+			else if (displayTileTypes)
+				tl.color = t->getColorType();
+			va.append(tl);
+
+			// Top right
+			sf::Vertex tr;
+			tr.position = sf::Vector2f(x, y);
+			tr.position += sf::Vector2f(1, 0);
+			tr.position += sf::Vector2f(m_offset);
+			tr.texCoords = sf::Vector2f(t->tex) * float(TILE_SIZE);
+			tr.texCoords += sf::Vector2f(TILE_SIZE, 0);
+			if (m_isClipboard)
+				tr.color = sf::Color(255, 255, 255, 128);
+			else if (displayTileTypes)
+				tr.color = t->getColorType();
+			va.append(tr);
+
+			// Bottom right
+			sf::Vertex br;
+			br.position = sf::Vector2f(x, y);
+			br.position += sf::Vector2f(1, 1);
+			br.position += sf::Vector2f(m_offset);
+			br.texCoords = sf::Vector2f(t->tex) * float(TILE_SIZE);
+			br.texCoords += sf::Vector2f(TILE_SIZE, TILE_SIZE);
+			if (m_isClipboard)
+				br.color = sf::Color(255, 255, 255, 128);
+			else if (displayTileTypes)
+				br.color = t->getColorType();
+			va.append(br);
+
+			// Bottom left
+			sf::Vertex bl;
+			bl.position = sf::Vector2f(x, y);
+			bl.position += sf::Vector2f(0, 1);
+			bl.position += sf::Vector2f(m_offset);
+			bl.texCoords = sf::Vector2f(t->tex) * float(TILE_SIZE);
+			bl.texCoords += sf::Vector2f(0, TILE_SIZE);
+			if (m_isClipboard)
+				bl.color = sf::Color(255, 255, 255, 128);
+			else if (displayTileTypes)
+				bl.color = t->getColorType();
+			va.append(bl);
+		}
+	}
+
+	if (va.getVertexCount() > 0)
+		target.draw(va, m_renderStates);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+
+void Map::setOffset(int x, int y)
+{
+	setOffset(sf::Vector2i(x, y));
+}
+
+void Map::setOffset(const sf::Vector2i &offset)
+{
+	m_offset = offset;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+
+void Map::setTile(const Tile &tile)
+{
+	Tile *t = getTile(tile.pos);
+	if (t)
+		*t = tile;
+	else {
+		m_tiles.push_back(tile);
+		m_sorted = false;
+	}
 }
 
 void Map::setTile(const sf::Vector2i &pos, const sf::Vector2i &tex)
@@ -180,16 +289,7 @@ void Map::setTile(const sf::Vector2i &pos, const sf::Vector2i &tex)
 	}
 }
 
-Tile *Map::getTile(const sf::Vector2i &pos)
-{
-	for (size_t i = 0; i < m_tiles.size(); ++i) {
-		if (m_tiles[i].pos == pos)
-			return &m_tiles[i];
-	}
-	return NULL;
-}
-
-void Map::removeTile(const sf::Vector2i &pos)
+void Map::deleteTile(const sf::Vector2i &pos)
 {
 	for (size_t i = 0; i < m_tiles.size(); ++i) {
 		if (m_tiles[i].pos == pos) {
@@ -199,14 +299,59 @@ void Map::removeTile(const sf::Vector2i &pos)
 	}
 }
 
+void Map::deleteTile(int x, int y)
+{
+	deleteTile(sf::Vector2i(x, y));
+}
+
+Tile *Map::getTile(const sf::Vector2i &pos)
+{
+	for (size_t i = 0; i < m_tiles.size(); ++i) {
+		if (m_tiles[i].pos == pos)
+			return &m_tiles[i];
+	}
+	return NULL;
+}
+
 Tile *Map::getTile(int x, int y)
 {
 	return getTile(sf::Vector2i(x, y));
 }
 
+////////////////////////////////////////////////////////////////////////////////
+
+const std::string &Map::getMapPath()
+{
+	return m_mapPath;
+}
+
+sf::Vector2i Map::getSize()
+{
+	return getBottomRightPosition() + sf::Vector2i(1, 1);
+}
+
 sf::Vector2i Map::getCenter()
 {
-	sf::Vector2i botRight;
+	return getSize() / 2;
+}
+
+sf::Vector2i Map::getTopLeftPosition()
+{
+	sf::Vector2i topLeft = m_tiles[0].pos;
+
+	for (size_t i = 1; i < m_tiles.size(); ++i) {
+		if (m_tiles[i].pos.x < topLeft.x)
+			topLeft.x = m_tiles[i].pos.x;
+		if (m_tiles[i].pos.y < topLeft.y)
+			topLeft.y = m_tiles[i].pos.y;
+	}
+
+	return topLeft;
+}
+
+sf::Vector2i Map::getBottomRightPosition()
+{
+	sf::Vector2i botRight = m_tiles[0].pos;
 
 	for (size_t i = 0; i < m_tiles.size(); ++i) {
 		if (m_tiles[i].pos.x > botRight.x)
@@ -214,12 +359,20 @@ sf::Vector2i Map::getCenter()
 		if (m_tiles[i].pos.y > botRight.y)
 			botRight.y = m_tiles[i].pos.y;
 	}
-	return botRight * TILEMAP_TILE_SIZE / 2;
+
+	return botRight;
 }
 
-const std::string &Map::getMapPath()
+////////////////////////////////////////////////////////////////////////////////
+
+void Map::setClipboard(bool isClipboard)
 {
-	return m_mapPath;
+	m_isClipboard = isClipboard;
+}
+
+bool Map::isClipboard()
+{
+	return m_isClipboard;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -242,14 +395,7 @@ void Map::reposition()
 {
 	sortTiles();
 
-	sf::Vector2i topLeft;
-	for (size_t i = 0; i < m_tiles.size(); ++i) {
-		if (m_tiles[i].pos.x < topLeft.x)
-			topLeft.x = m_tiles[i].pos.x;
-		if (m_tiles[i].pos.y < topLeft.y)
-			topLeft.y = m_tiles[i].pos.y;
-	}
-
+	sf::Vector2i topLeft = getTopLeftPosition();
 	for (std::vector<Tile>::reverse_iterator it = m_tiles.rbegin(); it != m_tiles.rend(); ++it) {
 		it->pos -= topLeft;
 	}

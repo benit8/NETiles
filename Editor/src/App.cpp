@@ -15,14 +15,12 @@ App::App(const std::string &appName, std::vector<std::string> &appArgs)
 , m_appName(appName)
 , m_appArgs(appArgs)
 {
-	m_videoMode = sf::VideoMode::getDesktopMode();
-	m_settings = sf::ContextSettings(24, 8, 0, 3, 0);
 }
 
 App::~App()
 {
-	if (m_window.isOpen())
-		m_window.close();
+	if (Display::isOpen())
+		Display::close();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -37,14 +35,14 @@ int App::run()
 		throw std::runtime_error("No states are registered");
 	}
 
-	while (m_window.isOpen() && !m_states.empty()) {
+	while (Display::isOpen() && !m_states.empty()) {
 		handleEvents();
 
 		currentState().update();
 
-		m_window.clear(sf::Color::Black);
-		currentState().render(m_window);
-		m_window.display();
+		Display::clear();
+		currentState().render(Display::getWindow());
+		Display::refresh();
 
 		if (m_shouldPop) {
 			m_shouldPop = false;
@@ -56,8 +54,8 @@ int App::run()
 		}
 	}
 
-	if (m_window.isOpen())
-		m_window.close();
+	if (Display::isOpen())
+		Display::close();
 
 	return exitCode;
 }
@@ -66,24 +64,22 @@ int App::run()
 
 void App::launch()
 {
-	m_window.create(m_videoMode, "NETiles Editor", sf::Style::Default, m_settings);
-	m_window.setFramerateLimit(60);
-	m_window.setKeyRepeatEnabled(false);
+	Display::create();
 
-	pushState<States::Main>(m_appArgs[1], m_window);
+	pushState<States::Main>(m_appArgs[1]);
 }
 
 void App::handleEvents()
 {
 	sf::Event e;
 
-	while (m_window.pollEvent(e)) {
+	while (Display::pollEvent(e)) {
 		switch (e.type) {
 			case sf::Event::Closed:
 				m_shouldClose = true;
 				break;
 			case sf::Event::Resized:
-				onResize(sf::Vector2i(e.size.width, e.size.height));
+				Display::setViewSize(e.size.width, e.size.height);
 				break;
 			default:
 				currentState().handleEvent(e);
@@ -106,13 +102,4 @@ void App::popState()
 States::State &App::currentState()
 {
 	return *m_states.back();
-}
-
-////////////////////////////////////////////////////////////////////////////////
-
-void App::onResize(sf::Vector2i newSize)
-{
-	sf::View v = m_window.getView();
-	v.setSize(newSize.x, newSize.y);
-	m_window.setView(v);
 }

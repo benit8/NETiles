@@ -14,18 +14,16 @@ namespace States
 
 ////////////////////////////////////////////////////////////////////////////////
 
-Main::Main(const std::string &mapPath, sf::RenderWindow &window)
+Main::Main(const std::string &mapPath)
 : State()
 , m_tileMap(mapPath)
 , m_tileCursor()
 , m_tileTypesFilter(false)
-, m_window(window)
 {
 	m_tileMap.loadFromFile();
 
-	sf::View v = m_window.getView();
-	v.setCenter(sf::Vector2f(m_tileMap.getCenter()));
-	m_window.setView(v);
+	Display::setViewCenter(m_tileMap.getCenter());
+	Display::zoomView(1 / 32.0f);
 }
 
 Main::~Main()
@@ -38,28 +36,22 @@ void Main::handleEvent(sf::Event &e)
 {
 	switch (e.type) {
 		case sf::Event::KeyPressed:
-			onKeydown(e.key.code);
+			onKeyDown(e.key.code);
 		break;
 		case sf::Event::KeyReleased:
-			onKeyup(e.key.code);
-		break;
-		case sf::Event::MouseWheelScrolled:
-			onMouseScrolled(e.mouseWheelScroll);
-		break;
-		case sf::Event::MouseButtonPressed:
-			m_tileCursor.startGrab(
-				mapWinToTileAbs(sf::Vector2i(e.mouseButton.x, e.mouseButton.y)),
-				e.mouseButton.button
-			);
-		break;
-		case sf::Event::MouseButtonReleased:
-			actionToSelectionRegion(m_tileCursor.endGrab(
-				mapWinToTileAbs(sf::Vector2i(e.mouseButton.x, e.mouseButton.y)),
-				e.mouseButton.button
-			));
+			onKeyUp(e.key.code);
 		break;
 		case sf::Event::MouseMoved:
 			onMouseMoved(sf::Vector2i(e.mouseMove.x, e.mouseMove.y));
+		break;
+		case sf::Event::MouseButtonPressed:
+			onMouseDown(e.mouseButton);
+		break;
+		case sf::Event::MouseButtonReleased:
+			onMouseUp(e.mouseButton);
+		break;
+		case sf::Event::MouseWheelScrolled:
+			onMouseScrolled(e.mouseWheelScroll);
 		break;
 		default:
 		break;
@@ -68,19 +60,19 @@ void Main::handleEvent(sf::Event &e)
 
 void Main::update()
 {
+	m_tileCursor.update(mapWinToTileAbs(Display::getMousePosition()));
 }
 
 void Main::render(sf::RenderWindow &target)
 {
-	// target.setView(m_view);
-
 	m_tileMap.render(target, m_tileTypesFilter);
+
 	m_tileCursor.render(target);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 
-void Main::onKeydown(sf::Keyboard::Key key)
+void Main::onKeyDown(sf::Keyboard::Key key)
 {
 	switch (key) {
 		case sf::Keyboard::Escape:
@@ -89,25 +81,25 @@ void Main::onKeydown(sf::Keyboard::Key key)
 		case sf::Keyboard::Tab:
 			m_tileCursor.enableTextureSelect();
 		break;
-		case sf::Keyboard::A:
-			copyCurrentTile();
-		break;
-		case sf::Keyboard::W:
-			if (!m_tileCursor.isGrabbing() && !m_tileCursor.isSelectingTexture())
-				m_tileTypesFilter = !m_tileTypesFilter;
-		break;
 		case sf::Keyboard::Return:
 			if (m_tileMap.saveToFile())
 				std::cout << "Saved map to '" << m_tileMap.getMapPath() << "'" << std::endl;
 			else
 				std::cout << "Could not save map to '" << m_tileMap.getMapPath() << "'" << std::endl;
 		break;
+		case sf::Keyboard::Space:
+			m_tileCursor.resetSelection();
+		break;
+		case sf::Keyboard::W:
+			if (!m_tileCursor.isGrabbing() && !m_tileCursor.isSelectingTexture())
+				m_tileTypesFilter = !m_tileTypesFilter;
+		break;
 		default:
 		break;
 	}
 }
 
-void Main::onKeyup(sf::Keyboard::Key key)
+void Main::onKeyUp(sf::Keyboard::Key key)
 {
 	switch (key) {
 		case sf::Keyboard::Tab:
@@ -118,65 +110,93 @@ void Main::onKeyup(sf::Keyboard::Key key)
 	}
 }
 
-void Main::onMouseMoved(sf::Vector2i mouseWindowPos)
+void Main::onMouseMoved(const sf::Vector2i &mouseWindowPos)
 {
-	sf::Vector2i mouseTilePos = mapWinToTileAbs(mouseWindowPos);
-
-	if (m_tileCursor.isGrabbing() && m_tileCursor.getGrabButton() == sf::Mouse::Middle) {
-		sf::View v = m_window.getView();
-		v.move(sf::Vector2f(m_tileCursor.getGrabStartPosition() - mouseTilePos));
-		m_window.setView(v);
+	if (m_tileCursor.isGrabbing() && m_tileCursor.getGrabType() == Tiles::Cursor::Move) {
+		sf::View v = Display::getView();
+		v.move(sf::Vector2f(m_tileCursor.getGrabStartPosition() - mapWinToTileAbs(mouseWindowPos)));
+		Display::setView(v);
 	}
-
-	m_tileCursor.update(mouseTilePos);
 }
 
-void Main::onMouseScrolled(sf::Event::MouseWheelScrollEvent e)
+void Main::onMouseDown(const sf::Event::MouseButtonEvent &e)
 {
-	sf::View v = m_window.getView();
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::LControl)) {
+	Tiles::Cursor::GrabType type = Tiles::Cursor::None;
+	if (m_tileTypesFilter)
+		type = Tiles::Cursor::None;
+	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::LShift))
+		type = Tiles::Cursor::Copy;
+	else if (e.button == sf::Mouse::Left)
+		type = Tiles::Cursor::Fill;
+	else if (e.button == sf::Mouse::Middle)
+		type = Tiles::Cursor::Move;
+	else if (e.button == sf::Mouse::Right)
+		type = Tiles::Cursor::Delete;
+
+	m_tileCursor.startGrab(mapWinToTileAbs(sf::Vector2i(e.x, e.y)), type);
+}
+
+void Main::onMouseUp(const sf::Event::MouseButtonEvent &e)
+{
+	m_tileCursor.endGrab(mapWinToTileAbs(sf::Vector2i(e.x, e.y)));
+
+	actionToSelection(m_tileCursor.getSelection());
+	m_tileCursor.resetSelection();
+}
+
+void Main::onMouseScrolled(const sf::Event::MouseWheelScrollEvent &e)
+{
+	// if (sf::Keyboard::isKeyPressed(sf::Keyboard::LControl)) {
 		if (e.wheel == sf::Mouse::VerticalWheel) {
 			if (e.delta < 0)
-				v.zoom(2.0f);
+				Display::zoomView(2.0f);
 			else
-				v.zoom(0.5f);
+				Display::zoomView(0.5f);
 		}
-	}
-	else {
-
-	}
-	m_window.setView(v);
+	// }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 
-void Main::actionToSelectionRegion(sf::IntRect region)
+void Main::actionToSelection(sf::IntRect region)
 {
-	if (m_tileCursor.getGrabButton() == sf::Mouse::Middle)
+	if (m_tileCursor.getGrabType() == Tiles::Cursor::Move)
 		return;
 
-	for (int y = region.top; y < region.height + region.top; ++y) {
-		for (int x = region.left; x < region.width + region.left; ++x) {
-			sf::Vector2i pos(x, y);
-			Tiles::Tile *t = m_tileMap.getTile(pos);
-
-			if (m_tileTypesFilter) {
-				if (t)
-					t->walkable = !t->walkable;
-			}
-			else {
-				if (m_tileCursor.getGrabButton() == sf::Mouse::Left)
-					m_tileMap.setTile(pos, m_tileCursor.getTexturePos());
-				else if (m_tileCursor.getGrabButton() == sf::Mouse::Right)
-					m_tileMap.removeTile(pos);
+	if (m_tileTypesFilter) {
+		for (int y = region.top; y < region.height + region.top; ++y) {
+			for (int x = region.left; x < region.width + region.left; ++x) {
+				Tiles::Tile *t = m_tileMap.getTile(x, y);
+				if (!t)
+					continue;
+				t->walkable = !t->walkable;
 			}
 		}
+	}
+	else if (m_tileCursor.getGrabType() == Tiles::Cursor::Fill) {
+		sf::Vector2i clipboardSize = m_tileCursor.getClipboard().getSize();
+		for (int y = region.top; y < region.height + region.top; ++y) {
+			for (int x = region.left; x < region.width + region.left; ++x) {
+				Tiles::Tile *t = m_tileCursor.getClipboard().getTile((x - region.left) % clipboardSize.x, (y - region.top) % clipboardSize.y);
+				if (!t)
+					continue;
+				m_tileMap.setTile(sf::Vector2i(x, y), t->tex);
+			}
+		}
+	}
+	else if (m_tileCursor.getGrabType() == Tiles::Cursor::Delete) {
+		for (int y = region.top; y < region.height + region.top; ++y)
+			for (int x = region.left; x < region.width + region.left; ++x)
+				m_tileMap.deleteTile(x, y);
+	}
+	else if (m_tileCursor.getGrabType() == Tiles::Cursor::Copy) {
+		m_tileCursor.copySelection(m_tileMap);
 	}
 }
 
 void Main::copyCurrentTile()
 {
-	sf::IntRect region = m_tileCursor.getRegion();
+	sf::IntRect region = m_tileCursor.getSelection();
 	Tiles::Tile *t = m_tileMap.getTile(region.left, region.top);
 
 	if (!t)
@@ -189,26 +209,8 @@ void Main::copyCurrentTile()
 
 sf::Vector2i Main::mapWinToTileAbs(sf::Vector2i windowPos)
 {
-	sf::Vector2f fpos(m_window.mapPixelToCoords(windowPos));
-	return sf::Vector2i(
-		floor(fpos.x / Tiles::Map::TILEMAP_TILE_SIZE) * Tiles::Map::TILEMAP_TILE_SIZE,
-		floor(fpos.y / Tiles::Map::TILEMAP_TILE_SIZE) * Tiles::Map::TILEMAP_TILE_SIZE
-	);
-}
-
-sf::Vector2i Main::mapWinToTileRel(sf::Vector2i windowPos)
-{
-	return mapWinToTileAbs(windowPos) / Tiles::Map::TILEMAP_TILE_SIZE;
-}
-
-sf::Vector2i Main::mapTileAbsToTileRel(sf::Vector2i tileAbsPos)
-{
-	return tileAbsPos / Tiles::Map::TILEMAP_TILE_SIZE;
-}
-
-sf::Vector2i Main::mapTileRelToTileAbs(sf::Vector2i tileRelPos)
-{
-	return tileRelPos * Tiles::Map::TILEMAP_TILE_SIZE;
+	sf::Vector2f fpos(Display::getWindow().mapPixelToCoords(windowPos));
+	return sf::Vector2i(floor(fpos.x), floor(fpos.y));
 }
 
 ////////////////////////////////////////////////////////////////////////////////

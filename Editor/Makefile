@@ -10,6 +10,7 @@ NAME	=	../editor
 
 SOURCES	=	Main.cpp			\
 		App.cpp				\
+		Display.cpp			\
 		Ressources/Manager.cpp		\
 		States/Main.cpp			\
 		Tiles/Tile.cpp			\

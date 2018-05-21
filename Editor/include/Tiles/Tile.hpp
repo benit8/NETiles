@@ -27,9 +27,9 @@ class Tile
 {
 public:
 	Tile();
-	Tile(const sf::Vector2i &);
-	Tile(const sf::Vector2i &, const sf::Vector2i &);
-	Tile(const sf::Vector2i &, const sf::Vector2i &, const sf::Vector2i &);
+	Tile(const sf::Vector2i &pos);
+	Tile(const sf::Vector2i &pos, const sf::Vector2i &tex);
+	Tile(const sf::Vector2i &pos, const sf::Vector2i &tex, const sf::Vector2i &telePos);
 
 	sf::Color getColorType();
 

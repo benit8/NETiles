@@ -43,30 +43,46 @@ public:
 	bool loadFromFile(const std::string &mapPath = "");
 	bool saveToFile(const std::string &mapPath = "");
 
-	void render(sf::RenderWindow &target, bool displayTileTypes);
+	void clear();
+	void render(sf::RenderWindow &target, bool displayTileTypes = false);
+	void renderRepeated(sf::RenderWindow &target, const sf::Vector2i &area, bool displayTileTypes = false);
 
+	void setOffset(int x, int y);
+	void setOffset(const sf::Vector2i &offset);
+
+	void setTile(const Tile &tile);
 	void setTile(const sf::Vector2i &pos, const sf::Vector2i &tex);
-	void removeTile(const sf::Vector2i &pos);
+	void deleteTile(const sf::Vector2i &pos);
+	void deleteTile(int x, int y);
 	Tile *getTile(const sf::Vector2i &pos);
 	Tile *getTile(int x, int y);
-	sf::Vector2i getCenter();
+
 	const std::string &getMapPath();
+	sf::Vector2i getSize();
+	sf::Vector2i getCenter();
+	sf::Vector2i getTopLeftPosition();
+	sf::Vector2i getBottomRightPosition();
+
+	void setClipboard(bool isClipboard);
+	bool isClipboard();
 
 private:
 	void sortTiles();
 	void reposition();
 
 public:
-	static const int TILESET_TILE_SIZE = 16;
-	static const int TILEMAP_TILE_SIZE = 32;
+	static const int TILE_SIZE = 16;
 
 private:
 	std::string m_mapPath;
 	std::vector<Tile> m_tiles;
 
+	sf::Vector2i m_offset;
+
 	sf::RenderStates m_renderStates;
 
 	bool m_sorted = false;
+	bool m_isClipboard = false;
 };
 
 }
