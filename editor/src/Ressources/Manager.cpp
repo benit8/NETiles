@@ -15,10 +15,10 @@ namespace Ressource
 ////////////////////////////////////////////////////////////////////////////////
 
 Manager::Manager() noexcept
-: m_fonts("Assets/fonts/", "ttf")
-, m_images("Assets/images/", "jpg")
-, m_textures("Assets/textures/", "png")
-, m_soundBuffers("Assets/sounds/", "ogg")
+: m_fonts(assetsDir + "fonts/", "ttf")
+, m_images(assetsDir + "images/", "jpg")
+, m_textures(assetsDir + "textures/", "png")
+, m_soundBuffers(assetsDir + "sounds/", "ogg")
 {}
 
 ////////////////////////////////////////////////////////////////////////////////

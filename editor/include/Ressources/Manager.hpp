@@ -33,6 +33,8 @@ namespace Ressource {
 namespace Ressource
 {
 
+const std::string assetsDir = "../assets/";
+
 class Manager : public Singleton
 {
 public:

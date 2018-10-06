@@ -3,7 +3,4 @@
 *.o
 *.a
 *.so
-client
-editor
-server
-TODO.txt
+build
