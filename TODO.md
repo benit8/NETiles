@@ -1,21 +1,17 @@
-##
-## Chat-room de ouf
-##
+# NETiles
 
 ## Objectifs
+Use CMake and SFgui
 
-# Editor
-	Rework keybinds (display help w/ F1)
-	Rewrite level file structure
-		[binary format]
-		Header magic 'NETlvl$$' [$$:format version]
-		Level name, type?, size,
+### Editor
+Rewrite level file structure :
+- Binary format
+- Header magic 'NETwld__' 
+	- __: format version
+- Level name, type (?), size,
 
-	Sub rooms (houses)
+Rework keybinds (display help w/ F1)
+Sub rooms (houses)
 
-# Client
-	Mise en cache des map et tileset
-
-# Misc
-	Update utils.make
-	CMakeLists ?
+### Client
+Mise en cache des map et tileset
