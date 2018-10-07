@@ -20,7 +20,6 @@ endfunction(PREPEND)
 ########################################
 
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
-# find_package(SFML 2.5 COMPONENTS graphics system window REQUIRED)
 
 project(NETiles)
 add_definitions("-W -Wall -Wextra")
