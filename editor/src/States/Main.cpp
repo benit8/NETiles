@@ -19,11 +19,12 @@ Main::Main(const std::string &mapPath)
 , m_tileMap(mapPath)
 , m_tileCursor()
 , m_tileTypesFilter(false)
+, m_initialZoomFactor(2 * Tiles::Map::TILE_SIZE)
 {
 	m_tileMap.loadFromFile();
 
 	Display::setViewCenter(m_tileMap.getCenter());
-	Display::zoomView(1 / 32.0f);
+	Display::zoomView(1 / m_initialZoomFactor);
 }
 
 Main::~Main()
@@ -78,6 +79,7 @@ void Main::onKeyDown(sf::Keyboard::Key key)
 		case sf::Keyboard::Escape:
 			m_requestingClose = true;
 		break;
+
 		case sf::Keyboard::Tab:
 			m_tileCursor.enableTextureSelect();
 		break;
@@ -94,6 +96,20 @@ void Main::onKeyDown(sf::Keyboard::Key key)
 			if (!m_tileCursor.isGrabbing() && !m_tileCursor.isSelectingTexture())
 				m_tileTypesFilter = !m_tileTypesFilter;
 		break;
+
+		case sf::Keyboard::Up:
+			moveMap(0, -1);
+		break;
+		case sf::Keyboard::Down:
+			moveMap(0, 1);
+		break;
+		case sf::Keyboard::Right:
+			moveMap(1, 0);
+		break;
+		case sf::Keyboard::Left:
+			moveMap(-1, 0);
+		break;
+
 		default:
 		break;
 	}
@@ -146,14 +162,28 @@ void Main::onMouseUp(const sf::Event::MouseButtonEvent &e)
 
 void Main::onMouseScrolled(const sf::Event::MouseWheelScrollEvent &e)
 {
-	// if (sf::Keyboard::isKeyPressed(sf::Keyboard::LControl)) {
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::LControl)) {
 		if (e.wheel == sf::Mouse::VerticalWheel) {
 			if (e.delta < 0)
 				Display::zoomView(2.0f);
 			else
 				Display::zoomView(0.5f);
 		}
-	// }
+	}
+	else {
+		if (e.wheel == sf::Mouse::VerticalWheel) {
+			if (e.delta < 0)
+				moveMap(0, 1);
+			else
+				moveMap(0, -1);
+		}
+		else if (e.wheel == sf::Mouse::HorizontalWheel) {
+			if (e.delta < 0)
+				moveMap(1, 0);
+			else
+				moveMap(-1, 0);
+		}
+	}
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -203,6 +233,18 @@ void Main::copyCurrentTile()
 		return;
 
 	m_tileCursor.setTexturePos(t->tex);
+}
+
+void Main::moveMap(sf::Vector2f offset)
+{
+	sf::View v = Display::getView();
+	v.move(offset * (Display::getZoom() * m_initialZoomFactor));
+	Display::setView(v);
+}
+
+void Main::moveMap(float x, float y)
+{
+	moveMap(sf::Vector2f(x, y));
 }
 
 ////////////////////////////////////////////////////////////////////////////////

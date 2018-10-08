@@ -36,4 +36,4 @@ PREPEND(EDITOR_INCLUDES ${EDITOR_INCLUDE_DIR}
 
 add_executable(${EDITOR_NAME} ${EDITOR_SOURCES} ${EDITOR_INCLUDES})
 target_include_directories(${EDITOR_NAME} PUBLIC ${EDITOR_INCLUDE_DIR})
-target_link_libraries(${EDITOR_NAME} sfml-audio sfml-graphics sfml-system sfml-window)
+target_link_libraries(${EDITOR_NAME} sfml-audio sfml-graphics sfml-system sfml-window sfgui)

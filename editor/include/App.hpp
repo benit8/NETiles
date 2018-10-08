@@ -20,6 +20,7 @@ class App;
 
 #include <SFML/Graphics.hpp>
 #include <SFML/Window.hpp>
+#include <SFGUI/SFGUI.hpp>
 
 #include "Display.hpp"
 #include "States/All.hpp"
@@ -50,4 +51,6 @@ private:
 	std::vector<std::string> m_appArgs;
 
 	std::vector<std::unique_ptr<States::State>> m_states;
+
+	sfg::SFGUI sfgui;
 };

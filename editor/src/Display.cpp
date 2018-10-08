@@ -132,6 +132,11 @@ void Display::zoomView(float factor)
 	m_window.setView(v);
 }
 
+float Display::getZoom(void)
+{
+	return m_zoom;
+}
+
 ////////////////////////////////////////////////////////////////////////////////
 
 sf::Vector2i Display::getMousePosition()

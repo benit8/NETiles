@@ -42,6 +42,7 @@ int App::run()
 
 		Display::clear();
 		currentState().render(Display::getWindow());
+		sfgui.Display(Display::getWindow());
 		Display::refresh();
 
 		if (m_shouldPop) {

@@ -56,12 +56,16 @@ private:
 	void actionToSelection(sf::IntRect tileRegion);
 	void copyCurrentTile();
 
+	void moveMap(sf::Vector2f offset);
+	void moveMap(float x, float y);
+
 	sf::Vector2i mapWinToTileAbs(sf::Vector2i windowPos);
 
 private:
 	Tiles::Map m_tileMap;
 	Tiles::Cursor m_tileCursor;
 	bool m_tileTypesFilter;
+	float m_initialZoomFactor;
 };
 
 }
