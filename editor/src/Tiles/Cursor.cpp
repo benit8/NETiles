@@ -33,15 +33,8 @@ Cursor::Cursor()
 	m_clipboard.setTile(sf::Vector2i(0, 0), sf::Vector2i(49, 2));
 	m_clipboard.setTile(sf::Vector2i(0, 1), sf::Vector2i(49, 3));
 
-	m_tilePosText.setFont(Ressource::Manager::getFont("Consolas"));
-	m_tilePosText.setCharacterSize(24);
-	m_tilePosText.setPosition(8, 0);
-
 	m_texture.setTexture(Ressource::Manager::getTexture("tileset0"), true);
 	m_texture.scale(sf::Vector2f(1 / float(Map::TILE_SIZE), 1 / float(Map::TILE_SIZE)));
-
-	m_tilePosTextBackground.setPosition(0, 0);
-	m_tilePosTextBackground.setFillColor(sf::Color(0, 0, 0, 125));
 
 
 	/// TODO:
@@ -70,39 +63,6 @@ void Cursor::update(const sf::Vector2i &mouseTilePos)
 	}
 
 	m_cursor.setPosition(sf::Vector2f(mouseTilePos));
-
-	updateText();
-}
-
-void Cursor::updateText()
-{
-	std::ostringstream oss;
-
-	oss << "Cursor:" << std::endl;
-	oss << "  at ["
-	    << (m_cursor.getPosition().x)
-	    << ","
-	    << (m_cursor.getPosition().y)
-	    << "]" << std::endl;
-	if (hasSelection()) {
-		oss << "Selection:" << std::endl;
-		oss << "  at ["
-		    << (m_selection.getPosition().x)
-		    << ","
-		    << (m_selection.getPosition().y)
-		    << "]" << std::endl;
-		oss << "size ["
-		    << (m_selection.getSize().x)
-		    << ","
-		    << (m_selection.getSize().y)
-		    << "]";
-	}
-
-	m_tilePosText.setString(oss.str());
-	m_tilePosTextBackground.setSize(sf::Vector2f(
-		m_tilePosText.getLocalBounds().width + m_tilePosText.getPosition().x + 20,
-		m_tilePosText.getLocalBounds().height + m_tilePosText.getPosition().y + 20
-	));
 }
 
 void Cursor::render(sf::RenderWindow &target)
@@ -125,11 +85,6 @@ void Cursor::render(sf::RenderWindow &target)
 
 	if (!m_grab)
 		target.draw(m_cursor);
-
-	if (!m_textureSelect) {
-		Display::drawAbsolute(m_tilePosTextBackground);
-		Display::drawAbsolute(m_tilePosText);
-	}
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -319,6 +274,28 @@ void Cursor::copySelection(Map &from)
 	}
 
 	resetSelection();
+}
+
+////////////////////////////////////////////////////////////////////////////////
+
+std::string Cursor::getDebugText()
+{
+	std::ostringstream oss;
+
+	oss << "Cursor: [" << (m_cursor.getPosition().x) << "," << (m_cursor.getPosition().y) << "]\t";
+	if (hasSelection()) {
+		oss << "Selection: ["
+		    << (m_selection.getPosition().x)
+		    << ","
+		    << (m_selection.getPosition().y)
+		    << "]["
+		    << (m_selection.getSize().x)
+		    << ","
+		    << (m_selection.getSize().y)
+		    << "]";
+	}
+
+	return oss.str();
 }
 
 ////////////////////////////////////////////////////////////////////////////////

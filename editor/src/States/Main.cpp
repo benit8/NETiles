@@ -21,6 +21,21 @@ Main::Main(const std::string &mapPath)
 , m_tileTypesFilter(false)
 , m_initialZoomFactor(2 * Tiles::Map::TILE_SIZE)
 {
+	m_SFGDesktop.SetProperty("Window", "BackgroundColor", "#000000af");
+	m_SFGDesktop.SetProperty("Window", "BorderWidth", 0);
+	m_SFGDesktop.SetProperty("Window > Label", "FontSize", 24.f);
+
+	m_SFGWindow = sfg::Window::Create(sfg::Window::BACKGROUND);
+	m_SFGWindow->SetTitle("DEBUG");
+	m_SFGWindow->SetRequisition(sf::Vector2f(Display::getWindowSize().x, 50.f));
+	m_SFGWindow->SetPosition(sf::Vector2f(0, Display::getWindowSize().y - m_SFGWindow->GetRequisition().y));
+
+	m_SFGLabel = sfg::Label::Create();
+	m_SFGLabel->SetText("");
+
+	m_SFGWindow->Add(m_SFGLabel);
+	m_SFGDesktop.Add(m_SFGWindow);
+
 	m_tileMap.loadFromFile();
 
 	Display::setViewCenter(m_tileMap.getCenter());
@@ -35,6 +50,8 @@ Main::~Main()
 
 void Main::handleEvent(sf::Event &e)
 {
+	m_SFGWindow->HandleEvent(e);
+
 	switch (e.type) {
 		case sf::Event::KeyPressed:
 			onKeyDown(e.key.code);
@@ -62,6 +79,9 @@ void Main::handleEvent(sf::Event &e)
 void Main::update()
 {
 	m_tileCursor.update(mapWinToTileAbs(Display::getMousePosition()));
+	m_SFGLabel->SetText(m_tileCursor.getDebugText());
+
+	m_SFGWindow->Update(0.f);
 }
 
 void Main::render(sf::RenderWindow &target)
@@ -234,6 +254,8 @@ void Main::copyCurrentTile()
 
 	m_tileCursor.setTexturePos(t->tex);
 }
+
+////////////////////////////////////////////////////////////////////////////////
 
 void Main::moveMap(sf::Vector2f offset)
 {

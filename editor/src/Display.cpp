@@ -132,7 +132,7 @@ void Display::zoomView(float factor)
 	m_window.setView(v);
 }
 
-float Display::getZoom(void)
+float Display::getZoom()
 {
 	return m_zoom;
 }

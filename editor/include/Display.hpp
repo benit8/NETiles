@@ -40,7 +40,7 @@ public:
 	static void setViewCenter(int x, int y);
 	static void setViewCenter(const sf::Vector2i &center);
 	static void zoomView(float factor);
-	static float getZoom(void);
+	static float getZoom();
 
 	static sf::Vector2i getMousePosition();
 	static void setMousePosition(int x, int y);

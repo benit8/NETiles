@@ -46,7 +46,6 @@ public:
 	~Cursor();
 
 	void update(const sf::Vector2i &mouseWindowPos);
-	void updateText();
 	void render(sf::RenderWindow &target);
 
 	void setTexturePos(const sf::Vector2i &pos);
@@ -72,6 +71,8 @@ public:
 	void resetSelection();
 	void copySelection(Map &from);
 
+	std::string getDebugText();
+
 private:
 	sf::Vector2f getScaledTexturePos();
 
@@ -87,9 +88,6 @@ private:
 
 	bool m_textureSelect;
 	sf::Sprite m_texture;
-
-	sf::Text m_tilePosText;
-	sf::RectangleShape m_tilePosTextBackground;
 };
 
 }

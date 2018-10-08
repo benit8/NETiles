@@ -22,6 +22,8 @@ namespace States {
 
 #include <SFML/Graphics.hpp>
 #include <SFML/System.hpp>
+#include <SFGUI/SFGUI.hpp>
+#include <SFGUI/Widgets.hpp>
 
 #include "Display.hpp"
 #include "States/State.hpp"
@@ -53,11 +55,11 @@ private:
 	void onMouseUp(const sf::Event::MouseButtonEvent &e);
 	void onMouseScrolled(const sf::Event::MouseWheelScrollEvent &e);
 
-	void actionToSelection(sf::IntRect tileRegion);
-	void copyCurrentTile();
-
 	void moveMap(sf::Vector2f offset);
 	void moveMap(float x, float y);
+
+	void actionToSelection(sf::IntRect tileRegion);
+	void copyCurrentTile();
 
 	sf::Vector2i mapWinToTileAbs(sf::Vector2i windowPos);
 
@@ -66,6 +68,10 @@ private:
 	Tiles::Cursor m_tileCursor;
 	bool m_tileTypesFilter;
 	float m_initialZoomFactor;
+
+	sfg::Desktop m_SFGDesktop;
+	sfg::Window::Ptr m_SFGWindow;
+	sfg::Label::Ptr m_SFGLabel;
 };
 
 }
