@@ -15,6 +15,8 @@ namespace Tiles {
 
 ////////////////////////////////////////////////////////////////////////////////
 
+#include <vector>
+
 #include <SFML/Graphics.hpp>
 #include <SFML/Window.hpp>
 
@@ -31,13 +33,17 @@ public:
 	Tile(const sf::Vector2i &pos, const sf::Vector2i &tex);
 	Tile(const sf::Vector2i &pos, const sf::Vector2i &tex, const sf::Vector2i &telePos);
 
+public:
 	sf::Color getColorType();
 
+public:
 	sf::Vector2i pos;
 	sf::Vector2i tex;
 	bool walkable;
 	bool tele;
 	sf::Vector2i telePos;
 };
+
+typedef std::vector<Tile> TileArray;
 
 }

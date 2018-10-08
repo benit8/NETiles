@@ -1,0 +1,34 @@
+/*
+** EPITECH PROJECT, 2018
+** NETiles
+** File description:
+** Tiles / ILevelWriter.hpp
+*/
+
+#pragma once
+
+////////////////////////////////////////////////////////////////////////////////
+
+namespace Tiles {
+	class ILevelWriter;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+
+#include "Tiles/LevelFactory.hpp"
+
+////////////////////////////////////////////////////////////////////////////////
+
+namespace Tiles
+{
+
+class ILevelWriter
+{
+public:
+	virtual ~ILevelWriter() = default;
+
+public:
+	virtual bool writeMap(const std::string &filename) = 0;
+};
+
+}

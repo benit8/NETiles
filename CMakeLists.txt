@@ -22,6 +22,7 @@ endfunction(PREPEND)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
 
 project(NETiles)
+add_definitions("-std=c++17")
 add_definitions("-W -Wall -Wextra")
 
 ########################################

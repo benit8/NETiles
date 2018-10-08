@@ -19,14 +19,14 @@ namespace Tiles {
 #include <cerrno>
 #include <cstring>
 #include <fstream>
-#include <sstream>
 #include <iostream>
 #include <string>
 
 #include <SFML/Graphics.hpp>
 
-#include "Ressources/Manager.hpp"
-#include "Tiles/Tile.hpp"
+#include "../Ressources/Manager.hpp"
+#include "LevelFactory.hpp"
+#include "Tile.hpp"
 
 ////////////////////////////////////////////////////////////////////////////////
 

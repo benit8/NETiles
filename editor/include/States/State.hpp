@@ -35,7 +35,7 @@ public:
 	virtual void update() = 0;
 	virtual void render(sf::RenderWindow &target) = 0;
 
-	bool isRequestingClose()
+	bool isRequestingClose() const
 	{
 		return m_requestingClose;
 	}

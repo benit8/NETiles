@@ -21,6 +21,9 @@ Main::Main(const std::string &mapPath)
 , m_tileTypesFilter(false)
 , m_initialZoomFactor(2 * Tiles::Map::TILE_SIZE)
 {
+	if (!m_tileMap.loadFromFile())
+		throw std::runtime_error("Could not load map file.");
+
 	m_SFGDesktop.SetProperty("Window", "BackgroundColor", "#000000af");
 	m_SFGDesktop.SetProperty("Window", "BorderWidth", 0);
 	m_SFGDesktop.SetProperty("Window > Label", "FontSize", 24.f);
@@ -35,8 +38,6 @@ Main::Main(const std::string &mapPath)
 
 	m_SFGWindow->Add(m_SFGLabel);
 	m_SFGDesktop.Add(m_SFGWindow);
-
-	m_tileMap.loadFromFile();
 
 	Display::setViewCenter(m_tileMap.getCenter());
 	Display::zoomView(1 / m_initialZoomFactor);

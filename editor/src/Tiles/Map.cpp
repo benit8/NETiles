@@ -31,6 +31,7 @@ Map::Map(const std::string &mapPath)
 
 bool Map::loadFromFile(const std::string &mapPath)
 {
+	// If no arguemnt given, use instance mapPath
 	std::string filepath(mapPath);
 	if (filepath.empty()) {
 		if (!m_mapPath.empty())
@@ -41,43 +42,29 @@ bool Map::loadFromFile(const std::string &mapPath)
 		}
 	}
 
-	std::ifstream ifs(filepath);
-	if (!ifs.is_open()) {
+	// Open a stream
+	std::ifstream stream(filepath);
+	if (!stream.is_open()) {
 		std::cerr << filepath << ": " << std::strerror(errno) << std::endl;
 		return false;
 	}
 
-	std::string line;
-	if (!std::getline(ifs, line))
-		return (false);
-	if (line.compare(0, 3, "LVL") != 0) {
-		std::cerr << filepath << ": Unknown file format" << std::endl;
-		return (false);
-	}
+	ILevelReader *reader = LevelFactory::getReaderFromStream(stream);
+	if (!reader)
+		return false;
 
-	while (std::getline(ifs, line)) {
-		if (line.empty())
-			continue;
+	if (!reader->loadMapFromStream(stream, m_tiles))
+		return false;
 
-		std::istringstream iss(line);
-		Tile t;
-		iss >> t.pos.x;
-		iss >> t.pos.y;
-		iss >> t.tex.x;
-		iss >> t.tex.y;
-		iss >> t.walkable;
 
-		if (iss.peek() != -1) {
-			t.tele = true;
-			iss >> t.telePos.x;
-			iss >> t.telePos.y;
-		}
 
-		iss.ignore(100, '\n');
-		m_tiles.push_back(t);
-	}
+	// std::byte headerMagic[8] = {0};
+	// if (stream.read(headerMagic, 8) != 8) {
+	// 	std::cerr << "An error occured while reading the file" << std::endl;
+	// 	return false;
+	// }
 
-	ifs.close();
+	stream.close();
 	return true;
 }
 
