@@ -17,7 +17,6 @@ PREPEND(EDITOR_SOURCES ${EDITOR_SOURCE_DIR}
 	Tiles/Cursor.cpp
 	Tiles/LevelFactory.cpp
 	Tiles/LevelReaderLVL2.cpp
-	Tiles/LevelReaderLVL2.hpp
 	Tiles/Map.cpp
 	Tiles/Tile.cpp
 )
@@ -35,6 +34,7 @@ PREPEND(EDITOR_INCLUDES ${EDITOR_INCLUDE_DIR}
 	Tiles/ILevelReader.hpp
 	Tiles/ILevelWriter.hpp
 	Tiles/LevelFactory.hpp
+	Tiles/LevelReaderLVL2.hpp
 	Tiles/Map.hpp
 	Tiles/Tile.hpp
 	Utils/Singleton.hpp
