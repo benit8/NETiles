@@ -2,33 +2,38 @@
 ** EPITECH PROJECT, 2018
 ** NETiles
 ** File description:
-** IState.hpp
+** FPSCounter.hpp
 */
 
 #pragma once
 
 ////////////////////////////////////////////////////////////////////////////////
 
-class IState;
+class FPSCounter;
 
 ////////////////////////////////////////////////////////////////////////////////
 
-#include <SFML/Window/Event.hpp>
+#include <SFML/System/Clock.hpp>
 #include <SFML/System/Time.hpp>
 
-#include "EventHandler.hpp"
-
 ////////////////////////////////////////////////////////////////////////////////
 
-class IState
+class FPSCounter
 {
 public:
-	virtual ~IState() = default;
+	FPSCounter();
+	~FPSCounter();
 
 public:
-	virtual void create() = 0;
-	virtual void update(const sf::Time delta) = 0;
-	virtual void handleEvent(sf::Event &e) = 0;
-	virtual void render() = 0;
-	virtual void destroy() = 0;
+	void reset();
+	void addFrameTime(const sf::Time &elapsed);
+	void incrementFrameCount();
+
+	unsigned getFPS() const;
+	unsigned getRealFPS() const;
+
+private:
+	sf::Clock m_clock;
+	sf::Time m_secondCounter;
+	unsigned m_frames, m_realFps, m_fps;
 };

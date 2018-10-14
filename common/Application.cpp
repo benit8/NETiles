@@ -31,8 +31,10 @@ int Application::run()
 	sf::Clock timer;
 	while (isRunning()) {
 		auto &state = m_stateManager.getCurrentState();
+
 		sf::Time elapsed = timer.restart();
 		updateTimer += elapsed;
+		m_fpsCounter.addFrameTime(elapsed);
 
 		bool shouldRender = false;
 		while (updateTimer >= frameTime) {
@@ -46,6 +48,7 @@ int Application::run()
 			m_window.clear();
 			state.render();
 			m_window.display();
+			m_fpsCounter.incrementFrameCount();
 		}
 
 		m_stateManager.tryPop();
@@ -56,14 +59,15 @@ int Application::run()
 
 void Application::launch()
 {
-	m_isRunning = true;
+	m_shouldClose = false;
 
 	m_window.create(
-		sf::VideoMode::getDesktopMode(),
+		// sf::VideoMode::getDesktopMode(),
+		sf::VideoMode(1280, 720),
 		m_binName,
 		sf::Style::Default,
-		sf::ContextSettings(24, 8, 0, 3, 0)
-	);
+		sf::ContextSettings(24, 8, 0, 3, 0));
+	m_fpsCounter.reset();
 }
 
 void Application::processEvents()
@@ -75,7 +79,11 @@ void Application::processEvents()
 		state.handleEvent(e);
 		switch (e.type) {
 			case sf::Event::Closed:
-				m_isRunning = false;
+				m_shouldClose = true;
+				break;
+			case sf::Event::KeyPressed:
+				if (e.key.code == sf::Keyboard::Escape)
+					m_shouldClose = true;
 				break;
 			default:
 				break;
@@ -85,7 +93,7 @@ void Application::processEvents()
 
 bool Application::isRunning() const
 {
-	return m_isRunning && m_window.isOpen();
+	return !m_shouldClose && m_window.isOpen();
 }
 
 sf::RenderWindow &Application::getWindow()

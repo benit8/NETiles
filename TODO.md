@@ -1,7 +1,10 @@
 # NETiles
 
 ## Objectifs
+Documentation (UML)
 Rework common project parts
+- EventHandler
+- ResourceManager
 
 ### Editor
 Rewrite level file structure :

@@ -2,14 +2,14 @@
 ** EPITECH PROJECT, 2018
 ** NETiles
 ** File description:
-** IState.hpp
+** State.hpp
 */
 
 #pragma once
 
 ////////////////////////////////////////////////////////////////////////////////
 
-class IState;
+class State;
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -17,18 +17,26 @@ class IState;
 #include <SFML/System/Time.hpp>
 
 #include "EventHandler.hpp"
+#include "IState.hpp"
 
 ////////////////////////////////////////////////////////////////////////////////
 
-class IState
+class State : public IState
 {
 public:
-	virtual ~IState() = default;
+	~State() override {}
 
 public:
-	virtual void create() = 0;
-	virtual void update(const sf::Time delta) = 0;
-	virtual void handleEvent(sf::Event &e) = 0;
-	virtual void render() = 0;
-	virtual void destroy() = 0;
+	void create() override {}
+	void update(const sf::Time delta) override {}
+	void render() override {}
+	void destroy() override {}
+
+public:
+	void handleEvent(sf::Event &e) {
+		m_eventHandler.handleEvent(e);
+	}
+
+protected:
+	EventHandler m_eventHandler;
 };

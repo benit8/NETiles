@@ -19,6 +19,7 @@ class Application;
 #include <SFML/System/Clock.hpp>
 #include <SFML/Graphics/RenderWindow.hpp>
 
+#include "FPSCounter.hpp"
 #include "StateManager.hpp"
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -43,7 +44,8 @@ private:
 	std::string m_binName;
 	std::vector<std::string> m_args;
 
-	bool m_isRunning;
-	StateManager m_stateManager;
+	bool m_shouldClose;
 	sf::RenderWindow m_window;
+	FPSCounter m_fpsCounter;
+	StateManager m_stateManager;
 };

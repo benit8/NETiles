@@ -8,6 +8,7 @@
 #include "StateManager.hpp"
 
 StateManager::StateManager()
+: m_flags(0)
 {
 }
 

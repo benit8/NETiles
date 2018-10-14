@@ -2,33 +2,31 @@
 ** EPITECH PROJECT, 2018
 ** NETiles
 ** File description:
-** IState.hpp
+** IEventListener.hpp
 */
 
 #pragma once
 
 ////////////////////////////////////////////////////////////////////////////////
 
-class IState;
+class IEventListener;
 
 ////////////////////////////////////////////////////////////////////////////////
 
 #include <SFML/Window/Event.hpp>
-#include <SFML/System/Time.hpp>
-
-#include "EventHandler.hpp"
 
 ////////////////////////////////////////////////////////////////////////////////
 
-class IState
+class IEventListener
 {
 public:
-	virtual ~IState() = default;
+	virtual ~IEventListener() = default;
 
 public:
-	virtual void create() = 0;
-	virtual void update(const sf::Time delta) = 0;
 	virtual void handleEvent(sf::Event &e) = 0;
-	virtual void render() = 0;
-	virtual void destroy() = 0;
+
+	template <typename F, typename... Args>
+	void registerCallback(F callback, Args&&... args) {
+
+	}
 };
