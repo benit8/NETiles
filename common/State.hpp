@@ -34,7 +34,7 @@ public:
 
 public:
 	void handleEvent(sf::Event &e) {
-		m_eventHandler.handleEvent(e);
+		m_eventHandler.dispatchEvent(e);
 	}
 
 protected:

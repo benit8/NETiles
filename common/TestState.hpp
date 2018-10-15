@@ -30,8 +30,8 @@ public:
 	TestState(Application *app)
 	: m_app(app)
 	{
-		m_eventHandler.on(sf::Event::KeyPressed, std::bind(&TestState::closeApp, this, _1, _2), sf::Keyboard::Q, Keyboard::Ctrl);
-		m_eventHandler.on(sf::Event::MouseMoved, std::bind(&TestState::whereIsMouse, this, _1, _2));
+		m_eventHandler.onKeyDown(std::bind(&TestState::closeApp, this, _1, _2), sf::Keyboard::Q, Keyboard::Ctrl);
+		m_eventHandler.onMouseMove(std::bind(&TestState::whereIsMouse, this, _1, _2));
 	}
 
 	~TestState() override
@@ -52,7 +52,7 @@ private:
 	}
 
 	void whereIsMouse(sf::Vector2i pos, sf::Vector2i rel) {
-		std::cout << pos.x << " " << pos.y << std::endl;
+		std::cout << pos.x << " " << pos.y << " | " << rel.x << " " << rel.y << std::endl;
 	}
 
 private:

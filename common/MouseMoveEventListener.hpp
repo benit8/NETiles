@@ -25,9 +25,10 @@ class MouseMoveEventListener;
 
 ////////////////////////////////////////////////////////////////////////////////
 
+typedef std::function<void(sf::Vector2i, sf::Vector2i)> MouseMoveCallback;
+
 class MouseMoveEventListener : public IEventListener
 {
-	typedef std::function<void(sf::Vector2i, sf::Vector2i)> MouseMoveCallback;
 	typedef std::vector<std::pair<sf::IntRect, MouseMoveCallback>> MouseMoveCallbacks;
 
 public:
@@ -51,8 +52,7 @@ public:
 		m_lastPos = pos;
 	}
 
-	template <typename F>
-	void registerCallback(F callback, sf::IntRect zone = sf::IntRect(0, 0, 1280, 720)) {
+	void registerCallback(MouseMoveCallback callback, sf::IntRect zone) {
 		m_callbacks.push_back(std::make_pair(zone, callback));
 	}
 

@@ -37,22 +37,24 @@ public:
 	~EventHandler() {}
 
 public:
-	void handleEvent(sf::Event &e)
+	void dispatchEvent(sf::Event &e)
 	{
 		EventListeners::iterator it = m_eventListeners.find(e.type);
 		if (it != m_eventListeners.end())
 			it->second->handleEvent(e);
 	}
 
-	template <typename F, typename... Args>
-	void on(sf::Event::EventType type, F callback, Args&&... args)
-	{
-		EventListeners::iterator it = m_eventListeners.find(type);
-		if (it == m_eventListeners.end())
-			return;
 
-		it->second->registerCallback(callback, std::forward<Args>(args)...);
-		// https://stackoverflow.com/questions/5871722/how-to-achieve-virtual-template-function-in-c/5872226
+	void onKeyDown(KeyDownCallback callback, int key, int ctrlKeys = 0) {
+		EventListeners::iterator it = m_eventListeners.find(sf::Event::KeyPressed);
+		if (it != m_eventListeners.end())
+			dynamic_cast<KeyDownEventListener *>(it->second.get())->registerCallback(callback, key, ctrlKeys);
+	}
+
+	void onMouseMove(MouseMoveCallback callback, sf::IntRect zone = sf::IntRect(0, 0, 1280, 720)) {
+		EventListeners::iterator it = m_eventListeners.find(sf::Event::MouseMoved);
+		if (it != m_eventListeners.end())
+			dynamic_cast<MouseMoveEventListener *>(it->second.get())->registerCallback(callback, zone);
 	}
 
 private:

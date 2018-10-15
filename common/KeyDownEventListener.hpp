@@ -35,10 +35,10 @@ public:
 	};
 };
 
+typedef std::function<void(int, int)> KeyDownCallback;
 
 class KeyDownEventListener : public IEventListener
 {
-	typedef std::function<void(int, int)> KeyDownCallback;
 	typedef std::map<std::pair<int, int>, std::vector<KeyDownCallback>> KeyDownCallbacks;
 
 public:
@@ -56,8 +56,7 @@ public:
 		}
 	}
 
-	template <typename F>
-	void registerCallback(F callback, int key, int ctrlKeys = 0) {
+	void registerCallback(KeyDownCallback callback, int key, int ctrlKeys = 0) {
 		m_callbacks[std::make_pair(key, ctrlKeys)].push_back(callback);
 	}
 

@@ -13,6 +13,7 @@ class IEventListener;
 
 ////////////////////////////////////////////////////////////////////////////////
 
+#include <iostream>
 #include <SFML/Window/Event.hpp>
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -25,8 +26,10 @@ public:
 public:
 	virtual void handleEvent(sf::Event &e) = 0;
 
-	template <typename F, typename... Args>
-	void registerCallback(F callback, Args&&... args) {
-
-	}
+	// virtual void registerCallback(F callback, Args&&... args) = 0;
+	// template <typename F, typename... Args>
+	// void registerCallback(F callback, Args&&... args)
+	// {
+	// 	std::cout << "yoinkers" << std::endl;
+	// }
 };
