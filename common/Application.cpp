@@ -27,7 +27,6 @@ int Application::run()
 	launch();
 
 	sf::Time updateTimer = sf::Time::Zero;
-	sf::Time frameTime = sf::seconds(1.0 / 60.0);
 	sf::Clock timer;
 	while (isRunning()) {
 		auto &state = m_stateManager.getCurrentState();
@@ -37,16 +36,16 @@ int Application::run()
 		m_fpsCounter.addFrameTime(elapsed);
 
 		bool shouldRender = false;
-		while (updateTimer >= frameTime) {
+		while (updateTimer >= m_fpsCounter.getFrameTime()) {
 			processEvents();
 			state.update(elapsed);
-			updateTimer -= frameTime;
+			updateTimer -= m_fpsCounter.getFrameTime();
 			shouldRender = true;
 		}
 
 		if (shouldRender) {
 			m_window.clear();
-			state.render();
+			state.render(m_window);
 			m_window.display();
 			m_fpsCounter.incrementFrameCount();
 		}
@@ -80,6 +79,9 @@ void Application::processEvents()
 		switch (e.type) {
 			case sf::Event::Closed:
 				m_shouldClose = true;
+				break;
+			case sf::Event::Resized:
+				m_window.setView(sf::View(sf::FloatRect(0, 0, e.size.width, e.size.height)));
 				break;
 			case sf::Event::KeyPressed:
 				if (e.key.code == sf::Keyboard::Escape)

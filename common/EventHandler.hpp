@@ -20,42 +20,42 @@ class EventHandler;
 
 #include <SFML/Window/Event.hpp>
 
-#include "KeyDownEventListener.hpp"
-#include "MouseMoveEventListener.hpp"
+#include "eventListeners/Close.hpp"
+#include "eventListeners/Resize.hpp"
+#include "eventListeners/Focus.hpp"
+#include "eventListeners/Text.hpp"
+#include "eventListeners/Key.hpp"
+#include "eventListeners/MouseWheel.hpp"
+#include "eventListeners/MouseButton.hpp"
+#include "eventListeners/MouseMove.hpp"
+#include "eventListeners/MouseFocus.hpp"
 
 ////////////////////////////////////////////////////////////////////////////////
 
 class EventHandler
 {
-	typedef std::map<int, std::unique_ptr<IEventListener>> EventListeners;
+	typedef std::map<sf::Event::EventType, std::unique_ptr<IEventListener>> EventListeners;
 
 public:
-	EventHandler() {
-		m_eventListeners[sf::Event::KeyPressed] = std::make_unique<KeyDownEventListener>();
-		m_eventListeners[sf::Event::MouseMoved] = std::make_unique<MouseMoveEventListener>();
-	}
-	~EventHandler() {}
+	EventHandler();
+	~EventHandler() = default;
 
 public:
-	void dispatchEvent(sf::Event &e)
-	{
-		EventListeners::iterator it = m_eventListeners.find(e.type);
-		if (it != m_eventListeners.end())
-			it->second->handleEvent(e);
-	}
+	void dispatchEvent(sf::Event &e);
 
-
-	void onKeyDown(KeyDownCallback callback, int key, int ctrlKeys = 0) {
-		EventListeners::iterator it = m_eventListeners.find(sf::Event::KeyPressed);
-		if (it != m_eventListeners.end())
-			dynamic_cast<KeyDownEventListener *>(it->second.get())->registerCallback(callback, key, ctrlKeys);
-	}
-
-	void onMouseMove(MouseMoveCallback callback, sf::IntRect zone = sf::IntRect(0, 0, 1280, 720)) {
-		EventListeners::iterator it = m_eventListeners.find(sf::Event::MouseMoved);
-		if (it != m_eventListeners.end())
-			dynamic_cast<MouseMoveEventListener *>(it->second.get())->registerCallback(callback, zone);
-	}
+	void onClose(CloseCallback callback);
+	void onResize(ResizeCallback callback);
+	void onFocusIn(FocusCallback callback);
+	void onFocusOut(FocusCallback callback);
+	void onText(TextCallback callback);
+	void onKeyDown(KeyCallback callback, sf::Keyboard::Key key, int ctrlKeys = 0);
+	void onKeyUp(KeyCallback callback, sf::Keyboard::Key key, int ctrlKeys = 0);
+	void onMouseWheel(MouseWheelCallback callback, sf::Mouse::Wheel wheel = sf::Mouse::VerticalWheel);
+	void onMouseDown(MouseButtonCallback callback, sf::Mouse::Button button);
+	void onMouseUp(MouseButtonCallback callback, sf::Mouse::Button button);
+	void onMouseMove(MouseMoveCallback callback);
+	void onMouseIn(MouseFocusCallback callback);
+	void onMouseOut(MouseFocusCallback callback);
 
 private:
 	EventListeners m_eventListeners;

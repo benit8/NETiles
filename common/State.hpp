@@ -13,11 +13,10 @@ class State;
 
 ////////////////////////////////////////////////////////////////////////////////
 
-#include <SFML/Window/Event.hpp>
-#include <SFML/System/Time.hpp>
-
-#include "EventHandler.hpp"
 #include "IState.hpp"
+
+// Only for callbacks binding
+using namespace std::placeholders;
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -29,7 +28,7 @@ public:
 public:
 	void create() override {}
 	void update(const sf::Time delta) override {}
-	void render() override {}
+	void render(sf::RenderTarget &renderTarget) override {}
 	void destroy() override {}
 
 public:

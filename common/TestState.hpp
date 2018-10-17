@@ -16,11 +16,10 @@ class TestState;
 #include <functional>
 #include <iostream>
 
+#include <SFML/Graphics.hpp>
+
 #include "Application.hpp"
 #include "State.hpp"
-
-// Never do that, only villains do that
-using namespace std::placeholders;
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -30,8 +29,16 @@ public:
 	TestState(Application *app)
 	: m_app(app)
 	{
-		m_eventHandler.onKeyDown(std::bind(&TestState::closeApp, this, _1, _2), sf::Keyboard::Q, Keyboard::Ctrl);
-		m_eventHandler.onMouseMove(std::bind(&TestState::whereIsMouse, this, _1, _2));
+		m_eventHandler.onMouseMove(std::bind(&TestState::mouseMove, this, _1, _2));
+		m_eventHandler.onMouseDown(std::bind(&TestState::mouseDown, this, _1, _2), sf::Mouse::Left);
+		m_eventHandler.onMouseUp(std::bind(&TestState::mouseUp, this, _1, _2), sf::Mouse::Left);
+		m_eventHandler.onMouseWheel(std::bind(&TestState::mouseScroll, this, _1, _2, _3));
+		m_eventHandler.onMouseIn(std::bind(&TestState::mouseIn, this));
+		m_eventHandler.onMouseOut(std::bind(&TestState::mouseOut, this));
+		m_eventHandler.onText(std::bind(&TestState::text, this, _1));
+
+		m_circle.setRadius(50);
+		m_circle.setFillColor(sf::Color::Green);
 	}
 
 	~TestState() override
@@ -39,22 +46,44 @@ public:
 
 public:
 	void update(const sf::Time delta) override {
-		// std::cout << "update" << std::endl;
 	}
 
-	void render() override {
-		// std::cout << "render" << std::endl;
+	void render(sf::RenderTarget &renderTarget) override {
+		renderTarget.draw(m_circle);
 	}
 
 private:
-	void closeApp(int key, int ctrlKeys) {
-		m_app->getWindow().close();
+	void mouseMove(sf::Vector2i pos, sf::Vector2i rel) {
+		m_circle.setPosition(pos.x - m_circle.getRadius(), pos.y - m_circle.getRadius());
 	}
 
-	void whereIsMouse(sf::Vector2i pos, sf::Vector2i rel) {
-		std::cout << pos.x << " " << pos.y << " | " << rel.x << " " << rel.y << std::endl;
+	void mouseDown(sf::Mouse::Button btn, sf::Vector2i pos) {
+		m_circle.setFillColor(sf::Color::Red);
+	}
+
+	void mouseUp(sf::Mouse::Button btn, sf::Vector2i pos) {
+		m_circle.setFillColor(sf::Color::Green);
+	}
+
+	void mouseScroll(sf::Mouse::Wheel wheel, float delta, sf::Vector2i pos) {
+		m_circle.setRadius(m_circle.getRadius() + delta);
+		m_circle.setPosition(pos.x - m_circle.getRadius(), pos.y - m_circle.getRadius());
+	}
+
+	void mouseIn() {
+		m_circle.setFillColor(sf::Color::Green);
+	}
+
+	void mouseOut() {
+		m_circle.setFillColor(sf::Color::Yellow);
+	}
+
+	void text(unsigned c) {
+		std::cout << "char: " << c << std::endl;
 	}
 
 private:
 	Application *m_app;
+
+	sf::CircleShape m_circle;
 };

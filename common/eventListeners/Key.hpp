@@ -2,24 +2,18 @@
 ** EPITECH PROJECT, 2018
 ** NETiles
 ** File description:
-** KeyDownEventListener.hpp
+** KeyEventListener.hpp
 */
 
 #pragma once
 
 ////////////////////////////////////////////////////////////////////////////////
 
-class KeyDownEventListener;
+class KeyEventListener;
 
 ////////////////////////////////////////////////////////////////////////////////
 
-#include <functional>
-#include <map>
-#include <vector>
-
-#include <SFML/Window/Event.hpp>
-
-#include "IEventListener.hpp"
+#include "../IEventListener.hpp"
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -35,35 +29,35 @@ public:
 	};
 };
 
-typedef std::function<void(int, int)> KeyDownCallback;
+typedef std::function<void(sf::Keyboard::Key, int)> KeyCallback;
 
-class KeyDownEventListener : public IEventListener
+class KeyEventListener : public IEventListener
 {
-	typedef std::map<std::pair<int, int>, std::vector<KeyDownCallback>> KeyDownCallbacks;
+	typedef std::map<std::pair<sf::Keyboard::Key, int>, std::vector<KeyCallback>> KeyCallbacks;
 
 public:
-	KeyDownEventListener() {}
-	~KeyDownEventListener() override {}
+	KeyEventListener() {}
+	~KeyEventListener() override {}
 
 public:
 	void handleEvent(sf::Event &e) override
 	{
 		auto key = keyFromEvent(e.key);
-		KeyDownCallbacks::iterator it = m_callbacks.find(key);
+		KeyCallbacks::iterator it = m_callbacks.find(key);
 		if (it != m_callbacks.end()) {
 			for (unsigned i = 0; i < m_callbacks[key].size(); ++i)
 				(m_callbacks[key][i])(key.first, key.second);
 		}
 	}
 
-	void registerCallback(KeyDownCallback callback, int key, int ctrlKeys = 0) {
+	void registerCallback(KeyCallback callback, sf::Keyboard::Key key, int ctrlKeys = 0) {
 		m_callbacks[std::make_pair(key, ctrlKeys)].push_back(callback);
 	}
 
 private:
-	std::pair<int, int> keyFromEvent(sf::Event::KeyEvent &e)
+	std::pair<sf::Keyboard::Key, int> keyFromEvent(sf::Event::KeyEvent &e)
 	{
-		std::pair<int, int> p;
+		std::pair<sf::Keyboard::Key, int> p;
 
 		p.first = e.code;
 		if (e.control) p.second |= Keyboard::Ctrl;
@@ -75,5 +69,5 @@ private:
 	}
 
 private:
-	KeyDownCallbacks m_callbacks;
+	KeyCallbacks m_callbacks;
 };

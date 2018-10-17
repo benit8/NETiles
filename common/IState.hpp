@@ -13,8 +13,9 @@ class IState;
 
 ////////////////////////////////////////////////////////////////////////////////
 
-#include <SFML/Window/Event.hpp>
 #include <SFML/System/Time.hpp>
+#include <SFML/Window/Event.hpp>
+#include <SFML/Graphics/RenderTarget.hpp>
 
 #include "EventHandler.hpp"
 
@@ -29,6 +30,6 @@ public:
 	virtual void create() = 0;
 	virtual void update(const sf::Time delta) = 0;
 	virtual void handleEvent(sf::Event &e) = 0;
-	virtual void render() = 0;
+	virtual void render(sf::RenderTarget &renderTarget) = 0;
 	virtual void destroy() = 0;
 };
