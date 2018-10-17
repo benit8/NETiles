@@ -23,18 +23,16 @@ using namespace std::placeholders;
 class State : public IState
 {
 public:
+	State() {}
 	~State() override {}
-
-public:
-	void create() override {}
-	void update(const sf::Time delta) override {}
-	void render(sf::RenderTarget &renderTarget) override {}
-	void destroy() override {}
 
 public:
 	void handleEvent(sf::Event &e) {
 		m_eventHandler.dispatchEvent(e);
 	}
+
+	void update(const sf::Time delta) override {}
+	void render(sf::RenderTarget &renderTarget) override {}
 
 protected:
 	EventHandler m_eventHandler;
