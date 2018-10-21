@@ -16,7 +16,7 @@ class MouseMoveEventListener;
 #include <SFML/Graphics/Rect.hpp>
 #include <SFML/System/Vector2.hpp>
 
-#include "../IEventListener.hpp"
+#include "IEventListener.hpp"
 
 ////////////////////////////////////////////////////////////////////////////////
 

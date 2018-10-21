@@ -17,7 +17,7 @@ class StateManager;
 #include <memory>
 #include <vector>
 
-#include "IState.hpp"
+#include "State.hpp"
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -36,16 +36,16 @@ public:
 public:
 	template <typename T, typename... Args>
 	void push(Args&&... args);
-	void push(std::unique_ptr<IState> state);
+	void push(std::unique_ptr<State> state);
 	template <typename T, typename... Args>
 	void swap(Args&&... args);
 	void pop();
 
 	void tryPop();
-	IState &getCurrentState() const;
+	State &getCurrentState() const;
 
 private:
-	std::vector<std::unique_ptr<IState>> m_states;
+	std::vector<std::unique_ptr<State>> m_states;
 	int m_flags;
 };
 

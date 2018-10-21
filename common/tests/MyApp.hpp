@@ -1,0 +1,32 @@
+/*
+** EPITECH PROJECT, 2018
+** NETiles
+** File description:
+** MyApp.hpp
+*/
+
+#pragma once
+
+////////////////////////////////////////////////////////////////////////////////
+
+class MyApp;
+
+////////////////////////////////////////////////////////////////////////////////
+
+#include "../Application.hpp"
+
+#include "TestState.hpp"
+
+////////////////////////////////////////////////////////////////////////////////
+
+class MyApp : public Application
+{
+public:
+	MyApp(int argc, char *argv[])
+	: Application(argc, argv)
+	{
+		m_stateManager.push<TestState>(this);
+		m_appName = "NETiles";
+	}
+
+};

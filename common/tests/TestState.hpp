@@ -18,8 +18,8 @@ class TestState;
 
 #include <SFML/Graphics.hpp>
 
-#include "Application.hpp"
-#include "State.hpp"
+#include "../Application.hpp"
+#include "../State.hpp"
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -35,7 +35,6 @@ public:
 		m_eventHandler.onMouseWheel(std::bind(&TestState::mouseScroll, this, _1, _2, _3));
 		m_eventHandler.onMouseIn(std::bind(&TestState::mouseIn, this));
 		m_eventHandler.onMouseOut(std::bind(&TestState::mouseOut, this));
-		m_eventHandler.onText(std::bind(&TestState::text, this, _1));
 
 		m_circle.setRadius(50);
 		m_circle.setFillColor(sf::Color::Green);
@@ -76,10 +75,6 @@ private:
 
 	void mouseOut() {
 		m_circle.setFillColor(sf::Color::Yellow);
-	}
-
-	void text(unsigned c) {
-		std::cout << "char: " << c << std::endl;
 	}
 
 private:

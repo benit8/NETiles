@@ -40,9 +40,10 @@ private:
 	void launch();
 	void processEvents();
 
-private:
-	std::string m_binName;
+protected:
+	std::string m_appName;
 	std::vector<std::string> m_args;
+	std::string m_binName;
 
 	bool m_shouldClose;
 	sf::RenderWindow m_window;

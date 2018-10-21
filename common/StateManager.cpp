@@ -18,7 +18,7 @@ StateManager::~StateManager()
 }
 
 
-void StateManager::push(std::unique_ptr<IState> state)
+void StateManager::push(std::unique_ptr<State> state)
 {
 	m_states.push_back(std::move(state));
 }
@@ -36,7 +36,7 @@ void StateManager::tryPop()
 	}
 }
 
-IState &StateManager::getCurrentState() const
+State &StateManager::getCurrentState() const
 {
 	if (m_states.empty())
 		throw std::logic_error("StateManager is empty");

@@ -6,13 +6,12 @@
 */
 
 #include "Application.hpp"
-#include "TestState.hpp"
 
 Application::Application(int argc, char *argv[])
 : m_binName(argv[0])
 , m_args(argv + 1, argv + argc)
 {
-	m_stateManager.push<TestState>(this);
+	m_appName = m_binName;
 }
 
 Application::~Application()
@@ -45,15 +44,17 @@ int Application::run()
 
 		if (shouldRender) {
 			m_window.clear();
-			state.render(m_window);
+			 state.render(m_window);
+			 m_fpsCounter.render(m_window);
 			m_window.display();
+
 			m_fpsCounter.incrementFrameCount();
 		}
 
 		m_stateManager.tryPop();
 	}
 
-	return 0;
+	return EXIT_SUCCESS;
 }
 
 void Application::launch()
@@ -63,9 +64,10 @@ void Application::launch()
 	m_window.create(
 		// sf::VideoMode::getDesktopMode(),
 		sf::VideoMode(1280, 720),
-		m_binName,
+		m_appName,
 		sf::Style::Default,
 		sf::ContextSettings(24, 8, 0, 3, 0));
+	m_fpsCounter.setLimit(1000);
 	m_fpsCounter.reset();
 }
 
