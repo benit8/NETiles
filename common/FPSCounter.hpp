@@ -20,20 +20,22 @@ class FPSCounter;
 #include <SFML/System/Clock.hpp>
 #include <SFML/System/Time.hpp>
 
+#include "FontLoader.hpp"
+
 ////////////////////////////////////////////////////////////////////////////////
 
 class FPSCounter
 {
 public:
 	FPSCounter()
-	: m_fpsTextFontPath("/usr/share/fonts/deepin-font-install/Consolas/Consolas.ttf")
+	: m_fpsTextFontName("Consolas")
 	, m_fontLoaded(false)
 	{
 		reset();
 		setLimit(60);
 
-		if (!m_fpsTextFont.loadFromFile(m_fpsTextFontPath))
-			std::cerr << "Could not load font '" << m_fpsTextFontPath << "'" << std::endl;
+		if (!FontLoader::loadFromSystem(m_fpsTextFontName, m_fpsTextFont))
+			std::cerr << "Could not load font '" << m_fpsTextFontName << "'" << std::endl;
 		else {
 			m_fontLoaded = true;
 			m_fpsText.setFont(m_fpsTextFont);
@@ -103,6 +105,6 @@ private:
 
 	sf::Text m_fpsText;
 	sf::Font m_fpsTextFont;
-	std::string m_fpsTextFontPath;
+	std::string m_fpsTextFontName;
 	bool m_fontLoaded;
 };
