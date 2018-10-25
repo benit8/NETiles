@@ -61,14 +61,10 @@ void Application::launch()
 {
 	m_shouldClose = false;
 
-	m_window.create(
-		// sf::VideoMode::getDesktopMode(),
-		sf::VideoMode(1280, 720),
-		m_appName,
-		sf::Style::Default,
-		sf::ContextSettings(24, 8, 0, 3, 0));
+	m_window.create(m_appName, sf::VideoMode(1280, 720));
 	m_fpsCounter.setLimit(1000);
 	m_fpsCounter.reset();
+	Window::setMainWindow(&m_window);
 }
 
 void Application::processEvents()
@@ -98,9 +94,4 @@ void Application::processEvents()
 bool Application::isRunning() const
 {
 	return !m_shouldClose && m_window.isOpen();
-}
-
-sf::RenderWindow &Application::getWindow()
-{
-	return m_window;
 }

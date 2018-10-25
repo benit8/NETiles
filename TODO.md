@@ -3,9 +3,10 @@
 ## Objectifs
 Documentation (UML)
 Rework common project parts
-- ResourceManager
+GUI
 
 ### Editor
+Rewrite editor with new core/
 Rewrite level file structure :
 - Binary format
 - Header magic 'NETwld__'

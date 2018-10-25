@@ -13,7 +13,9 @@ SOURCES	?=	main.cpp			\
 		../Application.cpp		\
 		../EventHandler.cpp		\
 		../FontLoader.cpp		\
-		../StateManager.cpp
+		../StateManager.cpp		\
+		../Window.cpp
+
 SRCS	=	$(addprefix $(SRC_DIR),$(SOURCES))
 OBJS	=	$(SRCS:.cpp=.o)
 

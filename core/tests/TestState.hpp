@@ -23,18 +23,25 @@ class TestState;
 
 ////////////////////////////////////////////////////////////////////////////////
 
+#define BIND(C) std::bind(&(C), this)
+#define BIND1(C) std::bind(&(C), this, _1)
+#define BIND2(C) std::bind(&(C), this, _1, _2)
+#define BIND3(C) std::bind(&(C), this, _1, _2, _3)
+
+////////////////////////////////////////////////////////////////////////////////
+
 class TestState : public State
 {
 public:
 	TestState(Application *app)
 	: m_app(app)
 	{
-		m_eventHandler.onMouseMove(std::bind(&TestState::mouseMove, this, _1, _2));
-		m_eventHandler.onMouseDown(std::bind(&TestState::mouseDown, this, _1, _2), sf::Mouse::Left);
-		m_eventHandler.onMouseUp(std::bind(&TestState::mouseUp, this, _1, _2), sf::Mouse::Left);
-		m_eventHandler.onMouseWheel(std::bind(&TestState::mouseScroll, this, _1, _2, _3));
-		m_eventHandler.onMouseIn(std::bind(&TestState::mouseIn, this));
-		m_eventHandler.onMouseOut(std::bind(&TestState::mouseOut, this));
+		m_eventHandler.onMouseMove(BIND2(TestState::mouseMove));
+		m_eventHandler.onMouseDown(BIND2(TestState::mouseDown), sf::Mouse::Left);
+		m_eventHandler.onMouseUp(BIND2(TestState::mouseUp), sf::Mouse::Left);
+		m_eventHandler.onMouseWheel(BIND3(&TestState::mouseScroll));
+		m_eventHandler.onMouseIn(BIND(&TestState::mouseIn));
+		m_eventHandler.onMouseOut(BIND(&TestState::mouseOut));
 
 		m_circle.setRadius(50);
 		m_circle.setFillColor(sf::Color::Green);
