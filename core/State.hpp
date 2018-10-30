@@ -18,9 +18,7 @@ class State;
 #include <SFML/Graphics/RenderTarget.hpp>
 
 #include "EventHandler.hpp"
-
-// Only for callbacks binding
-using namespace std::placeholders;
+#include "GUI/GUI.hpp"
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -32,6 +30,7 @@ public:
 
 public:
 	void handleEvent(sf::Event &e) {
+		GUI::handleEvent(e);
 		m_eventHandler.dispatchEvent(e);
 	}
 

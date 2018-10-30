@@ -20,15 +20,25 @@ class EventHandler;
 
 #include <SFML/Window/Event.hpp>
 
-#include "eventListeners/Close.hpp"
-#include "eventListeners/Resize.hpp"
-#include "eventListeners/Focus.hpp"
-#include "eventListeners/Text.hpp"
-#include "eventListeners/Key.hpp"
-#include "eventListeners/MouseWheel.hpp"
-#include "eventListeners/MouseButton.hpp"
-#include "eventListeners/MouseMove.hpp"
-#include "eventListeners/MouseFocus.hpp"
+#include "EventListeners/Close.hpp"
+#include "EventListeners/Resize.hpp"
+#include "EventListeners/Focus.hpp"
+#include "EventListeners/Text.hpp"
+#include "EventListeners/Key.hpp"
+#include "EventListeners/MouseWheel.hpp"
+#include "EventListeners/MouseButton.hpp"
+#include "EventListeners/MouseMove.hpp"
+#include "EventListeners/MouseFocus.hpp"
+
+// Only for callbacks binding
+using namespace std::placeholders;
+
+////////////////////////////////////////////////////////////////////////////////
+
+#define BIND(C) std::bind(&C, this)
+#define BIND1(C) std::bind(&C, this, _1)
+#define BIND2(C) std::bind(&C, this, _1, _2)
+#define BIND3(C) std::bind(&C, this, _1, _2, _3)
 
 ////////////////////////////////////////////////////////////////////////////////
 

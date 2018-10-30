@@ -14,7 +14,11 @@ SOURCES	?=	main.cpp			\
 		../EventHandler.cpp		\
 		../FontLoader.cpp		\
 		../StateManager.cpp		\
-		../Window.cpp
+		../Window.cpp			\
+		../GUI/GUI.cpp			\
+		../GUI/Env.cpp			\
+		../GUI/Object.cpp		\
+		../GUI/Box.cpp
 
 SRCS	=	$(addprefix $(SRC_DIR),$(SOURCES))
 OBJS	=	$(SRCS:.cpp=.o)

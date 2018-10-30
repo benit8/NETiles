@@ -20,13 +20,7 @@ class TestState;
 
 #include "../Application.hpp"
 #include "../State.hpp"
-
-////////////////////////////////////////////////////////////////////////////////
-
-#define BIND(C) std::bind(&(C), this)
-#define BIND1(C) std::bind(&(C), this, _1)
-#define BIND2(C) std::bind(&(C), this, _1, _2)
-#define BIND3(C) std::bind(&(C), this, _1, _2, _3)
+#include "../GUI/Box.hpp"
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -39,12 +33,14 @@ public:
 		m_eventHandler.onMouseMove(BIND2(TestState::mouseMove));
 		m_eventHandler.onMouseDown(BIND2(TestState::mouseDown), sf::Mouse::Left);
 		m_eventHandler.onMouseUp(BIND2(TestState::mouseUp), sf::Mouse::Left);
-		m_eventHandler.onMouseWheel(BIND3(&TestState::mouseScroll));
-		m_eventHandler.onMouseIn(BIND(&TestState::mouseIn));
-		m_eventHandler.onMouseOut(BIND(&TestState::mouseOut));
+		m_eventHandler.onMouseWheel(BIND3(TestState::mouseScroll));
+		m_eventHandler.onMouseIn(BIND(TestState::mouseIn));
+		m_eventHandler.onMouseOut(BIND(TestState::mouseOut));
 
 		m_circle.setRadius(50);
 		m_circle.setFillColor(sf::Color::Green);
+
+		GUI::getRoot()->addChild(&m_box);
 	}
 
 	~TestState() override
@@ -56,6 +52,7 @@ public:
 
 	void render(sf::RenderTarget &renderTarget) override {
 		renderTarget.draw(m_circle);
+		GUI::getRoot()->render(renderTarget);
 	}
 
 private:
@@ -88,4 +85,6 @@ private:
 	Application *m_app;
 
 	sf::CircleShape m_circle;
+
+	GUI::Box m_box;
 };

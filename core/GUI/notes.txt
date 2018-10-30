@@ -1,0 +1,19 @@
+To begin, here is a picture of a GUI system I made myself using OpenGL and C++ (made out of curiosity, but it works great, and I understand it better than any other system, and I can add new widgets to it whenever I want to. It's also cross-platform. You can see I used it in a small 2D game editor). http://imgur.com/k8IUu5L
+
+So how did I do it? Here's a basic rundown.
+
+- At the core I have a GUIEnv class. This serves a few functions, but mostly it gives me access to mouse coordinates and clicks, maintains a list of all root windows, and importantly, lets me know which form the mouse is over, or clicking. Forms are organised in a tree structure so you gotta do a tree-search to identify which form you're over. When you click, it sends an event to that form.
+
+- So what is a form? A form is an abstract class that contains a link to it's parent form, a rectangle to define it's position and size, a list of child-forms, and some abstract Update() and Draw() methods. Nothing happens in the Draw() method for the base Form class, but the Update() method updates all the child forms, calls Draw(), and updates it's position to be relative to the parent. (Note, a form's coordinates are always relative to their parent).
+
+- Many extensions of Form. I want to make a button? Simple: class Button : public Form. Then I add all the relevant methods and state management systems. For example, every Form has an OnHover(), OnClick(), OnRelease() methods that are called by GUIEnv. In the Button class, these update a 'state' to be between Idle, Hover, Click, and, as the states change, they send events out.
+
+- Some important details. Use states (in the form of enums) as much as possible. When you want to click and drag a window, it's handy to have the window being in a 'dragged' state, and simply doing a switch-case allows you to easily separate out all the logic. That reminds me, the GUIEnv class should have a 'currentlySelected' form, which should be publicly accessible, so you only have one selected form at a time. This allows you to only move one window at a time, or be able to click over a drop-down box and not accidentally click any buttons behind it.
+
+- Finally, I highly suggest you look into sigslot. It's a very handy way of separating out event senders and receivers so your code doesn't get tangled up. It works as such:
+myButton.OnClick.connect(myWindow, &Window::Close); // connect the button's OnClick signal to the window's Close slot. So when the button is clicked, the OnClick signal is sent (from within the button class), and any objects that are connected to the signal will have their slots called (slots are just methods). In this case, pressing 'myButton' will cause 'myWindow' to close. You can even send parameters through the signals
+
+That's my advice. I gather I've probably missed out on a lot of details, but feel free to ask if you get stuck. It really is a fascinating thing to work on, even if it's not economical.
+
+
+http://sigslot.sourceforge.net/sigslot.pdf
