@@ -22,6 +22,7 @@ SOURCES	?=	main.cpp			\
 
 SRCS	=	$(addprefix $(SRC_DIR),$(SOURCES))
 OBJS	=	$(SRCS:.cpp=.o)
+DEPS	=	$(SRCS:.cpp=.dp)
 
 GLOBAL_LIBS	?=	sfml-system		\
 			sfml-window		\
@@ -83,7 +84,7 @@ prebuild:
 clean:
 	@ for dir in $(LIBS_PATHS); do make -sC $$dir clean; done
 	@ $(PRINT) "$(YELLOW)%-40b$(RESET)" "Deleting object files"
-	@ $(RM) $(OBJS)
+	@ $(RM) $(OBJS) $(DEPS)
 	@ printf "$(GREEN)Done$(RESET)\n"
 
 fclean: clean
@@ -97,9 +98,12 @@ de: fclean debug
 
 .cpp.o:
 	@ $(PRINT) "  [  ]  $(CYAN)%b$(RESET)\\r" $<
-	@ $(CC) -c $< -o $@ $(CXXFLAGS) && \
+	@ $(CC) $(CXXFLAGS) -MMD -MP -o $@ -MF $*.dp -c $< && \
 	  ($(PRINT) "  [$(GREEN)OK$(RESET)]  $(CYAN)%b$(RESET)\n" $<) || \
 	  ($(PRINT) "  [$(RED)XX$(RESET)]  $(CYAN)%b$(RESET)\n" $< ; exit 1)
+
+%.dp: ;
+-include *.dp
 
 dump:
 	@ echo "CXXFLAGS: [$(CXXFLAGS)]"

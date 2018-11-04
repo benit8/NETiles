@@ -23,7 +23,7 @@ namespace GUI {}
 namespace GUI
 {
 
-extern Object *getRoot();
-extern void handleEvent(sf::Event &e);
+	extern Object *getRoot();
+	extern void handleEvent(sf::Event &e);
 
 }

@@ -33,13 +33,6 @@ public:
 public:
 	virtual void draw(sf::RenderTarget &rt) override;
 
-	virtual void onHoverIn() override;
-	virtual void onHoverOut() override;
-	virtual void onClick() override;
-	virtual void onRelease() override;
-	virtual void onDragBegin() override;
-	virtual void onDragEnd() override;
-
 private:
 	sf::RectangleShape m_rect;
 };

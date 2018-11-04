@@ -9,14 +9,6 @@
 
 ////////////////////////////////////////////////////////////////////////////////
 
-#define CHILDREN_CALL(f, ...) \
-	do { \
-		for (std::vector<Object *>::iterator it = m_children.begin(); it != m_children.end(); ++it) \
-			(*it)->f(__VA_ARGS__); \
-	} while (0)
-
-////////////////////////////////////////////////////////////////////////////////
-
 namespace GUI
 {
 
@@ -29,10 +21,10 @@ Object::Object()
 , m_position(0, 0)
 , m_size(0, 0)
 {
-	m_eventHandler.onMouseMove(BIND2(Object::callback_mouseMove));
-	m_eventHandler.onMouseDown(BIND1(Object::callback_mouseDown), sf::Mouse::Left);
-	m_eventHandler.onMouseUp(BIND1(Object::callback_mouseUp), sf::Mouse::Left);
-	m_eventHandler.onText(BIND1(Object::callback_text));
+	m_eventDispatcher.onMouseMove(BIND2(Object::callback_mouseMove));
+	m_eventDispatcher.onMouseDown(BIND2(Object::callback_mouseDown), sf::Mouse::Left);
+	m_eventDispatcher.onMouseUp(BIND2(Object::callback_mouseUp), sf::Mouse::Left);
+	m_eventDispatcher.onText(BIND1(Object::callback_text));
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -41,7 +33,7 @@ void Object::handleEvent(sf::Event &e)
 {
 	for (std::vector<Object *>::iterator it = m_children.begin(); it != m_children.end(); ++it)
 		(*it)->handleEvent(e);
-	m_eventHandler.dispatchEvent(e);
+	m_eventDispatcher.dispatchEvent(e);
 }
 
 void Object::render(sf::RenderTarget &rt)
@@ -49,6 +41,13 @@ void Object::render(sf::RenderTarget &rt)
 	draw(rt);
 	for (std::vector<Object *>::iterator it = m_children.begin(); it != m_children.end(); ++it)
 		(*it)->render(rt);
+}
+
+
+bool Object::doesMouseHover(sf::Vector2i pos)
+{
+	sf::IntRect bounds(m_position, sf::Vector2i(m_size));
+	return bounds.contains(pos);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -60,48 +59,47 @@ void Object::callback_mouseMove(sf::Vector2i pos, sf::Vector2i offset)
 
 	if (m_state == State::Dragged) {
 		move(offset);
-		onDrag();
+		onDrag(pos, offset);
 		return;
 	}
 
-	sf::IntRect bounds(m_position, sf::Vector2i(m_size));
-	bool in = bounds.contains(pos);
+	bool in = doesMouseHover(pos);
 
 	if (in && m_state == State::Clicked && m_mode >= Mode::Draggable) {
 		m_state = State::Dragged;
-		onDragBegin();
+		onDragBegin(pos);
 	}
 	else if (!in && m_state > State::Normal) {
 		m_state = State::Normal;
-		onHoverOut();
+		onHoverOut(pos);
 	}
 	else if (in && m_state == State::Normal) {
 		m_state = State::Hovered;
-		onHoverIn();
+		onHoverIn(pos);
 	}
 }
 
-void Object::callback_mouseDown(sf::Mouse::Button btn)
+void Object::callback_mouseDown(sf::Mouse::Button btn, sf::Vector2i pos)
 {
 	if (m_mode < Mode::Clickable)
 		return;
 
 	if (m_state == State::Hovered) {
 		m_state = State::Clicked;
-		onClick();
+		onClick(btn, pos);
 	}
 }
 
-void Object::callback_mouseUp(sf::Mouse::Button btn)
+void Object::callback_mouseUp(sf::Mouse::Button btn, sf::Vector2i pos)
 {
 	if (m_mode < Mode::Clickable)
 		return;
 
 	if (m_state >= State::Clicked) {
 		if (m_state == State::Dragged)
-			onDragEnd();
-		onRelease();
-		m_state = State::Normal;
+			onDragEnd(pos);
+		onRelease(btn, pos);
+		m_state = doesMouseHover(pos) ? State::Hovered : State::Normal;
 	}
 }
 
@@ -177,7 +175,7 @@ void Object::setPosition(int offsetX, int offsetY) {
 	setPosition(sf::Vector2i(offsetX, offsetY));
 }
 
-void Object::setPosition(sf::Vector2i position) {
+void Object::setPosition(const sf::Vector2i &position) {
 	move(position - m_position);
 }
 
@@ -185,7 +183,7 @@ void Object::move(int offsetX, int offsetY) {
 	move(sf::Vector2i(offsetX, offsetY));
 }
 
-void Object::move(sf::Vector2i offset) {
+void Object::move(const sf::Vector2i &offset) {
 	m_position += offset;
 	for (std::vector<Object *>::iterator it = m_children.begin(); it != m_children.end(); ++it)
 		(*it)->move(offset);
@@ -199,7 +197,7 @@ void Object::setSize(unsigned width, unsigned height) {
 	setSize(sf::Vector2u(width, height));
 }
 
-void Object::setSize(sf::Vector2u size) {
+void Object::setSize(const sf::Vector2u &size) {
 	m_size = size;
 }
 

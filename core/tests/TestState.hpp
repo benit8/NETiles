@@ -30,17 +30,13 @@ public:
 	TestState(Application *app)
 	: m_app(app)
 	{
-		m_eventHandler.onMouseMove(BIND2(TestState::mouseMove));
-		m_eventHandler.onMouseDown(BIND2(TestState::mouseDown), sf::Mouse::Left);
-		m_eventHandler.onMouseUp(BIND2(TestState::mouseUp), sf::Mouse::Left);
-		m_eventHandler.onMouseWheel(BIND3(TestState::mouseScroll));
-		m_eventHandler.onMouseIn(BIND(TestState::mouseIn));
-		m_eventHandler.onMouseOut(BIND(TestState::mouseOut));
-
-		m_circle.setRadius(50);
-		m_circle.setFillColor(sf::Color::Green);
-
 		GUI::getRoot()->addChild(&m_box);
+		m_box.setSize(250, 100);
+
+		// m_box.addChild(m_btn);
+		// m_btn.setPosition(10, 10);
+		// m_btn.setLabel("TEST BUTTON");
+		// m_btn.onClick.connect(this, &TestState::callback_ButtonClicked);
 	}
 
 	~TestState() override
@@ -51,40 +47,17 @@ public:
 	}
 
 	void render(sf::RenderTarget &renderTarget) override {
-		renderTarget.draw(m_circle);
-		GUI::getRoot()->render(renderTarget);
+		m_box.render(renderTarget);
 	}
 
 private:
-	void mouseMove(sf::Vector2i pos, sf::Vector2i rel) {
-		m_circle.setPosition(pos.x - m_circle.getRadius(), pos.y - m_circle.getRadius());
-	}
-
-	void mouseDown(sf::Mouse::Button btn, sf::Vector2i pos) {
-		m_circle.setFillColor(sf::Color::Red);
-	}
-
-	void mouseUp(sf::Mouse::Button btn, sf::Vector2i pos) {
-		m_circle.setFillColor(sf::Color::Green);
-	}
-
-	void mouseScroll(sf::Mouse::Wheel wheel, float delta, sf::Vector2i pos) {
-		m_circle.setRadius(m_circle.getRadius() + delta);
-		m_circle.setPosition(pos.x - m_circle.getRadius(), pos.y - m_circle.getRadius());
-	}
-
-	void mouseIn() {
-		m_circle.setFillColor(sf::Color::Green);
-	}
-
-	void mouseOut() {
-		m_circle.setFillColor(sf::Color::Yellow);
+	void callback_ButtonClicked(sf::Mouse::Button btn, sf::Vector2i pos)
+	{
+		std::cout << "button clicked" << std::endl;
 	}
 
 private:
 	Application *m_app;
-
-	sf::CircleShape m_circle;
-
 	GUI::Box m_box;
+	// GUI::Button m_btn;
 };

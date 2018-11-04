@@ -18,10 +18,13 @@ namespace GUI {
 #include <vector>
 
 #include <SFML/System/Vector2.hpp>
+#include <SFML/Window/Mouse.hpp>
 #include <SFML/Graphics/RenderTarget.hpp>
 
 #include "GUI.hpp"
+#include "Signal.hpp"
 #include "../EventHandler.hpp"
+#include "../Window.hpp"
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -54,18 +57,22 @@ public: // Methods
 	void render(sf::RenderTarget &rt);
 	virtual void draw(sf::RenderTarget &rt) {}
 
-	virtual void onHoverIn() {}
-	virtual void onHoverOut() {}
-	virtual void onClick() {}
-	virtual void onRelease() {}
-	virtual void onDrag() {}
-	virtual void onDragBegin() {}
-	virtual void onDragEnd() {}
+public: // Signals
+	Signal<sf::Vector2i> onHoverIn;
+	Signal<sf::Vector2i> onHoverOut;
+	Signal<sf::Mouse::Button, sf::Vector2i> onClick;
+	Signal<sf::Mouse::Button, sf::Vector2i> onRelease;
+	Signal<sf::Vector2i, sf::Vector2i> onDrag;
+	Signal<sf::Vector2i> onDragBegin;
+	Signal<sf::Vector2i> onDragEnd;
+
+private:
+	bool doesMouseHover(sf::Vector2i mousePos = sf::Mouse::getPosition(*Window::getMainWindow()));
 
 private: // Callbacks
 	void callback_mouseMove(sf::Vector2i pos, sf::Vector2i offset);
-	void callback_mouseDown(sf::Mouse::Button btn);
-	void callback_mouseUp(sf::Mouse::Button btn);
+	void callback_mouseDown(sf::Mouse::Button btn, sf::Vector2i pos);
+	void callback_mouseUp(sf::Mouse::Button btn, sf::Vector2i pos);
 	void callback_text(unsigned unicode);
 
 public: // Getters & Setters
@@ -86,15 +93,15 @@ public: // Getters & Setters
 	int getLeft() const;
 	int getTop() const;
 	void setPosition(int offsetX, int offsetY);
-	void setPosition(sf::Vector2i position);
+	void setPosition(const sf::Vector2i &position);
 	void move(int offsetX, int offsetY);
-	void move(sf::Vector2i offset);
+	void move(const sf::Vector2i &offset);
 
 	sf::Vector2u getSize() const;
 	unsigned getWidth() const;
 	unsigned getHeight() const;
 	void setSize(unsigned width, unsigned height);
-	void setSize(sf::Vector2u size);
+	void setSize(const sf::Vector2u &size);
 	void setWidth(unsigned width);
 	void setHeight(unsigned height);
 
@@ -107,7 +114,7 @@ protected:
 	sf::Vector2i m_position;
 	sf::Vector2u m_size;
 
-	EventHandler m_eventHandler;
+	EventHandler m_eventDispatcher;
 };
 
 }
