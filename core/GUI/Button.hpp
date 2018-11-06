@@ -2,7 +2,7 @@
 ** EPITECH PROJECT, 2018
 ** NETiles
 ** File description:
-** GUI / Box.hpp
+** GUI / Button.hpp
 */
 
 #pragma once
@@ -10,13 +10,18 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 namespace GUI {
-	class Box;
+	class Button;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 
-#include <SFML/Graphics/RectangleShape.hpp>
+#include <string>
 
+#include <SFML/Graphics/RectangleShape.hpp>
+#include <SFML/Graphics/Font.hpp>
+#include <SFML/Graphics/Text.hpp>
+
+#include "../FontLoader.hpp"
 #include "Widget.hpp"
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -24,21 +29,29 @@ namespace GUI {
 namespace GUI
 {
 
-class Box : public Widget
+class Button : public Widget
 {
 public:
-	Box();
-	virtual ~Box() override = default;
+	Button();
+	Button(const std::string &label);
+	virtual ~Button() override = default;
 
 public:
 	virtual void draw(sf::RenderTarget &rt) override;
 
-private:
+	void setLabel(const std::string &text);
+	const std::string getLabel() const;
+
+public:
 	void onHoverIn_callback(sf::Vector2i pos);
 	void onHoverOut_callback(sf::Vector2i pos);
+	void onClick_callback(sf::Mouse::Button btn, sf::Vector2i pos);
+	void onRelease_callback(sf::Mouse::Button btn, sf::Vector2i pos);
 
 private:
 	sf::RectangleShape m_rect;
+	sf::Font m_font;
+	sf::Text m_label;
 };
 
 }

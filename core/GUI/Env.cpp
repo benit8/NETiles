@@ -16,8 +16,8 @@ namespace GUI
 
 namespace Env
 {
-	Object root;
-	Object *target = nullptr;
+	Widget root;
+	Widget *target = nullptr;
 }
 
 ////////////////////////////////////////////////////////////////////////////////

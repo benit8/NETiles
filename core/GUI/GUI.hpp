@@ -16,14 +16,14 @@ namespace GUI {}
 #include <SFML/Window/Event.hpp>
 
 #include "Env.hpp"
-#include "Object.hpp"
+#include "Widget.hpp"
 
 ////////////////////////////////////////////////////////////////////////////////
 
 namespace GUI
 {
 
-	extern Object *getRoot();
+	extern Widget *getRoot();
 	extern void handleEvent(sf::Event &e);
 
 }

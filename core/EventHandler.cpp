@@ -27,7 +27,7 @@ EventHandler::EventHandler()
 
 void EventHandler::dispatchEvent(sf::Event &e)
 {
-	EventListeners::iterator it = m_eventListeners.find(e.type);
+	auto it = m_eventListeners.find(e.type);
 	if (it != m_eventListeners.end())
 		it->second->handleEvent(e);
 }
@@ -35,91 +35,91 @@ void EventHandler::dispatchEvent(sf::Event &e)
 
 void EventHandler::onClose(CloseCallback callback)
 {
-	EventListeners::iterator it = m_eventListeners.find(sf::Event::Closed);
+	auto it = m_eventListeners.find(sf::Event::Closed);
 	if (it != m_eventListeners.end())
 		dynamic_cast<CloseEventListener*>(it->second.get())->registerCallback(callback);
 }
 
 void EventHandler::onResize(ResizeCallback callback)
 {
-	EventListeners::iterator it = m_eventListeners.find(sf::Event::Resized);
+	auto it = m_eventListeners.find(sf::Event::Resized);
 	if (it != m_eventListeners.end())
 		dynamic_cast<ResizeEventListener*>(it->second.get())->registerCallback(callback);
 }
 
 void EventHandler::onFocusIn(FocusCallback callback)
 {
-	EventListeners::iterator it = m_eventListeners.find(sf::Event::GainedFocus);
+	auto it = m_eventListeners.find(sf::Event::GainedFocus);
 	if (it != m_eventListeners.end())
 		dynamic_cast<FocusEventListener*>(it->second.get())->registerCallback(callback);
 }
 
 void EventHandler::onFocusOut(FocusCallback callback)
 {
-	EventListeners::iterator it = m_eventListeners.find(sf::Event::LostFocus);
+	auto it = m_eventListeners.find(sf::Event::LostFocus);
 	if (it != m_eventListeners.end())
 		dynamic_cast<FocusEventListener*>(it->second.get())->registerCallback(callback);
 }
 
 void EventHandler::onText(TextCallback callback)
 {
-	EventListeners::iterator it = m_eventListeners.find(sf::Event::TextEntered);
+	auto it = m_eventListeners.find(sf::Event::TextEntered);
 	if (it != m_eventListeners.end())
 		dynamic_cast<TextEventListener*>(it->second.get())->registerCallback(callback);
 }
 
 void EventHandler::onKeyDown(KeyCallback callback, sf::Keyboard::Key key, int ctrlKeys)
 {
-	EventListeners::iterator it = m_eventListeners.find(sf::Event::KeyPressed);
+	auto it = m_eventListeners.find(sf::Event::KeyPressed);
 	if (it != m_eventListeners.end())
 		dynamic_cast<KeyEventListener*>(it->second.get())->registerCallback(callback, key, ctrlKeys);
 }
 
 void EventHandler::onKeyUp(KeyCallback callback, sf::Keyboard::Key key, int ctrlKeys)
 {
-	EventListeners::iterator it = m_eventListeners.find(sf::Event::KeyReleased);
+	auto it = m_eventListeners.find(sf::Event::KeyReleased);
 	if (it != m_eventListeners.end())
 		dynamic_cast<KeyEventListener*>(it->second.get())->registerCallback(callback, key, ctrlKeys);
 }
 
 void EventHandler::onMouseWheel(MouseWheelCallback callback, sf::Mouse::Wheel wheel)
 {
-	EventListeners::iterator it = m_eventListeners.find(sf::Event::MouseWheelScrolled);
+	auto it = m_eventListeners.find(sf::Event::MouseWheelScrolled);
 	if (it != m_eventListeners.end())
 		dynamic_cast<MouseWheelEventListener*>(it->second.get())->registerCallback(callback, wheel);
 }
 
 void EventHandler::onMouseDown(MouseButtonCallback callback, sf::Mouse::Button button)
 {
-	EventListeners::iterator it = m_eventListeners.find(sf::Event::MouseButtonPressed);
+	auto it = m_eventListeners.find(sf::Event::MouseButtonPressed);
 	if (it != m_eventListeners.end())
 		dynamic_cast<MouseButtonEventListener*>(it->second.get())->registerCallback(callback, button);
 }
 
 void EventHandler::onMouseUp(MouseButtonCallback callback, sf::Mouse::Button button)
 {
-	EventListeners::iterator it = m_eventListeners.find(sf::Event::MouseButtonReleased);
+	auto it = m_eventListeners.find(sf::Event::MouseButtonReleased);
 	if (it != m_eventListeners.end())
 		dynamic_cast<MouseButtonEventListener*>(it->second.get())->registerCallback(callback, button);
 }
 
 void EventHandler::onMouseMove(MouseMoveCallback callback)
 {
-	EventListeners::iterator it = m_eventListeners.find(sf::Event::MouseMoved);
+	auto it = m_eventListeners.find(sf::Event::MouseMoved);
 	if (it != m_eventListeners.end())
 		dynamic_cast<MouseMoveEventListener*>(it->second.get())->registerCallback(callback);
 }
 
 void EventHandler::onMouseIn(MouseFocusCallback callback)
 {
-	EventListeners::iterator it = m_eventListeners.find(sf::Event::MouseEntered);
+	auto it = m_eventListeners.find(sf::Event::MouseEntered);
 	if (it != m_eventListeners.end())
 		dynamic_cast<MouseFocusEventListener*>(it->second.get())->registerCallback(callback);
 }
 
 void EventHandler::onMouseOut(MouseFocusCallback callback)
 {
-	EventListeners::iterator it = m_eventListeners.find(sf::Event::MouseLeft);
+	auto it = m_eventListeners.find(sf::Event::MouseLeft);
 	if (it != m_eventListeners.end())
 		dynamic_cast<MouseFocusEventListener*>(it->second.get())->registerCallback(callback);
 }

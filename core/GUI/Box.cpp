@@ -16,16 +16,29 @@ namespace GUI
 
 Box::Box()
 {
-	m_rect.setFillColor(sf::Color(0, 0, 0, 100));
+	m_rect.setFillColor(sf::Color(255, 255, 255, 100));
+
+	// onHoverIn.connect(this, &Box::onHoverIn_callback);
+	// onHoverOut.connect(this, &Box::onHoverOut_callback);
 }
 
 
 void Box::draw(sf::RenderTarget &rt)
 {
-	m_rect.setSize(sf::Vector2f(m_size.x, m_size.y));
-	m_rect.setPosition(sf::Vector2f(m_position));
+	m_rect.setSize(getSize());
+	m_rect.setPosition(getPosition());
 
 	rt.draw(m_rect);
+}
+
+void Box::onHoverIn_callback(sf::Vector2i pos)
+{
+	m_rect.setFillColor(sf::Color::White);
+}
+
+void Box::onHoverOut_callback(sf::Vector2i pos)
+{
+	m_rect.setFillColor(sf::Color(255, 255, 255, 100));
 }
 
 ////////////////////////////////////////////////////////////////////////////////

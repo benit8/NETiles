@@ -17,7 +17,7 @@ namespace GUI {
 ////////////////////////////////////////////////////////////////////////////////
 
 #include <functional>
-#include <forward_list>
+#include <list>
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -27,29 +27,55 @@ namespace GUI
 template <typename... Args>
 class Signal
 {
-	typedef std::function<void(Args...)> Connection;
+	class IConnection
+	{
+	public:
+		virtual void emit(Args...) = 0;
+	};
+
+	////////////////////////////////////////
+
+	template <typename T>
+	class Connection : public IConnection
+	{
+	public:
+		Connection(T *classPtr, void (T::*classMember)(Args...))
+		: m_classPtr(classPtr)
+		, m_classMember(classMember)
+		{}
+
+		~Connection() = default;
+
+		void emit(Args... args) override {
+			(m_classPtr->*m_classMember)(args...);
+		}
+
+	private:
+		T *m_classPtr;
+		void (T::*m_classMember)(Args...);
+	};
 
 public:
 	Signal() = default;
-	~Signal() = default;
+	~Signal() {
+		for (auto it = m_connections.begin(); it != m_connections.end(); ++it)
+			delete *it;
+	}
 
 public:
 	template <typename T>
 	void connect(T *classPtr, void (T::*classMember)(Args...)) {
-		m_connections.push_back(std::bind(classMember, classPtr));
+		auto c = new Connection<T>(classPtr, classMember);
+		m_connections.push_back(c);
 	}
 
 	void emit(Args... args) {
 		for (auto it = m_connections.begin(); it != m_connections.end(); ++it)
-			(*it)(args...);
-	}
-
-	void operator()(Args... args) {
-		emit(args...);
+			(*it)->emit(args...);
 	}
 
 private:
-	std::forward_list<Connection> m_connections;
+	std::list<IConnection *> m_connections;
 };
 
 }

@@ -29,7 +29,7 @@ public:
 	virtual ~State() = default;
 
 public:
-	void handleEvent(sf::Event &e) {
+	virtual void handleEvent(sf::Event &e) {
 		GUI::handleEvent(e);
 		m_eventHandler.dispatchEvent(e);
 	}

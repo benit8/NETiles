@@ -15,7 +15,7 @@ namespace GUI {
 
 ////////////////////////////////////////////////////////////////////////////////
 
-#include "Object.hpp"
+#include "Widget.hpp"
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -23,7 +23,7 @@ namespace GUI
 {
 	namespace Env
 	{
-		extern Object root;
-		extern Object *target;
+		extern Widget root;
+		extern Widget *target;
 	}
 }

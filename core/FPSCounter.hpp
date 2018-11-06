@@ -39,8 +39,7 @@ public:
 		else {
 			m_fontLoaded = true;
 			m_fpsText.setFont(m_fpsTextFont);
-			m_fpsText.setCharacterSize(18);
-			m_fpsText.setPosition(8, 4);
+			m_fpsText.setCharacterSize(16);
 			m_fpsText.setFillColor(sf::Color::White);
 		}
 	}
@@ -76,6 +75,7 @@ public:
 	void render(sf::RenderTarget &rt) {
 		if (m_fontLoaded) {
 			m_fpsText.setString(std::to_string(m_fps) + " FPS");
+			m_fpsText.setPosition(rt.getSize().x - m_fpsText.getLocalBounds().width - 8, 4);
 			rt.draw(m_fpsText);
 		}
 	}
