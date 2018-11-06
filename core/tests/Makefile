@@ -13,6 +13,7 @@ CC	=	g++
 NAME	=	a.out
 
 SRCS	=	main.cpp			\
+		TestState.cpp			\
 		../Application.cpp		\
 		../EventHandler.cpp		\
 		../FontLoader.cpp		\

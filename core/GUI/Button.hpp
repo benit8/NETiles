@@ -39,8 +39,14 @@ public:
 public:
 	virtual void draw(sf::RenderTarget &rt) override;
 
-	void setLabel(const std::string &text);
+	void setLabel(const std::string &text, bool resize = true);
 	const std::string getLabel() const;
+	void setLabelSize(unsigned int size, bool resize = true);
+
+	virtual void setSize(const sf::Vector2f &size);
+
+private:
+	void centerLabel();
 
 public:
 	void onHoverIn_callback(sf::Vector2i pos);

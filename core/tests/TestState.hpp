@@ -28,34 +28,15 @@ class TestState;
 class TestState : public State
 {
 public:
-	TestState(Application *app)
-	: m_app(app)
-	{
-		GUI::getRoot()->addChild(&m_box);
-		m_box.setSize(250, 100);
-		m_box.setMode(GUI::Widget::Mode::Draggable);
-
-		m_box.addChild(&m_btn);
-		m_btn.setLabel("TEST BUTTON");
-		m_btn.setPosition(10, 10);
-		m_btn.onClick.connect(this, &TestState::onClick_callback);
-	}
-
-	~TestState() override
-	{}
+	TestState(Application *app);
+	~TestState() override = default;
 
 public:
-	void update(const sf::Time delta) override {
-	}
-
-	void render(sf::RenderTarget &renderTarget) override {
-		m_box.render(renderTarget);
-	}
+	void update(const sf::Time delta) override;
+	void render(sf::RenderTarget &renderTarget) override;
 
 private:
-	void onClick_callback(sf::Mouse::Button btn, sf::Vector2i pos) {
-		std::cout << "button clicked" << std::endl;
-	}
+	void onClick_callback(sf::Mouse::Button btn, sf::Vector2i pos);
 
 private:
 	Application *m_app;
