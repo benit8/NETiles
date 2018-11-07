@@ -35,14 +35,15 @@ public:
 	int run();
 
 	bool isRunning() const;
+	StateManager &getStateManager();
 
 private:
 	void launch();
 	void processEvents();
 
 protected:
-	std::string m_appName;
 	std::vector<std::string> m_args;
+	std::string m_appName;
 	std::string m_binName;
 
 	bool m_shouldClose;

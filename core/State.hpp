@@ -30,13 +30,14 @@ public:
 
 public:
 	virtual void handleEvent(sf::Event &e) {
-		GUI::handleEvent(e);
+		m_guiRoot.handleEvent(e);
 		m_eventHandler.dispatchEvent(e);
 	}
 
-	virtual void update(const sf::Time delta) {}
+	virtual void update(const sf::Time &delta) {}
 	virtual void render(sf::RenderTarget &renderTarget) {}
 
 protected:
 	EventHandler m_eventHandler;
+	GUI::Widget m_guiRoot;
 };

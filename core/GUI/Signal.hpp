@@ -30,6 +30,7 @@ class Signal
 	class IConnection
 	{
 	public:
+		virtual ~IConnection() = default;
 		virtual void emit(Args...) = 0;
 	};
 
@@ -44,7 +45,7 @@ class Signal
 		, m_classMember(classMember)
 		{}
 
-		~Connection() = default;
+		~Connection() override = default;
 
 		void emit(Args... args) override {
 			(m_classPtr->*m_classMember)(args...);

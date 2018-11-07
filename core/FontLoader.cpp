@@ -66,4 +66,5 @@ bool FontLoader::searchFonts()
 	}
 
 	s_loaded = true;
+	return true;
 }

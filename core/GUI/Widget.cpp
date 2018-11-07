@@ -25,6 +25,13 @@ Widget::Widget()
 	m_eventDispatcher.onText(BIND1(Widget::callback_text));
 }
 
+Widget::~Widget()
+{
+	for (auto it = m_children.begin(); it != m_children.end(); ++it)
+		(*it)->setParent(nullptr);
+	m_children.clear();
+}
+
 ////////////////////////////////////////////////////////////////////////////////
 
 void Widget::handleEvent(sf::Event &e)
@@ -32,17 +39,14 @@ void Widget::handleEvent(sf::Event &e)
 	for (auto it = m_children.begin(); it != m_children.end(); ++it)
 		(*it)->handleEvent(e);
 
-	if (this != GUI::getRoot())
-		m_eventDispatcher.dispatchEvent(e);
+	m_eventDispatcher.dispatchEvent(e);
 }
 
 void Widget::render(sf::RenderTarget &rt)
 {
-	if (this != GUI::getRoot()) {
-		move(getParentOffset());
-		draw(rt);
-		move(-getParentOffset());
-	}
+	move(getParentOffset());
+	draw(rt);
+	move(-getParentOffset());
 
 	for (auto it = m_children.begin(); it != m_children.end(); ++it) {
 		(*it)->render(rt);
@@ -154,6 +158,15 @@ void Widget::setParent(Widget *parent) {
 void Widget::addChild(Widget *child) {
 	m_children.push_back(child);
 	child->setParent(this);
+}
+
+void Widget::removeChild(Widget *child) {
+	auto it = std::find(m_children.begin(), m_children.end(), child);
+	if (it == m_children.end())
+		return;
+
+	child->setParent(nullptr);
+	m_children.remove(child);
 }
 
 

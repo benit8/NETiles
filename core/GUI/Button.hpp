@@ -34,7 +34,6 @@ class Button : public Widget
 public:
 	Button();
 	Button(const std::string &label);
-	virtual ~Button() override = default;
 
 public:
 	virtual void draw(sf::RenderTarget &rt) override;

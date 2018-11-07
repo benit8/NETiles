@@ -23,7 +23,6 @@ namespace GUI
 {
 	namespace Env
 	{
-		extern Widget root;
 		extern Widget *target;
 	}
 }

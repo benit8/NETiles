@@ -28,14 +28,9 @@ class Box : public Widget
 {
 public:
 	Box();
-	virtual ~Box() override = default;
 
 public:
 	virtual void draw(sf::RenderTarget &rt) override;
-
-private:
-	void onHoverIn_callback(sf::Vector2i pos);
-	void onHoverOut_callback(sf::Vector2i pos);
 
 private:
 	sf::RectangleShape m_rect;

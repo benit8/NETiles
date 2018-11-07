@@ -13,17 +13,16 @@ namespace GUI {}
 
 ////////////////////////////////////////////////////////////////////////////////
 
-#include <SFML/Window/Event.hpp>
-
 #include "Env.hpp"
 #include "Widget.hpp"
+#include "Box.hpp"
+#include "Button.hpp"
 
 ////////////////////////////////////////////////////////////////////////////////
 
 namespace GUI
 {
 
-	extern Widget *getRoot();
-	extern void handleEvent(sf::Event &e);
+	extern Widget *getTarget();
 
 }

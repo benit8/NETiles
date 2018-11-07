@@ -8,8 +8,8 @@
 #include "Application.hpp"
 
 Application::Application(int argc, char *argv[])
-: m_binName(argv[0])
-, m_args(argv + 1, argv + argc)
+: m_args(argv + 1, argv + argc)
+, m_binName(argv[0])
 {
 	m_appName = m_binName;
 }
@@ -94,4 +94,9 @@ void Application::processEvents()
 bool Application::isRunning() const
 {
 	return !m_shouldClose && m_window.isOpen();
+}
+
+StateManager &Application::getStateManager()
+{
+	return m_stateManager;
 }

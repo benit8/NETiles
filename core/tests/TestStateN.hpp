@@ -2,14 +2,14 @@
 ** EPITECH PROJECT, 2018
 ** NETiles
 ** File description:
-** TestState.hpp
+** TestStateN.hpp
 */
 
 #pragma once
 
 ////////////////////////////////////////////////////////////////////////////////
 
-class TestState;
+class TestStateN;
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -22,31 +22,25 @@ class TestState;
 #include "../State.hpp"
 #include "../Window.hpp"
 #include "../GUI/Box.hpp"
-#include "../GUI/Button.hpp"
-#include "TestStateN.hpp"
 
 ////////////////////////////////////////////////////////////////////////////////
 
-class TestState : public State
+class TestStateN : public State
 {
 public:
-	TestState(Application *app);
-	~TestState() override = default;
+	TestStateN(Application *app, int n);
+	~TestStateN() override = default;
 
 public:
 	void update(const sf::Time &delta) override;
 	void render(sf::RenderTarget &renderTarget) override;
 
 private:
-	void onClick_callback1(sf::Mouse::Button btn, sf::Vector2i pos);
-	void onClick_callback2(sf::Mouse::Button btn, sf::Vector2i pos);
-	void onClick_callback3(sf::Mouse::Button btn, sf::Vector2i pos);
-	void onResize_callback(sf::Vector2u pos);
+	void quit(sf::Mouse::Button btn, sf::Vector2i pos);
 
 private:
 	Application *m_app;
 	GUI::Box m_box;
-	GUI::Button m_btn1;
-	GUI::Button m_btn2;
-	GUI::Button m_btn3;
+
+	int m_n;
 };

@@ -50,7 +50,7 @@ public: // Typedefs & Enums
 
 public: // Con/Destructor
 	Widget();
-	virtual ~Widget() = default;
+	virtual ~Widget();
 
 public: // Methods
 	virtual void handleEvent(sf::Event &e);
@@ -83,6 +83,7 @@ public: // Getters & Setters
 	const std::list<Widget *> &getChildren() const;
 	void setParent(Widget *parent);
 	void addChild(Widget *child);
+	void removeChild(Widget *child);
 
 	virtual bool isHovered() const;
 	virtual bool isClicked() const;

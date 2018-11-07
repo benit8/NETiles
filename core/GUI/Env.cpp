@@ -16,7 +16,6 @@ namespace GUI
 
 namespace Env
 {
-	Widget root;
 	Widget *target = nullptr;
 }
 

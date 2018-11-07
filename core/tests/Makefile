@@ -14,6 +14,7 @@ NAME	=	a.out
 
 SRCS	=	main.cpp			\
 		TestState.cpp			\
+		TestStateN.cpp			\
 		../Application.cpp		\
 		../EventHandler.cpp		\
 		../FontLoader.cpp		\
