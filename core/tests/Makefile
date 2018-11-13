@@ -17,13 +17,15 @@ SRCS	=	main.cpp			\
 		TestStateN.cpp			\
 		../Application.cpp		\
 		../EventHandler.cpp		\
+		../FPSCounter.cpp		\
 		../FontLoader.cpp		\
 		../StateManager.cpp		\
 		../Window.cpp			\
 		../GUI/Env.cpp			\
 		../GUI/Widget.cpp		\
 		../GUI/Box.cpp			\
-		../GUI/Button.cpp
+		../GUI/Button.cpp		\
+		../GUI/Input.cpp
 
 OBJS	=	$(SRCS:.cpp=.o)
 

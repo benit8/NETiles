@@ -44,7 +44,7 @@ private:
 	~FontLoader();
 
 public:
-	static bool loadFromSystem(const std::string &name, sf::Font &font);
+	static bool loadFromSystem(sf::Font &font, const std::string &name);
 
 private:
 	static bool searchFonts();

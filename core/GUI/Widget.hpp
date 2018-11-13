@@ -56,6 +56,7 @@ public: // Methods
 	virtual void handleEvent(sf::Event &e, bool isRoot = false);
 	virtual void render(sf::RenderTarget &rt, bool isRoot = false);
 	virtual void draw(sf::RenderTarget &rt) {}
+	virtual void update() {}
 
 public: // Signals
 	Signal<sf::Vector2i> onHoverIn;
@@ -66,6 +67,8 @@ public: // Signals
 	Signal<sf::Vector2i> onDragBegin;
 	Signal<sf::Vector2i> onDragEnd;
 	Signal<unsigned> onTextInput;
+	Signal<> onFocusIn;
+	Signal<> onFocusOut;
 
 private:
 	bool isMouseHover(sf::Vector2i mouse);
@@ -85,32 +88,33 @@ public: // Getters & Setters
 	void addChild(Widget *child);
 	void removeChild(Widget *child);
 
-	virtual bool isHovered() const;
-	virtual bool isClicked() const;
-	virtual bool isDragged() const;
-	virtual bool isHoverable() const;
-	virtual bool isClickable() const;
-	virtual bool isDraggable() const;
-	virtual void setMode(Mode mode);
+	bool isTargeted() const;
+	bool isHovered() const;
+	bool isClicked() const;
+	bool isDragged() const;
+	bool isHoverable() const;
+	bool isClickable() const;
+	bool isDraggable() const;
+	void setMode(Mode mode);
 
 	virtual sf::FloatRect getZone() const;
 	virtual void setZone(const sf::FloatRect &zone);
 
 	virtual sf::Vector2f getPosition() const;
-	virtual float left() const;
-	virtual float top() const;
+	float left() const;
+	float top() const;
 	virtual void setPosition(const sf::Vector2f &position);
 	virtual void move(const sf::Vector2f &offset);
-	virtual void setPosition(float offsetX, float offsetY);
-	virtual void move(float offsetX, float offsetY);
+	void setPosition(float offsetX, float offsetY);
+	void move(float offsetX, float offsetY);
 
 	virtual sf::Vector2f getSize() const;
-	virtual float width() const;
-	virtual float height() const;
+	float width() const;
+	float height() const;
 	virtual void setSize(const sf::Vector2f &size);
-	virtual void setSize(float width, float height);
-	virtual void setWidth(float width);
-	virtual void setHeight(float height);
+	void setSize(float width, float height);
+	void setWidth(float width);
+	void setHeight(float height);
 
 protected:
 	Widget *m_parent;

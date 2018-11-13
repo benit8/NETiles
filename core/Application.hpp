@@ -35,6 +35,7 @@ public:
 	int run();
 
 	bool isRunning() const;
+	void close();
 
 private:
 	void launch();

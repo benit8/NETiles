@@ -17,13 +17,12 @@ namespace GUI
 
 Button::Button()
 {
-	m_mode = Mode::Clickable;
 	m_rect.setFillColor(sf::Color::Black);
 	m_rect.setOutlineThickness(1);
 	m_rect.setOutlineColor(sf::Color(170, 170, 170));
 	m_rect.setSize(sf::Vector2f(30, 10));
 
-	if (!FontLoader::loadFromSystem("Noto Sans", m_font))
+	if (!FontLoader::loadFromSystem(m_font, "Noto Sans"))
 		std::cerr << "Failed to load GUI::Button font" << std::endl;
 	m_label.setFont(m_font);
 

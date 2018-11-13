@@ -47,7 +47,6 @@ public:
 private:
 	void centerLabel();
 
-public:
 	void onHoverIn_callback(sf::Vector2i pos);
 	void onHoverOut_callback(sf::Vector2i pos);
 	void onClick_callback(sf::Mouse::Button btn, sf::Vector2i pos);

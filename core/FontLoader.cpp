@@ -11,7 +11,7 @@
 bool FontLoader::s_loaded = false;
 std::vector<FontLoader::FontInfo> FontLoader::s_fonts;
 
-bool FontLoader::loadFromSystem(const std::string &name, sf::Font &font)
+bool FontLoader::loadFromSystem(sf::Font &font, const std::string &name)
 {
 	searchFonts();
 

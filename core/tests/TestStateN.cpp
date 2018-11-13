@@ -19,7 +19,7 @@ TestStateN::TestStateN(Application *app, int n)
 	m_box.setSize(Window::getMainWindow()->getWidth(), Window::getMainWindow()->getHeight());
 	m_box.setBackgroundColor(sf::Color(25 + 75 * n, 0, 0, 100));
 
-	FontLoader::loadFromSystem("Consolas", m_font);
+	FontLoader::loadFromSystem(m_font, "Consolas");
 	m_text.setFont(m_font);
 	m_text.setString(std::to_string(n));
 	m_text.setCharacterSize(150);
@@ -27,7 +27,7 @@ TestStateN::TestStateN(Application *app, int n)
 	sf::FloatRect textBounds = m_text.getLocalBounds();
 	m_text.setPosition({
 		(m_box.width() - textBounds.width) / 2.f,
-		(m_box.height() - textBounds.height) / 2.f
+		(m_box.height() - textBounds.height) / 2.f - textBounds.top
 	});
 }
 

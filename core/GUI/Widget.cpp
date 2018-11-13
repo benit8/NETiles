@@ -117,7 +117,13 @@ void Widget::callback_mouseDown(sf::Mouse::Button btn, sf::Vector2i pos)
 	if (isHovered()) {
 		onClick.emit(btn, pos);
 		m_state |= State::Clicked;
-		Env::target = this;
+
+		if (m_children.empty()) {
+			if (Env::target != nullptr)
+				Env::target->onFocusOut.emit();
+			Env::target = this;
+			onFocusIn.emit();
+		}
 	}
 }
 
@@ -138,10 +144,8 @@ void Widget::callback_mouseUp(sf::Mouse::Button btn, sf::Vector2i pos)
 
 void Widget::callback_text(unsigned unicode)
 {
-	if (this != Env::target)
-		return;
-
-	onTextInput.emit(unicode);
+	if (Env::target == this)
+		onTextInput.emit(unicode);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -172,6 +176,10 @@ void Widget::removeChild(Widget *child) {
 	m_children.remove(child);
 }
 
+
+bool Widget::isTargeted() const {
+	return this == Env::target;
+}
 
 bool Widget::isHovered() const {
 	return m_state & State::Hovered;
@@ -217,11 +225,11 @@ sf::Vector2f Widget::getPosition() const {
 }
 
 float Widget::left() const {
-	return m_zone.left;
+	return getPosition().x;
 }
 
 float Widget::top() const {
-	return m_zone.top;
+	return getPosition().y;
 }
 
 void Widget::setPosition(float offsetX, float offsetY) {
@@ -240,6 +248,8 @@ void Widget::move(float offsetX, float offsetY) {
 void Widget::move(const sf::Vector2f &offset) {
 	m_zone.left += offset.x;
 	m_zone.top += offset.y;
+
+	update();
 }
 
 
@@ -248,11 +258,11 @@ sf::Vector2f Widget::getSize() const {
 }
 
 float Widget::width() const {
-	return m_zone.width;
+	return getSize().x;
 }
 
 float Widget::height() const {
-	return m_zone.height;
+	return getSize().y;
 }
 
 void Widget::setSize(float width, float height) {
@@ -262,6 +272,8 @@ void Widget::setSize(float width, float height) {
 void Widget::setSize(const sf::Vector2f &size) {
 	m_zone.width = size.x;
 	m_zone.height = size.y;
+
+	update();
 }
 
 void Widget::setWidth(float width) {

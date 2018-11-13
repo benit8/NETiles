@@ -82,10 +82,6 @@ void Application::processEvents()
 			case sf::Event::Resized:
 				m_window.setView(sf::View(sf::FloatRect(0, 0, e.size.width, e.size.height)));
 				break;
-			case sf::Event::KeyPressed:
-				if (e.key.code == sf::Keyboard::Escape)
-					m_shouldClose = true;
-				break;
 			default:
 				break;
 		}
@@ -95,4 +91,9 @@ void Application::processEvents()
 bool Application::isRunning() const
 {
 	return !m_shouldClose && m_window.isOpen();
+}
+
+void Application::close()
+{
+	m_shouldClose = true;
 }
