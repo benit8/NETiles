@@ -8,7 +8,8 @@
 #include "StateManager.hpp"
 
 StateManager::StateManager()
-: m_flags(0)
+: m_swap(nullptr)
+, m_flags(0)
 {
 }
 
@@ -18,21 +19,32 @@ StateManager::~StateManager()
 }
 
 
-void StateManager::push(std::unique_ptr<State> state)
+void StateManager::pushState(std::unique_ptr<State> state)
 {
 	m_states.push_back(std::move(state));
 }
 
-void StateManager::pop()
+void StateManager::swapState(std::unique_ptr<State> state)
+{
+	m_swap = std::move(state);
+	m_flags |= Pop | Swap;
+}
+
+void StateManager::popState()
 {
 	m_flags |= Pop;
 }
 
-void StateManager::tryPop()
+void StateManager::updateStates()
 {
 	if (m_flags & Pop) {
 		m_flags &= ~Pop;
 		m_states.pop_back();
+
+		if (m_flags & Swap) {
+			m_flags &= ~Swap;
+			m_states.push_back(std::move(m_swap));
+		}
 	}
 }
 

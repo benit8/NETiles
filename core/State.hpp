@@ -30,12 +30,15 @@ public:
 
 public:
 	virtual void handleEvent(sf::Event &e) {
-		m_guiRoot.handleEvent(e);
+		m_guiRoot.handleEvent(e, true);
 		m_eventHandler.dispatchEvent(e);
 	}
 
 	virtual void update(const sf::Time &delta) {}
-	virtual void render(sf::RenderTarget &renderTarget) {}
+
+	virtual void render(sf::RenderTarget &renderTarget) {
+		m_guiRoot.render(renderTarget, true);
+	}
 
 protected:
 	EventHandler m_eventHandler;

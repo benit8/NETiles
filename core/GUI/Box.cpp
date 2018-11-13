@@ -20,6 +20,23 @@ Box::Box()
 }
 
 
+void Box::setBackgroundColor(const sf::Color &color)
+{
+	m_rect.setFillColor(color);
+}
+
+void Box::setBorderColor(const sf::Color &color)
+{
+	m_rect.setOutlineColor(color);
+}
+
+void Box::setBorderSize(float size)
+{
+	m_rect.setOutlineThickness(size);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+
 void Box::draw(sf::RenderTarget &rt)
 {
 	m_rect.setSize(getSize());

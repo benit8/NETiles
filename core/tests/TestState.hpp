@@ -35,7 +35,6 @@ public:
 
 public:
 	void update(const sf::Time &delta) override;
-	void render(sf::RenderTarget &renderTarget) override;
 
 private:
 	void onClick_callback1(sf::Mouse::Button btn, sf::Vector2i pos);

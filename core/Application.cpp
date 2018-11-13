@@ -28,7 +28,7 @@ int Application::run()
 	sf::Time updateTimer = sf::Time::Zero;
 	sf::Clock timer;
 	while (isRunning()) {
-		auto &state = m_stateManager.getCurrentState();
+		auto &state = getCurrentState();
 
 		sf::Time elapsed = timer.restart();
 		updateTimer += elapsed;
@@ -51,7 +51,7 @@ int Application::run()
 			m_fpsCounter.incrementFrameCount();
 		}
 
-		m_stateManager.tryPop();
+		updateStates();
 	}
 
 	return EXIT_SUCCESS;
@@ -62,6 +62,7 @@ void Application::launch()
 	m_shouldClose = false;
 
 	m_window.create(m_appName, sf::VideoMode(1280, 720));
+	// m_window.create(m_appName, sf::VideoMode::getFullscreenModes()[0], sf::Style::None);
 	m_fpsCounter.setLimit(1000);
 	m_fpsCounter.reset();
 	Window::setMainWindow(&m_window);
@@ -69,7 +70,7 @@ void Application::launch()
 
 void Application::processEvents()
 {
-	auto &state = m_stateManager.getCurrentState();
+	auto &state = getCurrentState();
 
 	sf::Event e;
 	while (m_window.pollEvent(e)) {
@@ -94,9 +95,4 @@ void Application::processEvents()
 bool Application::isRunning() const
 {
 	return !m_shouldClose && m_window.isOpen();
-}
-
-StateManager &Application::getStateManager()
-{
-	return m_stateManager;
 }

@@ -29,9 +29,9 @@ TestState::TestState(Application *app)
 	m_btn2.setSize({400, 50});
 	m_btn3.setSize({400, 50});
 
-	m_btn1.setPosition((m_box.getWidth() - m_btn1.getWidth()) / 2, 100);
-	m_btn2.setPosition((m_box.getWidth() - m_btn2.getWidth()) / 2, 175);
-	m_btn3.setPosition((m_box.getWidth() - m_btn3.getWidth()) / 2, 250);
+	m_btn1.setPosition((m_box.width() - m_btn1.width()) / 2, 100);
+	m_btn2.setPosition((m_box.width() - m_btn2.width()) / 2, 175);
+	m_btn3.setPosition((m_box.width() - m_btn3.width()) / 2, 250);
 
 	m_btn1.onClick.connect(this, &TestState::onClick_callback1);
 	m_btn2.onClick.connect(this, &TestState::onClick_callback2);
@@ -44,29 +44,24 @@ void TestState::update(const sf::Time &delta)
 {
 }
 
-void TestState::render(sf::RenderTarget &renderTarget)
-{
-	m_guiRoot.render(renderTarget);
-}
-
 ////////////////////////////////////////////////////////////////////////////////
 
 void TestState::onClick_callback1(sf::Mouse::Button btn, sf::Vector2i pos) {
-	m_app->getStateManager().push<TestStateN>(m_app, 1);
+	m_app->pushState<TestStateN>(m_app, 1);
 }
 
 void TestState::onClick_callback2(sf::Mouse::Button btn, sf::Vector2i pos) {
-	m_app->getStateManager().push<TestStateN>(m_app, 2);
+	m_app->pushState<TestStateN>(m_app, 2);
 }
 
 void TestState::onClick_callback3(sf::Mouse::Button btn, sf::Vector2i pos) {
-	m_app->getStateManager().push<TestStateN>(m_app, 3);
+	m_app->pushState<TestStateN>(m_app, 3);
 }
 
 void TestState::onResize_callback(sf::Vector2u size)
 {
 	m_box.setSize(size.x, size.y);
-	m_btn1.setPosition((m_box.getWidth() - m_btn1.getWidth()) / 2, 100);
-	m_btn2.setPosition((m_box.getWidth() - m_btn2.getWidth()) / 2, 175);
-	m_btn3.setPosition((m_box.getWidth() - m_btn3.getWidth()) / 2, 250);
+	m_btn1.setPosition((m_box.width() - m_btn1.width()) / 2, 100);
+	m_btn2.setPosition((m_box.width() - m_btn2.width()) / 2, 175);
+	m_btn3.setPosition((m_box.width() - m_btn3.width()) / 2, 250);
 }

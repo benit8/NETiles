@@ -25,7 +25,7 @@ class Application;
 
 ////////////////////////////////////////////////////////////////////////////////
 
-class Application
+class Application : public StateManager
 {
 public:
 	Application(int argc, char *argv[]);
@@ -35,7 +35,6 @@ public:
 	int run();
 
 	bool isRunning() const;
-	StateManager &getStateManager();
 
 private:
 	void launch();
@@ -49,5 +48,4 @@ protected:
 	bool m_shouldClose;
 	Window m_window;
 	FPSCounter m_fpsCounter;
-	StateManager m_stateManager;
 };

@@ -34,19 +34,22 @@ Widget::~Widget()
 
 ////////////////////////////////////////////////////////////////////////////////
 
-void Widget::handleEvent(sf::Event &e)
+void Widget::handleEvent(sf::Event &e, bool isRoot)
 {
 	for (auto it = m_children.begin(); it != m_children.end(); ++it)
 		(*it)->handleEvent(e);
 
-	m_eventDispatcher.dispatchEvent(e);
+	if (!isRoot)
+		m_eventDispatcher.dispatchEvent(e);
 }
 
-void Widget::render(sf::RenderTarget &rt)
+void Widget::render(sf::RenderTarget &rt, bool isRoot)
 {
-	move(getParentOffset());
-	draw(rt);
-	move(-getParentOffset());
+	if (!isRoot) {
+		move(getParentOffset());
+		draw(rt);
+		move(-getParentOffset());
+	}
 
 	for (auto it = m_children.begin(); it != m_children.end(); ++it) {
 		(*it)->render(rt);
@@ -213,11 +216,11 @@ sf::Vector2f Widget::getPosition() const {
 	return sf::Vector2f(m_zone.left, m_zone.top);
 }
 
-float Widget::getLeft() const {
+float Widget::left() const {
 	return m_zone.left;
 }
 
-float Widget::getTop() const {
+float Widget::top() const {
 	return m_zone.top;
 }
 
@@ -244,11 +247,11 @@ sf::Vector2f Widget::getSize() const {
 	return sf::Vector2f(m_zone.width, m_zone.height);
 }
 
-float Widget::getWidth() const {
+float Widget::width() const {
 	return m_zone.width;
 }
 
-float Widget::getHeight() const {
+float Widget::height() const {
 	return m_zone.height;
 }
 

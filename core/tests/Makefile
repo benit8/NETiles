@@ -20,7 +20,6 @@ SRCS	=	main.cpp			\
 		../FontLoader.cpp		\
 		../StateManager.cpp		\
 		../Window.cpp			\
-		../GUI/GUI.cpp			\
 		../GUI/Env.cpp			\
 		../GUI/Widget.cpp		\
 		../GUI/Box.cpp			\

@@ -25,8 +25,8 @@ public:
 	MyApp(int argc, char *argv[])
 	: Application(argc, argv)
 	{
-		m_stateManager.push<TestState>(this);
 		m_appName = "NETiles";
+		pushState<TestState>(this);
 	}
 
 };

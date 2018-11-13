@@ -23,7 +23,7 @@ namespace GUI {
 
 #include "../EventHandler.hpp"
 #include "../Window.hpp"
-#include "GUI.hpp"
+#include "Env.hpp"
 #include "Signal.hpp"
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -53,8 +53,8 @@ public: // Con/Destructor
 	virtual ~Widget();
 
 public: // Methods
-	virtual void handleEvent(sf::Event &e);
-	virtual void render(sf::RenderTarget &rt);
+	virtual void handleEvent(sf::Event &e, bool isRoot = false);
+	virtual void render(sf::RenderTarget &rt, bool isRoot = false);
 	virtual void draw(sf::RenderTarget &rt) {}
 
 public: // Signals
@@ -97,16 +97,16 @@ public: // Getters & Setters
 	virtual void setZone(const sf::FloatRect &zone);
 
 	virtual sf::Vector2f getPosition() const;
-	virtual float getLeft() const;
-	virtual float getTop() const;
+	virtual float left() const;
+	virtual float top() const;
 	virtual void setPosition(const sf::Vector2f &position);
 	virtual void move(const sf::Vector2f &offset);
 	virtual void setPosition(float offsetX, float offsetY);
 	virtual void move(float offsetX, float offsetY);
 
 	virtual sf::Vector2f getSize() const;
-	virtual float getWidth() const;
-	virtual float getHeight() const;
+	virtual float width() const;
+	virtual float height() const;
 	virtual void setSize(const sf::Vector2f &size);
 	virtual void setSize(float width, float height);
 	virtual void setWidth(float width);

@@ -27,6 +27,7 @@ public:
 	enum Flags
 	{
 		Pop	= (1 << 0),
+		Swap	= (1 << 1),
 	};
 
 public:
@@ -35,31 +36,35 @@ public:
 
 public:
 	template <typename T, typename... Args>
-	void push(Args&&... args);
-	void push(std::unique_ptr<State> state);
+	void pushState(Args&&... args);
 	template <typename T, typename... Args>
-	void swap(Args&&... args);
-	void pop();
+	void swapState(Args&&... args);
 
-	void tryPop();
+	void pushState(std::unique_ptr<State> state);
+	void swapState(std::unique_ptr<State> state);
+	void popState();
+
 	State &getCurrentState() const;
+
+protected:
+	void updateStates();
 
 private:
 	std::vector<std::unique_ptr<State>> m_states;
+	std::unique_ptr<State> m_swap;
 	int m_flags;
 };
 
 ////////////////////////////////////////////////////////////////////////////////
 
 template <typename T, typename... Args>
-inline void StateManager::push(Args&&... args)
+inline void StateManager::pushState(Args&&... args)
 {
-	push(std::make_unique<T>(std::forward<Args>(args)...));
+	pushState(std::make_unique<T>(std::forward<Args>(args)...));
 }
 
 template <typename T, typename... Args>
-inline void StateManager::swap(Args&&... args)
+inline void StateManager::swapState(Args&&... args)
 {
-	push(std::make_unique<T>(std::forward<Args>(args)...));
-	m_flags |= Pop;
+	swapState(std::make_unique<T>(std::forward<Args>(args)...));
 }
