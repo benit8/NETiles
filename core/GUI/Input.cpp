@@ -37,6 +37,13 @@ Input::Input()
 	onFocusIn.connect(this, &Input::onFocusIn_callback);
 	onFocusOut.connect(this, &Input::onFocusOut_callback);
 	onTextInput.connect(this, &Input::onTextInput_callback);
+
+	m_eventDispatcher.onKeyDown(BIND2(Input::cursorToLeft), sf::Keyboard::Left);
+	m_eventDispatcher.onKeyDown(BIND2(Input::cursorToRight), sf::Keyboard::Right);
+	m_eventDispatcher.onKeyDown(BIND2(Input::cursorToBegin), sf::Keyboard::Up);
+	m_eventDispatcher.onKeyDown(BIND2(Input::cursorToBegin), sf::Keyboard::Home);
+	m_eventDispatcher.onKeyDown(BIND2(Input::cursorToEnd), sf::Keyboard::Down);
+	m_eventDispatcher.onKeyDown(BIND2(Input::cursorToEnd), sf::Keyboard::End);
 }
 
 Input::Input(const std::string &placeholder)
@@ -172,11 +179,17 @@ void Input::onTextInput_callback(unsigned unicode)
 	std::cout << (char)unicode << " (" << unicode << ")" << std::endl;
 
 	switch (unicode) {
-		case 8:
+		case 8: // Backspace
 			if (m_cursorIndex > 0) {
 				m_value.erase(--m_cursorIndex, 1);
 				m_text.setString(m_value);
 				updateCursor();
+			}
+			break;
+		case 127: // Delete
+			if (m_cursorIndex < m_value.length()) {
+				m_value.erase(m_cursorIndex, 1);
+				m_text.setString(m_value);
 			}
 			break;
 		default:
@@ -204,6 +217,39 @@ void Input::onFocusIn_callback()
 void Input::onFocusOut_callback()
 {
 	m_rect.setOutlineColor(sf::Color(170, 170, 170));
+}
+
+
+void Input::cursorToLeft(sf::Keyboard::Key key, int ctrlKeys)
+{
+	if (isTargeted() && m_cursorIndex > 0) {
+		m_cursorIndex--;
+		updateCursor();
+	}
+}
+
+void Input::cursorToRight(sf::Keyboard::Key key, int ctrlKeys)
+{
+	if (isTargeted() && m_cursorIndex < m_value.length()) {
+		m_cursorIndex++;
+		updateCursor();
+	}
+}
+
+void Input::cursorToBegin(sf::Keyboard::Key key, int ctrlKeys)
+{
+	if (isTargeted()) {
+		m_cursorIndex = 0;
+		updateCursor();
+	}
+}
+
+void Input::cursorToEnd(sf::Keyboard::Key key, int ctrlKeys)
+{
+	if (isTargeted()) {
+		m_cursorIndex = m_value.length();
+		updateCursor();
+	}
 }
 
 ////////////////////////////////////////////////////////////////////////////////

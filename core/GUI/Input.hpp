@@ -53,6 +53,10 @@ private:
 	void onHoverOut_callback(sf::Vector2i pos);
 	void onFocusIn_callback();
 	void onFocusOut_callback();
+	void cursorToLeft(sf::Keyboard::Key key, int ctrlKeys);
+	void cursorToRight(sf::Keyboard::Key key, int ctrlKeys);
+	void cursorToBegin(sf::Keyboard::Key key, int ctrlKeys);
+	void cursorToEnd(sf::Keyboard::Key key, int ctrlKeys);
 
 private:
 	sf::RectangleShape m_rect;
