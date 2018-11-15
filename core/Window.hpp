@@ -27,9 +27,9 @@ class Window : public sf::RenderWindow
 public:
 	Window();
 	Window(const std::string &title,
-		sf::VideoMode videoMode = sf::VideoMode::getDesktopMode(),
-		sf::Uint32 styles = sf::Style::Default,
-		sf::ContextSettings settings = sf::ContextSettings(24, 8, 0, 3, 0));
+	       sf::VideoMode videoMode = sf::VideoMode::getDesktopMode(),
+	       sf::Uint32 styles = sf::Style::Default,
+	       sf::ContextSettings settings = sf::ContextSettings(24, 8, 0, 3, 0));
 	~Window() = default;
 
 public:
@@ -38,9 +38,13 @@ public:
 
 public:
 	void create(const std::string &title,
-		sf::VideoMode videoMode = sf::VideoMode::getDesktopMode(),
-		sf::Uint32 styles = sf::Style::Default,
-		sf::ContextSettings settings = sf::ContextSettings(24, 8, 0, 3, 0));
+	            sf::VideoMode videoMode = sf::VideoMode::getDesktopMode(),
+	            sf::Uint32 styles = sf::Style::Default,
+	            sf::ContextSettings settings = sf::ContextSettings(24, 8, 0, 3, 0));
+
+	void createDefault(const std::string &title);
+	void createFullscreen(const std::string &title);
+	void createBorderless(const std::string &title);
 
 	unsigned getWidth() const;
 	void setWidth(int width);

@@ -61,8 +61,7 @@ void Application::launch()
 {
 	m_shouldClose = false;
 
-	m_window.create(m_appName, sf::VideoMode(1280, 720));
-	// m_window.create(m_appName, sf::VideoMode::getFullscreenModes()[0], sf::Style::None);
+	m_window.createDefault(m_appName);
 	m_fpsCounter.setLimit(1000);
 	m_fpsCounter.reset();
 	Window::setMainWindow(&m_window);

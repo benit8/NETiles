@@ -40,8 +40,10 @@ public:
 	void setValue(const std::string &value);
 	const std::string &getValue() const;
 	void setPlaceholder(const std::string &placeholder);
-	const std::string &getPlaceholder() const;
+	void clearPlaceholder();
 	void setCharacterSize(unsigned size);
+
+	Signal<const std::string &> onEnter;
 
 private:
 	void insert(const std::string &content);

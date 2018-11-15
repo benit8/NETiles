@@ -40,6 +40,21 @@ void Window::create(const std::string &title, sf::VideoMode videoMode, sf::Uint3
 	sf::RenderWindow::create(videoMode, title, styles, settings);
 }
 
+void Window::createDefault(const std::string &title)
+{
+	sf::RenderWindow::create(sf::VideoMode(1280, 720), title, sf::Style::Default, sf::ContextSettings(24, 8, 0, 3, 0));
+}
+
+void Window::createFullscreen(const std::string &title)
+{
+	sf::RenderWindow::create(sf::VideoMode::getFullscreenModes()[0], title, sf::Style::Fullscreen, sf::ContextSettings(24, 8, 0, 3, 0));
+}
+
+void Window::createBorderless(const std::string &title)
+{
+	sf::RenderWindow::create(sf::VideoMode::getFullscreenModes()[0], title, sf::Style::None, sf::ContextSettings(24, 8, 0, 3, 0));
+}
+
 
 unsigned Window::getWidth() const
 {

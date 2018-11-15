@@ -39,11 +39,10 @@ public:
 private:
 	void closeOnEscape(sf::Keyboard::Key key, int ctrlKeys);
 	void onResize_callback(sf::Vector2u pos);
+	void onEnter(const std::string &value);
 
 private:
 	Application *m_app;
 	GUI::Box m_box;
 	GUI::Input m_1;
-	GUI::Input m_2;
-	GUI::Input m_3;
 };

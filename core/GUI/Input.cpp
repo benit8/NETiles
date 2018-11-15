@@ -7,7 +7,6 @@
 
 #include "Input.hpp"
 #include "../FontLoader.hpp"
-#include <cctype>
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -23,7 +22,7 @@ Input::Input()
 	setSize(sf::Vector2f(300, 35));
 	setCharacterSize(20);
 
-	m_rect.setFillColor(sf::Color::Black);
+	m_rect.setFillColor(sf::Color(0, 0, 0, 175));
 	m_rect.setOutlineThickness(1);
 	m_rect.setOutlineColor(sf::Color(170, 170, 170));
 
@@ -70,10 +69,7 @@ void Input::draw(sf::RenderTarget &target)
 
 void Input::update()
 {
-	sf::Text tmp;
-	tmp.setFont(m_font);
-	tmp.setString("A");
-	tmp.setCharacterSize(m_text.getCharacterSize());
+	sf::Text tmp("A", m_font, m_text.getCharacterSize());
 	sf::FloatRect bounds = tmp.getLocalBounds();
 
 	sf::Vector2f textPos = getPosition();
@@ -128,13 +124,10 @@ void Input::setPlaceholder(const std::string &placeholder)
 	m_placeholder.setString(placeholder);
 }
 
-const std::string &Input::getPlaceholder() const
+void Input::clearPlaceholder()
 {
-	static std::string ref;
-	ref = m_placeholder.getString();
-	return ref;
+	m_placeholder.setString("");
 }
-
 
 void Input::setCharacterSize(unsigned size)
 {
@@ -176,7 +169,7 @@ void Input::updateCursor()
 
 void Input::onTextInput_callback(unsigned unicode)
 {
-	std::cout << (char)unicode << " (" << unicode << ")" << std::endl;
+	char c = static_cast<char>(unicode);
 
 	switch (unicode) {
 		case 8: // Backspace
@@ -186,6 +179,9 @@ void Input::onTextInput_callback(unsigned unicode)
 				updateCursor();
 			}
 			break;
+		case 13: // Enter
+			onEnter.emit(getValue());
+			break;
 		case 127: // Delete
 			if (m_cursorIndex < m_value.length()) {
 				m_value.erase(m_cursorIndex, 1);
@@ -193,8 +189,8 @@ void Input::onTextInput_callback(unsigned unicode)
 			}
 			break;
 		default:
-			if (isprint(unicode))
-				insert(unicode);
+			if (isprint(c))
+				insert(c);
 			break;
 	}
 }

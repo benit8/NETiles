@@ -46,7 +46,7 @@ void Widget::handleEvent(sf::Event &e, bool isRoot)
 void Widget::render(sf::RenderTarget &rt, bool isRoot)
 {
 	if (!isRoot) {
-		move(getParentOffset());
+		move(getParentOffset());  // Improve this
 		draw(rt);
 		move(-getParentOffset());
 	}
@@ -57,11 +57,13 @@ void Widget::render(sf::RenderTarget &rt, bool isRoot)
 }
 
 
-bool Widget::isMouseHover(sf::Vector2i mouse) {
+bool Widget::isMouseHover(sf::Vector2i mouse)
+{
 	return isMouseHover(sf::Vector2f(mouse.x, mouse.y));
 }
 
-bool Widget::isMouseHover(sf::Vector2f mouse) {
+bool Widget::isMouseHover(sf::Vector2f mouse)
+{
 	sf::FloatRect zone = m_zone;
 	sf::Vector2f parentOffset = getParentOffset();
 
@@ -118,7 +120,7 @@ void Widget::callback_mouseDown(sf::Mouse::Button btn, sf::Vector2i pos)
 		onClick.emit(btn, pos);
 		m_state |= State::Clicked;
 
-		if (m_children.empty()) {
+		if (m_children.empty()) {  // Improve this
 			if (Env::target != nullptr)
 				Env::target->onFocusOut.emit();
 			Env::target = this;
@@ -162,12 +164,14 @@ void Widget::setParent(Widget *parent) {
 	m_parent = parent;
 }
 
-void Widget::addChild(Widget *child) {
+void Widget::addChild(Widget *child)
+{
 	m_children.push_back(child);
 	child->setParent(this);
 }
 
-void Widget::removeChild(Widget *child) {
+void Widget::removeChild(Widget *child)
+{
 	auto it = std::find(m_children.begin(), m_children.end(), child);
 	if (it == m_children.end())
 		return;
@@ -239,17 +243,16 @@ void Widget::setPosition(float offsetX, float offsetY) {
 void Widget::setPosition(const sf::Vector2f &position) {
 	m_zone.left = position.x;
 	m_zone.top = position.y;
+
+	update();
 }
 
 void Widget::move(float offsetX, float offsetY) {
-	move(sf::Vector2f(offsetX, offsetY));
+	setPosition(sf::Vector2f(m_zone.left + offsetX, m_zone.top + offsetY));
 }
 
 void Widget::move(const sf::Vector2f &offset) {
-	m_zone.left += offset.x;
-	m_zone.top += offset.y;
-
-	update();
+	setPosition(sf::Vector2f(m_zone.left + offset.x, m_zone.top + offset.y));
 }
 
 
