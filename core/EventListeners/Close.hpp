@@ -29,9 +29,8 @@ public:
 
 public:
 	void handleEvent(sf::Event &e) {
-		for (CloseCallbacks::iterator it = m_callbacks.begin(); it != m_callbacks.end(); ++it) {
+		for (CloseCallbacks::iterator it = m_callbacks.begin(); it != m_callbacks.end(); ++it)
 			(*it)();
-		}
 	}
 
 	void registerCallback(CloseCallback callback) {

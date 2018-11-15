@@ -39,9 +39,8 @@ public:
 	{
 		sf::Vector2i pos(e.mouseMove.x, e.mouseMove.y);
 
-		for (MouseMoveCallbacks::iterator it = m_callbacks.begin(); it != m_callbacks.end(); ++it) {
+		for (MouseMoveCallbacks::iterator it = m_callbacks.begin(); it != m_callbacks.end(); ++it)
 			(*it)(pos, pos - m_lastPos);
-		}
 
 		m_lastPos = pos;
 	}

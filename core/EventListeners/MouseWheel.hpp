@@ -33,9 +33,8 @@ public:
 		if (m_callbacks.find(data.wheel) == m_callbacks.end())
 			return;
 
-		for (std::vector<MouseWheelCallback>::iterator it = m_callbacks[data.wheel].begin(); it != m_callbacks[data.wheel].end(); ++it) {
+		for (std::vector<MouseWheelCallback>::iterator it = m_callbacks[data.wheel].begin(); it != m_callbacks[data.wheel].end(); ++it)
 			(*it)(data.wheel, data.delta, sf::Vector2i(data.x, data.y));
-		}
 	}
 
 	void registerCallback(MouseWheelCallback callback, sf::Mouse::Wheel wheel) {

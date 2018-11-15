@@ -29,9 +29,8 @@ public:
 
 public:
 	void handleEvent(sf::Event &e) {
-		for (MouseFocusCallbacks::iterator it = m_callbacks.begin(); it != m_callbacks.end(); ++it) {
+		for (MouseFocusCallbacks::iterator it = m_callbacks.begin(); it != m_callbacks.end(); ++it)
 			(*it)();
-		}
 	}
 
 	void registerCallback(MouseFocusCallback callback) {

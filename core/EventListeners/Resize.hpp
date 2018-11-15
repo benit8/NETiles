@@ -30,9 +30,8 @@ public:
 public:
 	void handleEvent(sf::Event &e) {
 		sf::Vector2u size(e.size.width, e.size.height);
-		for (ResizeCallbacks::iterator it = m_callbacks.begin(); it != m_callbacks.end(); ++it) {
+		for (ResizeCallbacks::iterator it = m_callbacks.begin(); it != m_callbacks.end(); ++it)
 			(*it)(size);
-		}
 	}
 
 	void registerCallback(ResizeCallback callback) {

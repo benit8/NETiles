@@ -29,9 +29,8 @@ public:
 
 public:
 	void handleEvent(sf::Event &e) {
-		for (TextCallbacks::iterator it = m_callbacks.begin(); it != m_callbacks.end(); ++it) {
+		for (TextCallbacks::iterator it = m_callbacks.begin(); it != m_callbacks.end(); ++it)
 			(*it)(e.text.unicode);
-		}
 	}
 
 	void registerCallback(TextCallback callback) {

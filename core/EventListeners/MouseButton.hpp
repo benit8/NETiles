@@ -38,9 +38,8 @@ public:
 			return;
 
 		sf::Vector2i pos(e.mouseButton.x, e.mouseButton.y);
-		for (std::vector<MouseButtonCallback>::iterator it = m_callbacks[btn].begin(); it != m_callbacks[btn].end(); ++it) {
+		for (std::vector<MouseButtonCallback>::iterator it = m_callbacks[btn].begin(); it != m_callbacks[btn].end(); ++it)
 			(*it)(btn, pos);
-		}
 	}
 
 	void registerCallback(MouseButtonCallback callback, sf::Mouse::Button button) {
