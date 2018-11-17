@@ -61,8 +61,8 @@ public: // Methods
 public: // Signals
 	Signal<sf::Vector2i> onHoverIn;
 	Signal<sf::Vector2i> onHoverOut;
-	Signal<sf::Mouse::Button, sf::Vector2i> onClick;
-	Signal<sf::Mouse::Button, sf::Vector2i> onRelease;
+	Signal<sf::Vector2i> onClick;
+	Signal<sf::Vector2i> onRelease;
 	Signal<sf::Vector2i, sf::Vector2i> onDrag;
 	Signal<sf::Vector2i> onDragBegin;
 	Signal<sf::Vector2i> onDragEnd;
@@ -77,8 +77,8 @@ private:
 
 private: // Callbacks
 	void callback_mouseMove(sf::Vector2i pos, sf::Vector2i offset);
-	void callback_mouseDown(sf::Mouse::Button btn, sf::Vector2i pos);
-	void callback_mouseUp(sf::Mouse::Button btn, sf::Vector2i pos);
+	void callback_mouseDown(sf::Vector2i pos);
+	void callback_mouseUp(sf::Vector2i pos);
 	void callback_text(unsigned unicode);
 
 public: // Getters & Setters

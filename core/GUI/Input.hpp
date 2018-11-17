@@ -40,30 +40,31 @@ public:
 	void setValue(const std::string &value);
 	const std::string &getValue() const;
 	void setPlaceholder(const std::string &placeholder);
-	void clearPlaceholder();
 	void setCharacterSize(unsigned size);
+	unsigned getCharacterSize() const;
 
 	Signal<const std::string &> onEnter;
 
 private:
 	void insert(const std::string &content);
 	void insert(char c);
+	void updateTextOffset();
 	void updateCursor();
 
 	void onTextInput_callback(unsigned unicode);
-	void onHoverIn_callback(sf::Vector2i pos);
-	void onHoverOut_callback(sf::Vector2i pos);
 	void onFocusIn_callback();
 	void onFocusOut_callback();
-	void cursorToLeft(sf::Keyboard::Key key, int ctrlKeys);
-	void cursorToRight(sf::Keyboard::Key key, int ctrlKeys);
-	void cursorToBegin(sf::Keyboard::Key key, int ctrlKeys);
-	void cursorToEnd(sf::Keyboard::Key key, int ctrlKeys);
+	void cursorToLeft();
+	void cursorToRight();
+	void cursorToBegin();
+	void cursorToEnd();
 
 private:
 	sf::RectangleShape m_rect;
 	sf::RectangleShape m_cursor;
 	std::size_t m_cursorIndex;
+	std::size_t m_valueOffset;
+	std::size_t m_valueLength;
 
 	sf::Font m_font;
 	sf::Text m_placeholder;

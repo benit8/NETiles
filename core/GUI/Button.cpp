@@ -115,14 +115,14 @@ void Button::onHoverOut_callback(sf::Vector2i pos)
 	m_rect.setOutlineColor(sf::Color(170, 170, 170));
 }
 
-void Button::onClick_callback(sf::Mouse::Button btn, sf::Vector2i pos)
+void Button::onClick_callback(sf::Vector2i pos)
 {
 	m_rect.setFillColor(sf::Color::White);
 	m_rect.setOutlineColor(sf::Color(170, 170, 170));
 	m_label.setFillColor(sf::Color::Black);
 }
 
-void Button::onRelease_callback(sf::Mouse::Button btn, sf::Vector2i pos)
+void Button::onRelease_callback(sf::Vector2i pos)
 {
 	m_rect.setFillColor(sf::Color::Black);
 	m_rect.setOutlineColor(sf::Color(170, 170, 170));

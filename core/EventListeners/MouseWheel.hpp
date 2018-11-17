@@ -17,7 +17,7 @@ class MouseWheelEventListener;
 
 ////////////////////////////////////////////////////////////////////////////////
 
-typedef std::function<void(sf::Mouse::Wheel, float, sf::Vector2i)> MouseWheelCallback;
+typedef std::function<void(float, sf::Vector2i)> MouseWheelCallback;
 
 class MouseWheelEventListener : public IEventListener
 {
@@ -34,7 +34,7 @@ public:
 			return;
 
 		for (std::vector<MouseWheelCallback>::iterator it = m_callbacks[data.wheel].begin(); it != m_callbacks[data.wheel].end(); ++it)
-			(*it)(data.wheel, data.delta, sf::Vector2i(data.x, data.y));
+			(*it)(data.delta, sf::Vector2i(data.x, data.y));
 	}
 
 	void registerCallback(MouseWheelCallback callback, sf::Mouse::Wheel wheel) {

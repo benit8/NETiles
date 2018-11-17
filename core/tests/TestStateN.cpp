@@ -13,7 +13,7 @@ TestStateN::TestStateN(Application *app, int n)
 : m_app(app)
 , m_n(n)
 {
-	m_eventHandler.onMouseDown(BIND2(TestStateN::quit), sf::Mouse::Button::Left);
+	m_eventHandler.onMouseDown(BIND1(TestStateN::quit), sf::Mouse::Button::Left);
 
 	m_guiRoot.addChild(&m_box);
 	m_box.setSize(Window::getMainWindow()->getWidth(), Window::getMainWindow()->getHeight());
@@ -44,7 +44,7 @@ void TestStateN::render(sf::RenderTarget &renderTarget) {
 
 ////////////////////////////////////////////////////////////////////////////////
 
-void TestStateN::quit(sf::Mouse::Button btn, sf::Vector2i pos)
+void TestStateN::quit(sf::Vector2i pos)
 {
 	m_app->popState();
 }

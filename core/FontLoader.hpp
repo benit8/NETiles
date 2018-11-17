@@ -18,9 +18,6 @@ class FontLoader;
 #include <string>
 #include <vector>
 
-#include <boost/algorithm/string/classification.hpp>
-#include <boost/algorithm/string/split.hpp>
-
 #include <SFML/Graphics/Font.hpp>
 
 ////////////////////////////////////////////////////////////////////////////////

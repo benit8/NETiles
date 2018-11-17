@@ -49,8 +49,8 @@ private:
 
 	void onHoverIn_callback(sf::Vector2i pos);
 	void onHoverOut_callback(sf::Vector2i pos);
-	void onClick_callback(sf::Mouse::Button btn, sf::Vector2i pos);
-	void onRelease_callback(sf::Mouse::Button btn, sf::Vector2i pos);
+	void onClick_callback(sf::Vector2i pos);
+	void onRelease_callback(sf::Vector2i pos);
 
 private:
 	sf::RectangleShape m_rect;

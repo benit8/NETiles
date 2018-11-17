@@ -36,7 +36,7 @@ public:
 	void render(sf::RenderTarget &renderTarget) override;
 
 private:
-	void quit(sf::Mouse::Button btn, sf::Vector2i pos);
+	void quit(sf::Vector2i pos);
 
 private:
 	Application *m_app;

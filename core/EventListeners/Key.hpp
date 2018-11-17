@@ -29,7 +29,7 @@ public:
 	};
 };
 
-typedef std::function<void(sf::Keyboard::Key, int)> KeyCallback;
+typedef std::function<void()> KeyCallback;
 
 class KeyEventListener : public IEventListener
 {
@@ -46,7 +46,7 @@ public:
 		KeyCallbacks::iterator it = m_callbacks.find(key);
 		if (it != m_callbacks.end()) {
 			for (unsigned i = 0; i < m_callbacks[key].size(); ++i)
-				(m_callbacks[key][i])(key.first, key.second);
+				(m_callbacks[key][i])();
 		}
 	}
 

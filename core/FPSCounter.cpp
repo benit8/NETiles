@@ -13,6 +13,7 @@
 FPSCounter::FPSCounter()
 : m_fpsTextFontName("Consolas")
 , m_fontLoaded(false)
+, m_shouldDisplay(true)
 {
 	reset();
 	setLimit(60);
@@ -60,11 +61,16 @@ void FPSCounter::setLimit(unsigned limit)
 
 void FPSCounter::render(sf::RenderTarget &target)
 {
-	if (m_fontLoaded) {
+	if (m_fontLoaded && m_shouldDisplay) {
 		m_fpsText.setString(std::to_string(m_fps) + " FPS");
 		m_fpsText.setPosition(target.getSize().x - m_fpsText.getLocalBounds().width - 8, 4);
 		target.draw(m_fpsText);
 	}
+}
+
+void FPSCounter::toggleDisplay()
+{
+	m_shouldDisplay = !m_shouldDisplay;
 }
 
 

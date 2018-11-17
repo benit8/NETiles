@@ -37,7 +37,7 @@ public:
 	void update(const sf::Time &delta) override;
 
 private:
-	void closeOnEscape(sf::Keyboard::Key key, int ctrlKeys);
+	void closeOnEscape();
 	void onResize_callback(sf::Vector2u pos);
 	void onEnter(const std::string &value);
 

@@ -20,8 +20,8 @@ Widget::Widget()
 , m_mode(Clickable)
 {
 	m_eventDispatcher.onMouseMove(BIND2(Widget::callback_mouseMove));
-	m_eventDispatcher.onMouseDown(BIND2(Widget::callback_mouseDown), sf::Mouse::Left);
-	m_eventDispatcher.onMouseUp(BIND2(Widget::callback_mouseUp), sf::Mouse::Left);
+	m_eventDispatcher.onMouseDown(BIND1(Widget::callback_mouseDown), sf::Mouse::Left);
+	m_eventDispatcher.onMouseUp(BIND1(Widget::callback_mouseUp), sf::Mouse::Left);
 	m_eventDispatcher.onText(BIND1(Widget::callback_text));
 }
 
@@ -41,14 +41,19 @@ void Widget::handleEvent(sf::Event &e, bool isRoot)
 
 	if (!isRoot)
 		m_eventDispatcher.dispatchEvent(e);
+	else
+		Env::foundTarget = false;
 }
 
 void Widget::render(sf::RenderTarget &rt, bool isRoot)
 {
 	if (!isRoot) {
-		move(getParentOffset());  // Improve this
+		sf::Vector2f pOff = getParentOffset();
+		m_zone.left += pOff.x;
+		m_zone.top += pOff.y;
 		draw(rt);
-		move(-getParentOffset());
+		m_zone.left -= pOff.x;
+		m_zone.top -= pOff.y;
 	}
 
 	for (auto it = m_children.begin(); it != m_children.end(); ++it) {
@@ -111,25 +116,26 @@ void Widget::callback_mouseMove(sf::Vector2i pos, sf::Vector2i offset)
 	}
 }
 
-void Widget::callback_mouseDown(sf::Mouse::Button btn, sf::Vector2i pos)
+void Widget::callback_mouseDown(sf::Vector2i pos)
 {
 	if (!isClickable())
 		return;
 
 	if (isHovered()) {
-		onClick.emit(btn, pos);
+		onClick.emit(pos);
 		m_state |= State::Clicked;
 
-		if (m_children.empty()) {  // Improve this
+		if (!Env::foundTarget) {
 			if (Env::target != nullptr)
 				Env::target->onFocusOut.emit();
 			Env::target = this;
 			onFocusIn.emit();
+			Env::foundTarget = true;
 		}
 	}
 }
 
-void Widget::callback_mouseUp(sf::Mouse::Button btn, sf::Vector2i pos)
+void Widget::callback_mouseUp(sf::Vector2i pos)
 {
 	if (!isClickable())
 		return;
@@ -139,7 +145,7 @@ void Widget::callback_mouseUp(sf::Mouse::Button btn, sf::Vector2i pos)
 			onDragEnd.emit(pos);
 			m_state &= ~State::Dragged;
 		}
-		onRelease.emit(btn, pos);
+		onRelease.emit(pos);
 		m_state &= ~State::Clicked;
 	}
 }

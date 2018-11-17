@@ -24,5 +24,6 @@ namespace GUI
 	namespace Env
 	{
 		extern Widget *target;
+		extern bool foundTarget;
 	}
 }

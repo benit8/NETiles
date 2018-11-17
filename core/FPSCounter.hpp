@@ -34,6 +34,7 @@ public:
 	void incrementFrameCount();
 	void setLimit(unsigned limit);
 	void render(sf::RenderTarget &rt);
+	void toggleDisplay();
 
 	unsigned getFPS() const;
 	unsigned getRealFPS() const;
@@ -50,4 +51,5 @@ private:
 	sf::Font m_fpsTextFont;
 	std::string m_fpsTextFontName;
 	bool m_fontLoaded;
+	bool m_shouldDisplay;
 };

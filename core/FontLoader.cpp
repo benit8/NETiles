@@ -53,11 +53,13 @@ bool FontLoader::searchFonts()
 	std::istringstream iss(rawFonts);
 	std::string line;
 	while (std::getline(iss, line)) {
+		std::string part;
 		std::vector<std::string> rawInfos;
-		boost::split(rawInfos, line, boost::is_any_of(":"), boost::token_compress_on);
+		std::istringstream iss_(line);
+		while (std::getline(iss_, part, ':'))
+			rawInfos.push_back(part);
 
-		while (rawInfos[1].find(' ') == 0)
-			rawInfos[1].erase(0, 1);
+		rawInfos[1].erase(0, 1);
 		std::size_t n;
 		if ((n = rawInfos[2].find("style=")) != std::string::npos)
 			rawInfos[2].erase(n, 6);

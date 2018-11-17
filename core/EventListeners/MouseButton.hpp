@@ -20,7 +20,7 @@ class MouseButtonEventListener;
 
 ////////////////////////////////////////////////////////////////////////////////
 
-typedef std::function<void(sf::Mouse::Button, sf::Vector2i)> MouseButtonCallback;
+typedef std::function<void(sf::Vector2i)> MouseButtonCallback;
 
 class MouseButtonEventListener : public IEventListener
 {
@@ -39,7 +39,7 @@ public:
 
 		sf::Vector2i pos(e.mouseButton.x, e.mouseButton.y);
 		for (std::vector<MouseButtonCallback>::iterator it = m_callbacks[btn].begin(); it != m_callbacks[btn].end(); ++it)
-			(*it)(btn, pos);
+			(*it)(pos);
 	}
 
 	void registerCallback(MouseButtonCallback callback, sf::Mouse::Button button) {
