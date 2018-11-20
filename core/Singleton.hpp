@@ -12,10 +12,10 @@
 class Singleton
 {
 public:
-	Singleton(Singleton &other) = delete;
-	Singleton(Singleton &&other) = delete;
-	Singleton &operator =(Singleton &other) = delete;
-	Singleton &operator =(Singleton &&other) = delete;
+	Singleton(const Singleton &) = delete;
+	Singleton(Singleton &&) = delete;
+	Singleton &operator =(const Singleton &) = delete;
+	Singleton &operator =(Singleton &&) = delete;
 
 protected:
 	Singleton() = default;

@@ -5,8 +5,9 @@
 ** Input.cpp
 */
 
-#include "Input.hpp"
+#include "../GUI/Input.hpp"
 #include "../FontLoader.hpp"
+#include "../Window.hpp"
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -18,11 +19,10 @@ namespace GUI
 Input::Input()
 : m_cursorIndex(0)
 , m_valueOffset(0)
-, m_valueLength(0)
 {
 	setFont("Consolas");
 	setSize(sf::Vector2f(300, 35));
-	setCharacterSize(20);
+	setCharacterSize(18);
 
 	m_rect.setFillColor(sf::Color(0, 0, 0, 175));
 	m_rect.setOutlineThickness(1);
@@ -31,16 +31,11 @@ Input::Input()
 	m_cursor.setFillColor(sf::Color::White);
 	m_placeholder.setFillColor(sf::Color(100, 100, 100));
 
+	onHoverIn.connect(this, &Input::onHoverIn_callback);
+	onHoverOut.connect(this, &Input::onHoverOut_callback);
 	onFocusIn.connect(this, &Input::onFocusIn_callback);
 	onFocusOut.connect(this, &Input::onFocusOut_callback);
 	onTextInput.connect(this, &Input::onTextInput_callback);
-
-	m_eventDispatcher.onKeyDown(BIND(Input::cursorToLeft), sf::Keyboard::Left);
-	m_eventDispatcher.onKeyDown(BIND(Input::cursorToRight), sf::Keyboard::Right);
-	m_eventDispatcher.onKeyDown(BIND(Input::cursorToBegin), sf::Keyboard::Up);
-	m_eventDispatcher.onKeyDown(BIND(Input::cursorToBegin), sf::Keyboard::Home);
-	m_eventDispatcher.onKeyDown(BIND(Input::cursorToEnd), sf::Keyboard::Down);
-	m_eventDispatcher.onKeyDown(BIND(Input::cursorToEnd), sf::Keyboard::End);
 
 	update();
 }
@@ -61,19 +56,8 @@ void Input::draw(sf::RenderTarget &target)
 	target.draw(m_rect);
 	if (m_value.empty())
 		target.draw(m_placeholder);
-	else {
-		sf::RectangleShape border;
-		sf::FloatRect bounds = m_text.getLocalBounds();
-		sf::Vector2f pos = m_text.getPosition();
-		border.setPosition(pos + sf::Vector2f(bounds.left, bounds.top));
-		border.setSize({bounds.width, bounds.height});
-		border.setOutlineThickness(1);
-		border.setOutlineColor((bounds.width > width() - 16) ? sf::Color::Green : sf::Color::Red);
-		border.setFillColor(sf::Color::Transparent);
-
+	else
 		target.draw(m_text);
-		target.draw(border);
-	}
 	if (isTargeted())
 		target.draw(m_cursor);
 }
@@ -165,9 +149,11 @@ void Input::updateTextOffset()
 {
 	unsigned size = getCharacterSize();
 	std::size_t maxTextWidth = width() - 16;
-	std::size_t textWidth = 0;
 
-	size_t i = m_valueOffset;
+	m_text.setString(m_value);
+	std::size_t textWidth = m_text.getLocalBounds().width;
+
+	size_t i = 0;
 	for (; i < m_value.length() && textWidth > maxTextWidth; ++i)
 		textWidth -= m_font.getGlyph(m_value[i], size, false).advance;
 	m_valueOffset = i;
@@ -180,7 +166,6 @@ void Input::updateCursor()
 {
 	unsigned size = getCharacterSize();
 	size_t max = std::min(m_cursorIndex + m_valueOffset, m_value.length());
-
 	sf::Vector2f cursorPos(m_text.getPosition().x, top());
 	for (size_t i = m_valueOffset; i < max; ++i)
 		cursorPos.x += m_font.getGlyph(m_value[i], size, false).advance;
@@ -197,13 +182,9 @@ void Input::onTextInput_callback(unsigned unicode)
 	switch (unicode) {
 		case 8: // Backspace
 			if (m_cursorIndex > 0) {
-				m_value.erase(m_cursorIndex, 1);
-				cursorToLeft();
+				m_value.erase(--m_cursorIndex, 1);
 				updateTextOffset();
 			}
-			break;
-		case 9: // Tab
-			update();
 			break;
 		case 13: // Enter
 			onEnter.emit(getValue());
@@ -231,61 +212,14 @@ void Input::onFocusOut_callback()
 	m_rect.setOutlineColor(sf::Color(170, 170, 170));
 }
 
-
-void Input::cursorToLeft()
+void Input::onHoverIn_callback(sf::Vector2i pos)
 {
-	if (isTargeted() && m_cursorIndex > 0) {
-		m_cursorIndex--;
-		updateCursor();
-	}
+	Window::getMainWindow()->setCursor(sf::Cursor::Text);
 }
 
-void Input::cursorToRight()
+void Input::onHoverOut_callback(sf::Vector2i pos)
 {
-	if (isTargeted() && m_cursorIndex < m_value.length()) {
-		m_cursorIndex++;
-		updateCursor();
-	}
-}
-
-void Input::cursorToBegin()
-{
-	if (isTargeted()) {
-		m_cursorIndex = m_valueOffset = 0;
-		m_valueLength = 0;
-
-		unsigned size = getCharacterSize();
-		std::size_t maxTextWidth = width() - 16;
-		size_t textWidth = 0;
-		for (int i = 0; i < m_value.length() && textWidth > maxTextWidth; ++i) {
-			textWidth += m_font.getGlyph(m_value[i], size, false).advance;
-			m_valueLength++;
-		}
-
-		m_text.setString(m_value.substr(m_valueOffset, m_valueLength));
-
-		updateCursor();
-	}
-}
-
-void Input::cursorToEnd()
-{
-	if (isTargeted()) {
-		m_cursorIndex = m_value.length();
-		m_valueLength = 0;
-
-		unsigned size = getCharacterSize();
-		std::size_t maxTextWidth = width() - 16;
-		size_t textWidth = 0;
-		for (int i = m_value.length() - 1; i > 0 && textWidth > maxTextWidth; --i) {
-			textWidth += m_font.getGlyph(m_value[i], size, false).advance;
-			m_valueLength++;
-		}
-
-		m_text.setString(m_value.substr(m_valueOffset, m_valueLength));
-
-		updateCursor();
-	}
+	Window::getMainWindow()->setCursor(sf::Cursor::Arrow);
 }
 
 ////////////////////////////////////////////////////////////////////////////////

@@ -57,6 +57,7 @@ public:
 	void setLeft(int left);
 
 	void setIcon(const std::string &path);
+	void setCursor(sf::Cursor::Type type);
 
 private:
 	static Window *s_mainWindow;

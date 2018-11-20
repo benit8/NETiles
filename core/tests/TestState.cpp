@@ -12,21 +12,26 @@
 TestState::TestState(Application *app)
 : m_app(app)
 {
-	m_eventHandler.onResize(BIND1(TestState::onResize_callback));
+	m_eventHandler.onResize(BIND1(TestState::updatePositions));
 	m_eventHandler.onKeyDown(BIND(TestState::closeOnEscape), sf::Keyboard::Escape);
 
 	m_guiRoot.addChild(&m_box);
-	m_box.setSize(1280, 720);
 	m_box.setBackgroundImage("bg.png");
 
-	m_box.addChild(&m_1);
-	m_1.setPosition({(1280 - m_1.width()) / 2.f, 250});
-	m_1.setSize({600, 60});
-	m_1.setPlaceholder("Type text here...");
-	m_1.setCharacterSize(30);
-	m_1.setValue("abcdefghijklmnopqrstuvwxyzmlkakfjri");
+	m_box.addChild(&m_input);
+	m_input.setSize({600, 60});
+	m_input.setPlaceholder("Type text here...");
+	m_input.setCharacterSize(30);
+	m_input.setValue("abcdefghijklmnopqrstuvwxyzmlkakfjri");
+	m_input.onEnter.connect(this, &TestState::onEnter);
 
-	m_1.onEnter.connect(this, &TestState::onEnter);
+	m_box.addChild(&m_button);
+	m_button.setSize({600, 60});
+	m_button.setLabel("Click here");
+	m_button.setLabelSize(24);
+	m_button.onClick.connect(this, &TestState::onClick);
+
+	updatePositions({1280, 720});
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -42,13 +47,19 @@ void TestState::closeOnEscape()
 	m_app->close();
 }
 
-void TestState::onResize_callback(sf::Vector2u size)
+void TestState::updatePositions(sf::Vector2u size)
 {
 	m_box.setSize(size.x, size.y);
-	m_1.setPosition({(size.x - m_1.width()) / 2.f, 250});
+	m_input.setPosition({(size.x - m_input.width()) / 2.f, 250});
+	m_button.setPosition({(size.x - m_button.width()) / 2.f, 340});
 }
 
 void TestState::onEnter(const std::string &value)
 {
 	std::cout << "'" << value << "'" << std::endl;
+}
+
+void TestState::onClick(sf::Vector2i pos)
+{
+	std::cout << "'" << m_input.getValue() << "'" << std::endl;
 }

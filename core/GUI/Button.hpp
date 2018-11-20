@@ -38,9 +38,9 @@ public:
 public:
 	virtual void draw(sf::RenderTarget &rt) override;
 
-	void setLabel(const std::string &text, bool resize = true);
+	void setLabel(const std::string &text, bool resize = false);
 	const std::string getLabel() const;
-	void setLabelSize(unsigned int size, bool resize = true);
+	void setLabelSize(unsigned int size, bool resize = false);
 
 	virtual void setSize(const sf::Vector2f &size);
 

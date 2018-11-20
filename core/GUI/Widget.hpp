@@ -58,6 +58,8 @@ public: // Methods
 	virtual void draw(sf::RenderTarget &rt) {}
 	virtual void update() {}
 
+	void focus();
+
 public: // Signals
 	Signal<sf::Vector2i> onHoverIn;
 	Signal<sf::Vector2i> onHoverOut;

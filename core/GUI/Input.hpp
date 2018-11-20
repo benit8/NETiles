@@ -52,19 +52,16 @@ private:
 	void updateCursor();
 
 	void onTextInput_callback(unsigned unicode);
+	void onHoverIn_callback(sf::Vector2i pos);
+	void onHoverOut_callback(sf::Vector2i pos);
 	void onFocusIn_callback();
 	void onFocusOut_callback();
-	void cursorToLeft();
-	void cursorToRight();
-	void cursorToBegin();
-	void cursorToEnd();
 
 private:
 	sf::RectangleShape m_rect;
 	sf::RectangleShape m_cursor;
 	std::size_t m_cursorIndex;
 	std::size_t m_valueOffset;
-	std::size_t m_valueLength;
 
 	sf::Font m_font;
 	sf::Text m_placeholder;

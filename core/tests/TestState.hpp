@@ -18,12 +18,8 @@ class TestState;
 
 #include <SFML/Graphics.hpp>
 
-#include "../Application.hpp"
 #include "../State.hpp"
-#include "../Window.hpp"
-#include "../GUI/Box.hpp"
-#include "../GUI/Input.hpp"
-#include "TestStateN.hpp"
+#include "../Application.hpp"
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -37,12 +33,14 @@ public:
 	void update(const sf::Time &delta) override;
 
 private:
+	void updatePositions(sf::Vector2u pos);
 	void closeOnEscape();
-	void onResize_callback(sf::Vector2u pos);
 	void onEnter(const std::string &value);
+	void onClick(sf::Vector2i pos);
 
 private:
 	Application *m_app;
 	GUI::Box m_box;
-	GUI::Input m_1;
+	GUI::Input m_input;
+	GUI::Button m_button;
 };

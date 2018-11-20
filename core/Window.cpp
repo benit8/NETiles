@@ -110,3 +110,11 @@ void Window::setIcon(const std::string &path)
 	sf::Vector2u size = icon.getSize();
 	sf::RenderWindow::setIcon(size.x, size.y, icon.getPixelsPtr());
 }
+
+void Window::setCursor(sf::Cursor::Type type)
+{
+	sf::Cursor cursor;
+
+	if (cursor.loadFromSystem(type))
+		setMouseCursor(cursor);
+}

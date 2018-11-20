@@ -61,6 +61,14 @@ void Widget::render(sf::RenderTarget &rt, bool isRoot)
 	}
 }
 
+void Widget::focus()
+{
+	if (Env::target)
+		Env::target->onFocusOut.emit();
+	Env::target = this;
+	onFocusIn.emit();
+}
+
 
 bool Widget::isMouseHover(sf::Vector2i mouse)
 {

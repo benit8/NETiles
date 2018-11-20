@@ -17,7 +17,7 @@ namespace GUI
 
 Button::Button()
 {
-	m_rect.setFillColor(sf::Color::Black);
+	m_rect.setFillColor(sf::Color(0, 0, 0, 175));
 	m_rect.setOutlineThickness(1);
 	m_rect.setOutlineColor(sf::Color(170, 170, 170));
 	m_rect.setSize(sf::Vector2f(30, 10));
@@ -27,7 +27,7 @@ Button::Button()
 	m_label.setFont(m_font);
 
 	setLabel("Button");
-	setLabelSize(20);
+	setLabelSize(18);
 
 	onHoverIn.connect(this, &Button::onHoverIn_callback);
 	onHoverOut.connect(this, &Button::onHoverOut_callback);
@@ -61,7 +61,7 @@ void Button::setLabel(const std::string &text, bool resize)
 
 	if (resize) {
 		sf::FloatRect labelBounds = m_label.getLocalBounds();
-		setSize({labelBounds.width * 1.1f, labelBounds.height + 14});
+		setSize({labelBounds.width + 32, labelBounds.height + 14});
 	}
 }
 
@@ -76,7 +76,7 @@ void Button::setLabelSize(unsigned int size, bool resize)
 
 	if (resize) {
 		sf::FloatRect labelBounds = m_label.getLocalBounds();
-		setSize({labelBounds.width * 1.1f, labelBounds.height + 14});
+		setSize({labelBounds.width + 32, labelBounds.height + 14});
 	}
 }
 
@@ -108,11 +108,13 @@ void Button::centerLabel()
 void Button::onHoverIn_callback(sf::Vector2i pos)
 {
 	m_rect.setOutlineColor(sf::Color::White);
+	Window::getMainWindow()->setCursor(sf::Cursor::Hand);
 }
 
 void Button::onHoverOut_callback(sf::Vector2i pos)
 {
 	m_rect.setOutlineColor(sf::Color(170, 170, 170));
+	Window::getMainWindow()->setCursor(sf::Cursor::Arrow);
 }
 
 void Button::onClick_callback(sf::Vector2i pos)
@@ -124,7 +126,7 @@ void Button::onClick_callback(sf::Vector2i pos)
 
 void Button::onRelease_callback(sf::Vector2i pos)
 {
-	m_rect.setFillColor(sf::Color::Black);
+	m_rect.setFillColor(sf::Color(0, 0, 0, 175));
 	m_rect.setOutlineColor(sf::Color(170, 170, 170));
 	m_label.setFillColor(sf::Color::White);
 }
