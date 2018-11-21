@@ -5,8 +5,11 @@
 ** GUI / Button.cpp
 */
 
-#include <algorithm>
 #include "Button.hpp"
+#include "../FontLoader.hpp"
+#include "../Window.hpp"
+#include "GUI.hpp"
+#include <algorithm>
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -17,14 +20,12 @@ namespace GUI
 
 Button::Button()
 {
-	m_rect.setFillColor(sf::Color(0, 0, 0, 175));
-	m_rect.setOutlineThickness(1);
-	m_rect.setOutlineColor(sf::Color(170, 170, 170));
-	m_rect.setSize(sf::Vector2f(30, 10));
+	setSize(sf::Vector2f(30, 10));
+	m_zone.setFillColor(sf::Color(0, 0, 0, 175));
+	m_zone.setOutlineThickness(1);
+	m_zone.setOutlineColor(sf::Color(170, 170, 170));
 
-	if (!FontLoader::loadFromSystem(m_font, "Noto Sans"))
-		std::cerr << "Failed to load GUI::Button font" << std::endl;
-	m_label.setFont(m_font);
+	m_label.setFont(GUI::getDefaultFont());
 
 	setLabel("Button");
 	setLabelSize(18);
@@ -45,11 +46,9 @@ Button::Button(const std::string &label)
 
 void Button::draw(sf::RenderTarget &rt)
 {
-	m_rect.setSize(getSize());
-	m_rect.setPosition(getPosition());
 	centerLabel();
 
-	rt.draw(m_rect);
+	rt.draw(m_zone);
 	rt.draw(m_label);
 }
 
@@ -87,8 +86,7 @@ void Button::setSize(const sf::Vector2f &requestedSize)
 	size.x = std::max(size.x, labelBounds.width);
 	size.y = std::max(size.y, labelBounds.height);
 
-	m_zone.width = size.x;
-	m_zone.height = size.y;
+	Widget::setSize(size);
 }
 
 
@@ -96,8 +94,8 @@ void Button::centerLabel()
 {
 	sf::FloatRect labelBounds = m_label.getLocalBounds();
 
-	sf::Vector2f pos(m_zone.left, m_zone.top);
-	pos += sf::Vector2f((m_zone.width - labelBounds.width) / 2.f, (m_zone.height - labelBounds.height) / 2.f);
+	sf::Vector2f pos = getPosition();
+	pos += sf::Vector2f((width() - labelBounds.width) / 2.f, (height() - labelBounds.height) / 2.f);
 	pos -= sf::Vector2f(labelBounds.left, labelBounds.top);
 
 	m_label.setPosition(pos);
@@ -107,27 +105,27 @@ void Button::centerLabel()
 
 void Button::onHoverIn_callback(sf::Vector2i pos)
 {
-	m_rect.setOutlineColor(sf::Color::White);
+	m_zone.setOutlineColor(sf::Color::White);
 	Window::getMainWindow()->setCursor(sf::Cursor::Hand);
 }
 
 void Button::onHoverOut_callback(sf::Vector2i pos)
 {
-	m_rect.setOutlineColor(sf::Color(170, 170, 170));
+	m_zone.setOutlineColor(sf::Color(170, 170, 170));
 	Window::getMainWindow()->setCursor(sf::Cursor::Arrow);
 }
 
 void Button::onClick_callback(sf::Vector2i pos)
 {
-	m_rect.setFillColor(sf::Color::White);
-	m_rect.setOutlineColor(sf::Color(170, 170, 170));
+	m_zone.setFillColor(sf::Color::White);
+	m_zone.setOutlineColor(sf::Color(170, 170, 170));
 	m_label.setFillColor(sf::Color::Black);
 }
 
 void Button::onRelease_callback(sf::Vector2i pos)
 {
-	m_rect.setFillColor(sf::Color(0, 0, 0, 175));
-	m_rect.setOutlineColor(sf::Color(170, 170, 170));
+	m_zone.setFillColor(sf::Color(0, 0, 0, 175));
+	m_zone.setOutlineColor(sf::Color(170, 170, 170));
 	m_label.setFillColor(sf::Color::White);
 }
 

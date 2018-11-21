@@ -15,14 +15,9 @@ namespace GUI {
 
 ////////////////////////////////////////////////////////////////////////////////
 
-#include <string>
-
-#include <SFML/Graphics/RectangleShape.hpp>
-#include <SFML/Graphics/Font.hpp>
-#include <SFML/Graphics/Text.hpp>
-
-#include "../FontLoader.hpp"
 #include "Widget.hpp"
+
+#include <string>
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -53,8 +48,6 @@ private:
 	void onRelease_callback(sf::Vector2i pos);
 
 private:
-	sf::RectangleShape m_rect;
-	sf::Font m_font;
 	sf::Text m_label;
 };
 

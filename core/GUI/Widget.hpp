@@ -17,13 +17,11 @@ namespace GUI {
 
 #include <list>
 
-#include <SFML/System/Vector2.hpp>
-#include <SFML/Window/Mouse.hpp>
-#include <SFML/Graphics/RenderTarget.hpp>
+#include <SFML/System.hpp>
+#include <SFML/Window.hpp>
+#include <SFML/Graphics.hpp>
 
 #include "../EventHandler.hpp"
-#include "../Window.hpp"
-#include "Env.hpp"
 #include "Signal.hpp"
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -59,6 +57,7 @@ public: // Methods
 	virtual void update() {}
 
 	void focus();
+	void unfocus();
 
 public: // Signals
 	Signal<sf::Vector2i> onHoverIn;
@@ -76,6 +75,7 @@ private:
 	bool isMouseHover(sf::Vector2i mouse);
 	bool isMouseHover(sf::Vector2f mouse);
 	sf::Vector2f getParentOffset();
+	bool isFromModal();
 
 private: // Callbacks
 	void callback_mouseMove(sf::Vector2i pos, sf::Vector2i offset);
@@ -99,24 +99,23 @@ public: // Getters & Setters
 	bool isDraggable() const;
 	void setMode(Mode mode);
 
-	virtual sf::FloatRect getZone() const;
-	virtual void setZone(const sf::FloatRect &zone);
-
-	virtual sf::Vector2f getPosition() const;
 	float left() const;
 	float top() const;
-	virtual void setPosition(const sf::Vector2f &position);
-	virtual void move(const sf::Vector2f &offset);
-	void setPosition(float offsetX, float offsetY);
+	void left(float left);
+	void top(float top);
 	void move(float offsetX, float offsetY);
+	void move(const sf::Vector2f &offset);
+	void setPosition(float offsetX, float offsetY);
+	virtual void setPosition(const sf::Vector2f &position);
+	virtual const sf::Vector2f &getPosition() const;
 
-	virtual sf::Vector2f getSize() const;
-	float width() const;
 	float height() const;
-	virtual void setSize(const sf::Vector2f &size);
+	float width() const;
+	void width(float width);
+	void height(float height);
 	void setSize(float width, float height);
-	void setWidth(float width);
-	void setHeight(float height);
+	virtual void setSize(const sf::Vector2f &size);
+	virtual const sf::Vector2f &getSize() const;
 
 protected:
 	Widget *m_parent;
@@ -124,7 +123,7 @@ protected:
 
 	int m_state;
 	int m_mode;
-	sf::FloatRect m_zone;
+	sf::RectangleShape m_zone;
 
 	EventHandler m_eventDispatcher;
 };

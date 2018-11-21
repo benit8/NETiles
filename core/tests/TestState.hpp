@@ -20,6 +20,7 @@ class TestState;
 
 #include "../State.hpp"
 #include "../Application.hpp"
+#include "../GUI/GUI.hpp"
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -43,4 +44,5 @@ private:
 	GUI::Box m_box;
 	GUI::Input m_input;
 	GUI::Button m_button;
+	GUI::MessageBox *m_msgBox;
 };

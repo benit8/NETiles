@@ -2,7 +2,7 @@
 ** EPITECH PROJECT, 2018
 ** NETiles
 ** File description:
-** GUI / Env.hpp
+** GUI / Modal.hpp
 */
 
 #pragma once
@@ -10,7 +10,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 namespace GUI {
-	namespace Env {}
+	class Modal;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -21,10 +21,19 @@ namespace GUI {
 
 namespace GUI
 {
-	namespace Env
-	{
-		extern bool foundTarget;
-		extern Widget *target;
-		extern Widget *modal;
-	}
+
+class Modal : public Widget
+{
+public:
+	Modal();
+	virtual ~Modal();
+
+public:
+	void open();
+	void close();
+
+private:
+	Widget *m_previousModal;
+};
+
 }

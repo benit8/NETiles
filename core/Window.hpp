@@ -46,15 +46,15 @@ public:
 	void createFullscreen(const std::string &title);
 	void createBorderless(const std::string &title);
 
-	unsigned getWidth() const;
-	void setWidth(int width);
-	unsigned getHeight() const;
-	void setHeight(int height);
+	unsigned width() const;
+	void width(int width);
+	unsigned height() const;
+	void height(int height);
 
-	int getTop() const;
-	void setTop(int top);
-	int getLeft() const;
-	void setLeft(int left);
+	int top() const;
+	void top(int top);
+	int left() const;
+	void left(int left);
 
 	void setIcon(const std::string &path);
 	void setCursor(sf::Cursor::Type type);

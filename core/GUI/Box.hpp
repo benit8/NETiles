@@ -15,11 +15,6 @@ namespace GUI {
 
 ////////////////////////////////////////////////////////////////////////////////
 
-#include <SFML/Graphics/Color.hpp>
-#include <SFML/Graphics/RectangleShape.hpp>
-#include <SFML/Graphics/RenderTarget.hpp>
-#include <SFML/Graphics/Texture.hpp>
-
 #include "Widget.hpp"
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -53,7 +48,6 @@ public:
 	void setBorderSize(float size);
 
 private:
-	sf::RectangleShape m_rect;
 	sf::Texture m_background;
 	BackgroundMode m_backgroundMode;
 };

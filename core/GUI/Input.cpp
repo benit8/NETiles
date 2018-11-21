@@ -2,12 +2,13 @@
 ** EPITECH PROJECT, 2018
 ** NETiles
 ** File description:
-** Input.cpp
+** GUI / Input.cpp
 */
 
-#include "../GUI/Input.hpp"
+#include "Input.hpp"
 #include "../FontLoader.hpp"
 #include "../Window.hpp"
+#include "GUI.hpp"
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -20,13 +21,13 @@ Input::Input()
 : m_cursorIndex(0)
 , m_valueOffset(0)
 {
-	setFont("Consolas");
+	setFont(GUI::getDefaultFont());
 	setSize(sf::Vector2f(300, 35));
 	setCharacterSize(18);
 
-	m_rect.setFillColor(sf::Color(0, 0, 0, 175));
-	m_rect.setOutlineThickness(1);
-	m_rect.setOutlineColor(sf::Color(170, 170, 170));
+	m_zone.setFillColor(sf::Color(0, 0, 0, 175));
+	m_zone.setOutlineThickness(1);
+	m_zone.setOutlineColor(sf::Color(170, 170, 170));
 
 	m_cursor.setFillColor(sf::Color::White);
 	m_placeholder.setFillColor(sf::Color(100, 100, 100));
@@ -50,10 +51,7 @@ Input::Input(const std::string &placeholder)
 
 void Input::draw(sf::RenderTarget &target)
 {
-	m_rect.setSize(getSize());
-	m_rect.setPosition(getPosition());
-
-	target.draw(m_rect);
+	target.draw(m_zone);
 	if (m_value.empty())
 		target.draw(m_placeholder);
 	else
@@ -204,12 +202,12 @@ void Input::onTextInput_callback(unsigned unicode)
 
 void Input::onFocusIn_callback()
 {
-	m_rect.setOutlineColor(sf::Color(231, 76, 60));
+	m_zone.setOutlineColor(sf::Color(231, 76, 60));
 }
 
 void Input::onFocusOut_callback()
 {
-	m_rect.setOutlineColor(sf::Color(170, 170, 170));
+	m_zone.setOutlineColor(sf::Color(170, 170, 170));
 }
 
 void Input::onHoverIn_callback(sf::Vector2i pos)

@@ -2,9 +2,10 @@
 ** EPITECH PROJECT, 2018
 ** NETiles
 ** File description:
-** GUI / Env.cpp
+** GUI / Modal.cpp
 */
 
+#include "Modal.hpp"
 #include "Env.hpp"
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -14,11 +15,26 @@ namespace GUI
 
 ////////////////////////////////////////////////////////////////////////////////
 
-namespace Env
+Modal::Modal()
 {
-	bool foundTarget = false;
-	Widget *target = nullptr;
-	Widget *modal = nullptr;
+}
+
+Modal::~Modal()
+{
+}
+
+////////////////////////////////////////////////////////////////////////////////
+
+void Modal::open()
+{
+	m_previousModal = Env::modal;
+	Env::modal = this;
+	focus();
+}
+
+void Modal::close()
+{
+	Env::modal = m_previousModal;
 }
 
 ////////////////////////////////////////////////////////////////////////////////

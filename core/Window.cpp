@@ -56,45 +56,45 @@ void Window::createBorderless(const std::string &title)
 }
 
 
-unsigned Window::getWidth() const
+unsigned Window::width() const
 {
 	return getSize().x;
 }
 
-void Window::setWidth(int width)
+void Window::width(int width)
 {
-	setSize(sf::Vector2u(width, getHeight()));
+	setSize(sf::Vector2u(width, height()));
 }
 
-unsigned Window::getHeight() const
+unsigned Window::height() const
 {
 	return getSize().y;
 }
 
-void Window::setHeight(int height)
+void Window::height(int height)
 {
-	setSize(sf::Vector2u(getWidth(), height));
+	setSize(sf::Vector2u(width(), height));
 }
 
 
-int Window::getLeft() const
+int Window::left() const
 {
 	return getPosition().y;
 }
 
-void Window::setLeft(int left)
+void Window::left(int left)
 {
-	setPosition(sf::Vector2i(getTop(), left));
+	setPosition(sf::Vector2i(top(), left));
 }
 
-int Window::getTop() const
+int Window::top() const
 {
 	return getPosition().y;
 }
 
-void Window::setTop(int top)
+void Window::top(int top)
 {
-	setPosition(sf::Vector2i(top, getLeft()));
+	setPosition(sf::Vector2i(top, left()));
 }
 
 

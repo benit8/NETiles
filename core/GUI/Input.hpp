@@ -2,7 +2,7 @@
 ** EPITECH PROJECT, 2018
 ** NETiles
 ** File description:
-** Input.hpp
+** GUI / Input.hpp
 */
 
 #pragma once
@@ -14,9 +14,6 @@ namespace GUI {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-
-#include <SFML/Graphics/RectangleShape.hpp>
-#include <SFML/Graphics/Text.hpp>
 
 #include "Widget.hpp"
 
@@ -58,7 +55,6 @@ private:
 	void onFocusOut_callback();
 
 private:
-	sf::RectangleShape m_rect;
 	sf::RectangleShape m_cursor;
 	std::size_t m_cursorIndex;
 	std::size_t m_valueOffset;

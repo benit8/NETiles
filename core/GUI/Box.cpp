@@ -51,15 +51,12 @@ void Box::update()
 		tRect.top = (oldHeight - tRect.height) / 2.f;
 	}
 
-	m_rect.setTextureRect(tRect);
+	m_zone.setTextureRect(tRect);
 }
 
 void Box::draw(sf::RenderTarget &rt)
 {
-	m_rect.setSize(getSize());
-	m_rect.setPosition(getPosition());
-
-	rt.draw(m_rect);
+	rt.draw(m_zone);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -80,7 +77,7 @@ void Box::setBackgroundImage(const sf::Image &image, BackgroundMode mode)
 
 	m_backgroundMode = mode;
 	m_background.setRepeated(m_backgroundMode == Tiled);
-	m_rect.setTexture(&m_background);
+	m_zone.setTexture(&m_background);
 
 	update();
 }
@@ -94,17 +91,17 @@ void Box::setBackgroundMode(BackgroundMode mode)
 
 void Box::setBackgroundColor(const sf::Color &color)
 {
-	m_rect.setFillColor(color);
+	m_zone.setFillColor(color);
 }
 
 void Box::setBorderColor(const sf::Color &color)
 {
-	m_rect.setOutlineColor(color);
+	m_zone.setOutlineColor(color);
 }
 
 void Box::setBorderSize(float size)
 {
-	m_rect.setOutlineThickness(size);
+	m_zone.setOutlineThickness(size);
 }
 
 ////////////////////////////////////////////////////////////////////////////////

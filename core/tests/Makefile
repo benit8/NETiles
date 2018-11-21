@@ -14,18 +14,20 @@ NAME	=	a.out
 
 SRCS	=	main.cpp			\
 		TestState.cpp			\
-		TestStateN.cpp			\
 		../Application.cpp		\
 		../EventHandler.cpp		\
 		../FPSCounter.cpp		\
 		../FontLoader.cpp		\
 		../StateManager.cpp		\
 		../Window.cpp			\
+		../GUI/GUI.cpp			\
 		../GUI/Env.cpp			\
 		../GUI/Widget.cpp		\
 		../GUI/Box.cpp			\
 		../GUI/Button.cpp		\
-		../GUI/Input.cpp
+		../GUI/Input.cpp		\
+		../GUI/Modal.cpp		\
+		../GUI/MessageBox.cpp		\
 
 OBJS	=	$(SRCS:.cpp=.o)
 

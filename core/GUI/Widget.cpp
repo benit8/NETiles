@@ -6,6 +6,9 @@
 */
 
 #include "Widget.hpp"
+#include "../Window.hpp"
+#include "GUI.hpp"
+#include "Env.hpp"
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -23,6 +26,8 @@ Widget::Widget()
 	m_eventDispatcher.onMouseDown(BIND1(Widget::callback_mouseDown), sf::Mouse::Left);
 	m_eventDispatcher.onMouseUp(BIND1(Widget::callback_mouseUp), sf::Mouse::Left);
 	m_eventDispatcher.onText(BIND1(Widget::callback_text));
+
+	onFocusOut.connect(this, &Widget::unfocus);
 }
 
 Widget::~Widget()
@@ -36,28 +41,44 @@ Widget::~Widget()
 
 void Widget::handleEvent(sf::Event &e, bool isRoot)
 {
-	for (auto it = m_children.begin(); it != m_children.end(); ++it)
-		(*it)->handleEvent(e);
+	if (isRoot && Env::modal != nullptr) {
+		Env::modal->handleEvent(e);
+		return;
+	}
 
-	if (!isRoot)
+	if (isRoot && Env::modal != nullptr) {
+		if (e.type == sf::Event::Closed || e.type == sf::Event::Resized) {
+			for (auto it = m_children.begin(); it != m_children.end(); ++it)
+				(*it)->handleEvent(e);
+		}
+	}
+	else {
+		for (auto it = m_children.begin(); it != m_children.end(); ++it)
+			(*it)->handleEvent(e);
+	}
+
+	if (!isRoot) {
 		m_eventDispatcher.dispatchEvent(e);
-	else
+	}
+	else {
 		Env::foundTarget = false;
+	}
 }
 
 void Widget::render(sf::RenderTarget &rt, bool isRoot)
 {
 	if (!isRoot) {
-		sf::Vector2f pOff = getParentOffset();
-		m_zone.left += pOff.x;
-		m_zone.top += pOff.y;
+		sf::Vector2f offset = getParentOffset();
+		m_zone.move(offset);
 		draw(rt);
-		m_zone.left -= pOff.x;
-		m_zone.top -= pOff.y;
+		m_zone.move(-offset);
 	}
 
-	for (auto it = m_children.begin(); it != m_children.end(); ++it) {
+	for (auto it = m_children.begin(); it != m_children.end(); ++it)
 		(*it)->render(rt);
+
+	if (isRoot && Env::modal) {
+		Env::modal->render(rt);
 	}
 }
 
@@ -69,6 +90,15 @@ void Widget::focus()
 	onFocusIn.emit();
 }
 
+void Widget::unfocus()
+{
+	if (isClicked()) {
+		onRelease.emit({0, 0});
+		m_state &= ~State::Clicked;
+	}
+}
+
+////////////////////////////////////////////////////////////////////////////////
 
 bool Widget::isMouseHover(sf::Vector2i mouse)
 {
@@ -77,12 +107,12 @@ bool Widget::isMouseHover(sf::Vector2i mouse)
 
 bool Widget::isMouseHover(sf::Vector2f mouse)
 {
-	sf::FloatRect zone = m_zone;
+	sf::FloatRect rect(getPosition(), getSize());
 	sf::Vector2f parentOffset = getParentOffset();
 
-	zone.left += parentOffset.x;
-	zone.top += parentOffset.y;
-	return zone.contains(mouse);
+	rect.left += parentOffset.x;
+	rect.top += parentOffset.y;
+	return rect.contains(mouse);
 }
 
 sf::Vector2f Widget::getParentOffset()
@@ -94,6 +124,17 @@ sf::Vector2f Widget::getParentOffset()
 	}
 
 	return offset;
+}
+
+bool Widget::isFromModal()
+{
+	if (Env::modal == this)
+		return true;
+
+	if (m_parent)
+		return m_parent->isFromModal();
+
+	return false;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -122,6 +163,10 @@ void Widget::callback_mouseMove(sf::Vector2i pos, sf::Vector2i offset)
 		onHoverIn.emit(pos);
 		m_state |= State::Hovered;
 	}
+	else if (!in && !isHovered() && isClicked()) {
+		onRelease.emit(pos);
+		m_state &= ~State::Clicked;
+	}
 }
 
 void Widget::callback_mouseDown(sf::Vector2i pos)
@@ -134,10 +179,7 @@ void Widget::callback_mouseDown(sf::Vector2i pos)
 		m_state |= State::Clicked;
 
 		if (!Env::foundTarget) {
-			if (Env::target != nullptr)
-				Env::target->onFocusOut.emit();
-			Env::target = this;
-			onFocusIn.emit();
+			focus();
 			Env::foundTarget = true;
 		}
 	}
@@ -194,6 +236,7 @@ void Widget::removeChild(Widget *child)
 	m_children.remove(child);
 }
 
+////////////////////////////////////////////////////////////////////////////////
 
 bool Widget::isTargeted() const {
 	return this == Env::target;
@@ -227,20 +270,7 @@ void Widget::setMode(Mode mode) {
 	m_mode = mode;
 }
 
-
-sf::FloatRect Widget::getZone() const {
-	return m_zone;
-}
-
-void Widget::setZone(const sf::FloatRect &zone) {
-	setSize(zone.width, zone.height);
-	setPosition(zone.left, zone.top);
-}
-
-
-sf::Vector2f Widget::getPosition() const {
-	return sf::Vector2f(m_zone.left, m_zone.top);
-}
+////////////////////////////////////////////////////////////////////////////////
 
 float Widget::left() const {
 	return getPosition().x;
@@ -250,29 +280,35 @@ float Widget::top() const {
 	return getPosition().y;
 }
 
+void Widget::left(float left) {
+	return setPosition(left, top());
+}
+
+void Widget::top(float top) {
+	return setPosition(left(), top);
+}
+
+void Widget::move(float offsetX, float offsetY) {
+	move(sf::Vector2f(offsetX, offsetY));
+}
+
+void Widget::move(const sf::Vector2f &offset) {
+	setPosition(getPosition() + offset);
+}
+
 void Widget::setPosition(float offsetX, float offsetY) {
 	setPosition(sf::Vector2f(offsetX, offsetY));
 }
 
 void Widget::setPosition(const sf::Vector2f &position) {
-	m_zone.left = position.x;
-	m_zone.top = position.y;
-
+	m_zone.setPosition(position);
 	update();
 }
 
-void Widget::move(float offsetX, float offsetY) {
-	setPosition(sf::Vector2f(m_zone.left + offsetX, m_zone.top + offsetY));
+const sf::Vector2f &Widget::getPosition() const {
+	return m_zone.getPosition();
 }
 
-void Widget::move(const sf::Vector2f &offset) {
-	setPosition(sf::Vector2f(m_zone.left + offset.x, m_zone.top + offset.y));
-}
-
-
-sf::Vector2f Widget::getSize() const {
-	return sf::Vector2f(m_zone.width, m_zone.height);
-}
 
 float Widget::width() const {
 	return getSize().x;
@@ -282,23 +318,25 @@ float Widget::height() const {
 	return getSize().y;
 }
 
+void Widget::width(float width) {
+	setSize(width, height());
+}
+
+void Widget::height(float height) {
+	setSize(width(), height);
+}
+
 void Widget::setSize(float width, float height) {
 	setSize(sf::Vector2f(width, height));
 }
 
 void Widget::setSize(const sf::Vector2f &size) {
-	m_zone.width = size.x;
-	m_zone.height = size.y;
-
+	m_zone.setSize(size);
 	update();
 }
 
-void Widget::setWidth(float width) {
-	setSize(width, m_zone.height);
-}
-
-void Widget::setHeight(float height) {
-	setSize(m_zone.width, height);
+const sf::Vector2f &Widget::getSize() const {
+	return m_zone.getSize();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
