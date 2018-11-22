@@ -49,8 +49,8 @@ private:
 	void updateCursor();
 
 	void onTextInput_callback(unsigned unicode);
-	void onHoverIn_callback(sf::Vector2i pos);
-	void onHoverOut_callback(sf::Vector2i pos);
+	void onHoverIn_callback(sf::Vector2i);
+	void onHoverOut_callback(sf::Vector2i);
 	void onFocusIn_callback();
 	void onFocusOut_callback();
 

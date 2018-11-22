@@ -6,8 +6,8 @@
 */
 
 #include "Input.hpp"
+#include "../Application.hpp"
 #include "../FontLoader.hpp"
-#include "../Window.hpp"
 #include "GUI.hpp"
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -210,14 +210,14 @@ void Input::onFocusOut_callback()
 	m_zone.setOutlineColor(sf::Color(170, 170, 170));
 }
 
-void Input::onHoverIn_callback(sf::Vector2i pos)
+void Input::onHoverIn_callback(sf::Vector2i)
 {
-	Window::getMainWindow()->setCursor(sf::Cursor::Text);
+	Application::SetCursor(sf::Cursor::Text);
 }
 
-void Input::onHoverOut_callback(sf::Vector2i pos)
+void Input::onHoverOut_callback(sf::Vector2i)
 {
-	Window::getMainWindow()->setCursor(sf::Cursor::Arrow);
+	Application::SetCursor(sf::Cursor::Arrow);
 }
 
 ////////////////////////////////////////////////////////////////////////////////

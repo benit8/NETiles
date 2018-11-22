@@ -28,7 +28,7 @@ public:
 	~FocusEventListener() override {}
 
 public:
-	void handleEvent(sf::Event &e) {
+	void handleEvent(sf::Event &) {
 		for (FocusCallbacks::iterator it = m_callbacks.begin(); it != m_callbacks.end(); ++it)
 			(*it)();
 	}

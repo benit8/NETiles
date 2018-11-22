@@ -13,7 +13,7 @@ TestState::TestState(Application *app)
 : m_app(app)
 {
 	m_eventHandler.onResize(BIND1(TestState::updatePositions));
-	// m_eventHandler.onKeyDown(BIND(TestState::closeOnEscape), sf::Keyboard::Escape);
+	m_eventHandler.onKeyDown(BIND(TestState::closeOnEscape), sf::Keyboard::Q);
 
 	m_guiRoot.addChild(&m_box);
 	m_box.setBackgroundImage("bg.png");
@@ -36,12 +36,6 @@ TestState::TestState(Application *app)
 
 ////////////////////////////////////////////////////////////////////////////////
 
-void TestState::update(const sf::Time &delta)
-{
-}
-
-////////////////////////////////////////////////////////////////////////////////
-
 void TestState::closeOnEscape()
 {
 	m_app->close();
@@ -59,7 +53,7 @@ void TestState::onEnter(const std::string &value)
 	std::cout << "'" << value << "'" << std::endl;
 }
 
-void TestState::onClick(sf::Vector2i pos)
+void TestState::onClick(sf::Vector2i)
 {
 	m_msgBox = new GUI::MessageBox("Lorem ipsum dolor sit amet, consectetur adipisicing elit. Corporis ipsa, ullam itaque suscipit dignissimos veniam at quam molestias. Corrupti, nulla? Voluptas, unde et. Reprehenderit dolorum quo, harum iste, nobis magni!", {GUI::MessageBox::Ok, GUI::MessageBox::Close});
 	m_msgBox->open();

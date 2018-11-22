@@ -2,14 +2,18 @@
 ** EPITECH PROJECT, 2018
 ** NETiles
 ** File description:
-** common / tests / main.c
+** Core / tests / main.cpp
 */
 
-#include "MyApp.hpp"
+#include "../Application.hpp"
+#include "TestState.hpp"
 
 int main(int argc, char *argv[])
 {
-	MyApp app(argc, argv);
+	Application app(argc, argv);
+	app.setAppName("NETiles");
+	app.pushState<TestState>(&app);
+	app.setWindowMode(Application::Windowed, {1280, 720});
 
 	return app.run();
 }

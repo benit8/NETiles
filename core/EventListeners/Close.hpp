@@ -28,7 +28,7 @@ public:
 	~CloseEventListener() override {}
 
 public:
-	void handleEvent(sf::Event &e) {
+	void handleEvent(sf::Event &) {
 		for (CloseCallbacks::iterator it = m_callbacks.begin(); it != m_callbacks.end(); ++it)
 			(*it)();
 	}

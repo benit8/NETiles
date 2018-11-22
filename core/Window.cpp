@@ -9,50 +9,36 @@
 
 ////////////////////////////////////////////////////////////////////////////////
 
-Window *Window::s_mainWindow = nullptr;
-
-void Window::setMainWindow(Window *window)
-{
-	s_mainWindow = window;
-}
-
-Window *Window::getMainWindow()
-{
-	return s_mainWindow;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-
 Window::Window()
 : sf::RenderWindow()
 {
 }
 
-Window::Window(const std::string &title, sf::VideoMode videoMode, sf::Uint32 styles, sf::ContextSettings settings)
+Window::Window(const std::string &title, sf::VideoMode videoMode, sf::Uint32 styles, const sf::ContextSettings &settings)
 : sf::RenderWindow(videoMode, title, styles, settings)
 {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 
-void Window::create(const std::string &title, sf::VideoMode videoMode, sf::Uint32 styles, sf::ContextSettings settings)
+void Window::create(const std::string &title, sf::VideoMode videoMode, sf::Uint32 styles, const sf::ContextSettings &settings)
 {
 	sf::RenderWindow::create(videoMode, title, styles, settings);
 }
 
-void Window::createDefault(const std::string &title)
+void Window::create(const std::string &title, const sf::Vector2u &windowSize, sf::Uint32 styles, const sf::ContextSettings &settings)
 {
-	sf::RenderWindow::create(sf::VideoMode(1280, 720), title, sf::Style::Default, sf::ContextSettings(24, 8, 0, 3, 0));
-}
-
-void Window::createFullscreen(const std::string &title)
-{
-	sf::RenderWindow::create(sf::VideoMode::getFullscreenModes()[0], title, sf::Style::Fullscreen, sf::ContextSettings(24, 8, 0, 3, 0));
+	create(title, sf::VideoMode(windowSize.x, windowSize.y), styles, settings);
 }
 
 void Window::createBorderless(const std::string &title)
 {
-	sf::RenderWindow::create(sf::VideoMode::getFullscreenModes()[0], title, sf::Style::None, sf::ContextSettings(24, 8, 0, 3, 0));
+	create(title, sf::VideoMode::getFullscreenModes()[0], sf::Style::None);
+}
+
+void Window::createFullscreen(const std::string &title)
+{
+	create(title, sf::VideoMode::getFullscreenModes()[0], sf::Style::Fullscreen);
 }
 
 

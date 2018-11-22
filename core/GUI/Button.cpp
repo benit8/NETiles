@@ -6,8 +6,8 @@
 */
 
 #include "Button.hpp"
+#include "../Application.hpp"
 #include "../FontLoader.hpp"
-#include "../Window.hpp"
 #include "GUI.hpp"
 #include <algorithm>
 
@@ -103,26 +103,26 @@ void Button::centerLabel()
 
 ////////////////////////////////////////////////////////////////////////////////
 
-void Button::onHoverIn_callback(sf::Vector2i pos)
+void Button::onHoverIn_callback(sf::Vector2i)
 {
 	m_zone.setOutlineColor(sf::Color::White);
-	Window::getMainWindow()->setCursor(sf::Cursor::Hand);
+	Application::SetCursor(sf::Cursor::Hand);
 }
 
-void Button::onHoverOut_callback(sf::Vector2i pos)
+void Button::onHoverOut_callback(sf::Vector2i)
 {
 	m_zone.setOutlineColor(sf::Color(170, 170, 170));
-	Window::getMainWindow()->setCursor(sf::Cursor::Arrow);
+	Application::SetCursor(sf::Cursor::Arrow);
 }
 
-void Button::onClick_callback(sf::Vector2i pos)
+void Button::onClick_callback(sf::Vector2i)
 {
 	m_zone.setFillColor(sf::Color::White);
 	m_zone.setOutlineColor(sf::Color(170, 170, 170));
 	m_label.setFillColor(sf::Color::Black);
 }
 
-void Button::onRelease_callback(sf::Vector2i pos)
+void Button::onRelease_callback(sf::Vector2i)
 {
 	m_zone.setFillColor(sf::Color(0, 0, 0, 175));
 	m_zone.setOutlineColor(sf::Color(170, 170, 170));

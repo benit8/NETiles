@@ -29,22 +29,22 @@ public:
 	Window(const std::string &title,
 	       sf::VideoMode videoMode = sf::VideoMode::getDesktopMode(),
 	       sf::Uint32 styles = sf::Style::Default,
-	       sf::ContextSettings settings = sf::ContextSettings(24, 8, 0, 3, 0));
+	       const sf::ContextSettings &settings = sf::ContextSettings(24, 8, 0, 3, 0));
 	~Window() = default;
-
-public:
-	static void setMainWindow(Window *window);
-	static Window *getMainWindow();
 
 public:
 	void create(const std::string &title,
 	            sf::VideoMode videoMode = sf::VideoMode::getDesktopMode(),
 	            sf::Uint32 styles = sf::Style::Default,
-	            sf::ContextSettings settings = sf::ContextSettings(24, 8, 0, 3, 0));
+	            const sf::ContextSettings &settings = sf::ContextSettings(24, 8, 0, 3, 0));
 
-	void createDefault(const std::string &title);
-	void createFullscreen(const std::string &title);
+	void create(const std::string &title,
+	            const sf::Vector2u &windowSize,
+	            sf::Uint32 styles = sf::Style::Default,
+	            const sf::ContextSettings &settings = sf::ContextSettings(24, 8, 0, 3, 0));
+
 	void createBorderless(const std::string &title);
+	void createFullscreen(const std::string &title);
 
 	unsigned width() const;
 	void width(int width);
@@ -58,7 +58,4 @@ public:
 
 	void setIcon(const std::string &path);
 	void setCursor(sf::Cursor::Type type);
-
-private:
-	static Window *s_mainWindow;
 };

@@ -6,7 +6,7 @@
 */
 
 #include "MessageBox.hpp"
-#include "../Window.hpp"
+#include "../Application.hpp"
 #include "GUI.hpp"
 #include <algorithm>
 #include <cctype>
@@ -29,14 +29,6 @@ MessageBox::MessageBox(const std::string &text, const std::vector<ButtonType> &b
 , m_rawText(text)
 , m_text("", m_font, 18)
 {
-	m_eventDispatcher.onResize(BIND1(MessageBox::updatePositions));
-	m_eventDispatcher.onKeyDown(BIND(Modal::close), sf::Keyboard::Escape);
-
-	m_back.setBackgroundColor(sf::Color(0, 0, 0, 150));
-
-	m_zone.setFillColor(sf::Color::Black);
-	m_zone.setOutlineThickness(1);
-
 	constructGeometry(buttons);
 }
 
@@ -50,8 +42,7 @@ MessageBox::~MessageBox()
 
 void MessageBox::draw(sf::RenderTarget &rt)
 {
-	m_back.draw(rt);
-	rt.draw(m_zone);
+	Modal::draw(rt);
 
 	m_text.move(getPosition());
 	rt.draw(m_text);
@@ -60,20 +51,9 @@ void MessageBox::draw(sf::RenderTarget &rt)
 
 ////////////////////////////////////////////////////////////////////////////////
 
-void MessageBox::updatePositions(sf::Vector2u size)
-{
-	m_back.setSize({size.x, size.y});
-
-	setPosition({
-		(size.x - width()) / 2.f,
-		(size.y - height()) / 2.f
-	});
-}
-
 void MessageBox::constructGeometry(const std::vector<ButtonType> &buttons)
 {
-	unsigned maxWidth = Window::getMainWindow() ? Window::getMainWindow()->width() : sf::VideoMode::getDesktopMode().width;
-	maxWidth *= 0.75f;
+	unsigned maxWidth = Application::MainWindowWidth() * 0.75f;
 
 	float w = 0;
 	for (size_t i = 0; i < m_rawText.length(); ++i) {
@@ -94,7 +74,7 @@ void MessageBox::constructGeometry(const std::vector<ButtonType> &buttons)
 		std::max(200.f, textBounds.height + 102)
 	);
 
-	updatePositions(Window::getMainWindow()->getSize());
+	updatePositions(Application::MainWindowSize());
 
 	w = 0;
 	for (auto it = m_buttons.begin(); it != m_buttons.end(); ++it) {
@@ -196,6 +176,8 @@ Button *MessageBox::createButton(ButtonType type)
 		case RestoreDefaults:
 			button->setLabel("RestoreDefaults", true);
 			button->onClick.connect(this, &MessageBox::emitReset);
+			break;
+		default:
 			break;
 	}
 

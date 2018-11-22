@@ -16,7 +16,6 @@ namespace GUI {
 ////////////////////////////////////////////////////////////////////////////////
 
 #include "Modal.hpp"
-#include "Box.hpp"
 #include "Button.hpp"
 
 #include <map>
@@ -63,7 +62,6 @@ public:
 	void draw(sf::RenderTarget &target) override;
 
 private:
-	void updatePositions(sf::Vector2u pos);
 	void constructGeometry(const std::vector<ButtonType> &buttons);
 	float constructButtons(const std::vector<ButtonType> &buttons);
 	Button *createButton(ButtonType type);
@@ -82,7 +80,6 @@ public:
 	Signal<> onReset;
 
 private:
-	Box m_back;
 	sf::Font m_font;
 	std::string m_rawText;
 	sf::Text m_text;

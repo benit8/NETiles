@@ -43,14 +43,13 @@ void Widget::handleEvent(sf::Event &e, bool isRoot)
 {
 	if (isRoot && Env::modal != nullptr) {
 		Env::modal->handleEvent(e);
-		return;
-	}
 
-	if (isRoot && Env::modal != nullptr) {
 		if (e.type == sf::Event::Closed || e.type == sf::Event::Resized) {
 			for (auto it = m_children.begin(); it != m_children.end(); ++it)
 				(*it)->handleEvent(e);
 		}
+
+		return;
 	}
 	else {
 		for (auto it = m_children.begin(); it != m_children.end(); ++it)
@@ -84,6 +83,9 @@ void Widget::render(sf::RenderTarget &rt, bool isRoot)
 
 void Widget::focus()
 {
+	if (isTargeted())
+		return;
+
 	if (Env::target)
 		Env::target->onFocusOut.emit();
 	Env::target = this;

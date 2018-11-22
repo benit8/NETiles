@@ -34,7 +34,6 @@ sf::Font &getDefaultFont()
 		if (font_data_base64[font_data_base64_length - 2] == '=') font_data_len--;
 
 		unsigned char font_data[font_data_len];
-		unsigned char input_block[4];
 
 		for (std::size_t i = 0, j = 0; i < font_data_base64_length; ) {
 			uint32_t sextet_a = (font_data_base64[i] == '=') ? 0 & i++ : decoding_table[(int)font_data_base64[i++]];

@@ -7,11 +7,25 @@
 
 #include "Application.hpp"
 
+////////////////////////////////////////////////////////////////////////////////
+
+Application *Application::s_instance = nullptr;
+
+////////////////////////////////////////////////////////////////////////////////
+
 Application::Application(int argc, char *argv[])
 : m_args(argv + 1, argv + argc)
+, m_appName(argv[0])
 , m_binName(argv[0])
+, m_shouldClose(false)
+, m_windowMode(Windowed)
+, m_windowStartupSize(0, 0)
 {
-	m_appName = m_binName;
+	s_instance = this;
+
+	sf::VideoMode desktopMode = sf::VideoMode::getDesktopMode();
+	m_windowStartupSize.x = desktopMode.width;
+	m_windowStartupSize.y = desktopMode.height;
 }
 
 Application::~Application()
@@ -20,6 +34,7 @@ Application::~Application()
 		m_window.close();
 }
 
+////////////////////////////////////////////////////////////////////////////////
 
 int Application::run()
 {
@@ -57,14 +72,72 @@ int Application::run()
 	return EXIT_SUCCESS;
 }
 
+void Application::close()
+{
+	m_shouldClose = true;
+}
+
+bool Application::isRunning() const
+{
+	return !m_shouldClose && m_window.isOpen();
+}
+
+void Application::setAppName(const std::string &name)
+{
+	m_appName = name;
+}
+
+const std::string &Application::getAppName() const
+{
+	return m_appName;
+}
+
+
+void Application::setWindowMode(WindowMode mode, const sf::Vector2u &size)
+{
+	sf::Vector2u currentSize = m_window.getSize();
+
+	if (m_window.isOpen() && m_windowMode != mode) {
+		switch (mode) {
+			case Windowed:
+				if (size != currentSize)
+					m_window.setSize(size);
+				else
+					m_window.create(m_appName, sf::VideoMode(size.x, size.y));
+				break;
+			case Borderless:
+					m_window.createBorderless(m_appName);
+				break;
+			case Fullscreen:
+				m_window.createFullscreen(m_appName);
+				break;
+		}
+	}
+	else if (!m_window.isOpen() && mode == Windowed) {
+		m_windowStartupSize = size;
+	}
+
+	m_windowMode = mode;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+
 void Application::launch()
 {
-	m_shouldClose = false;
+	switch (m_windowMode) {
+		case Windowed:
+			m_window.create(m_appName, sf::VideoMode(m_windowStartupSize.x, m_windowStartupSize.y));
+			break;
+		case Borderless:
+			m_window.createBorderless(m_appName);
+			break;
+		case Fullscreen:
+			m_window.createFullscreen(m_appName);
+			break;
+	}
 
-	m_window.createDefault(m_appName);
 	m_fpsCounter.setLimit(1000);
 	m_fpsCounter.reset();
-	Window::setMainWindow(&m_window);
 }
 
 void Application::processEvents()
@@ -87,12 +160,31 @@ void Application::processEvents()
 	}
 }
 
-bool Application::isRunning() const
+////////////////////////////////////////////////////////////////////////////////
+
+Application *Application::Instance()
 {
-	return !m_shouldClose && m_window.isOpen();
+	return s_instance;
 }
 
-void Application::close()
+sf::Vector2u Application::MainWindowSize()
 {
-	m_shouldClose = true;
+	Application *self = Instance();
+
+	return self->m_window.isOpen() ? self->m_window.getSize() : self->m_windowStartupSize;
+}
+
+unsigned Application::MainWindowWidth()
+{
+	return MainWindowSize().x;
+}
+
+unsigned Application::MainWindowHeight()
+{
+	return MainWindowSize().y;
+}
+
+void Application::SetCursor(sf::Cursor::Type cursor)
+{
+	Instance()->m_window.setCursor(cursor);
 }

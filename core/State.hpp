@@ -34,7 +34,7 @@ public:
 		m_eventHandler.dispatchEvent(e);
 	}
 
-	virtual void update(const sf::Time &delta) {}
+	virtual void update(const sf::Time &) {}
 
 	virtual void render(sf::RenderTarget &renderTarget) {
 		m_guiRoot.render(renderTarget, true);

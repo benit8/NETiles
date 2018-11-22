@@ -42,10 +42,10 @@ public:
 private:
 	void centerLabel();
 
-	void onHoverIn_callback(sf::Vector2i pos);
-	void onHoverOut_callback(sf::Vector2i pos);
-	void onClick_callback(sf::Vector2i pos);
-	void onRelease_callback(sf::Vector2i pos);
+	void onHoverIn_callback(sf::Vector2i);
+	void onHoverOut_callback(sf::Vector2i);
+	void onClick_callback(sf::Vector2i);
+	void onRelease_callback(sf::Vector2i);
 
 private:
 	sf::Text m_label;

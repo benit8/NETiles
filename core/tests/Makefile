@@ -35,7 +35,7 @@ OBJS	=	$(SRCS:.cpp=.o)
 
 CXXFLAGS	+=	-std=c++17
 CXXFLAGS	+=	-I.
-# CXXFLAGS	+=	-W -Wall -Wextra
+CXXFLAGS	+=	-W -Wall -Wextra -Werror
 
 LDFLAGS	+=	-lsfml-system		\
 		-lsfml-window		\

@@ -53,7 +53,7 @@ public: // Con/Destructor
 public: // Methods
 	virtual void handleEvent(sf::Event &e, bool isRoot = false);
 	virtual void render(sf::RenderTarget &rt, bool isRoot = false);
-	virtual void draw(sf::RenderTarget &rt) {}
+	virtual void draw(sf::RenderTarget &) {}
 	virtual void update() {}
 
 	void focus();

@@ -27,5 +27,5 @@ public:
 	virtual ~IEventListener() = default;
 
 public:
-	virtual void handleEvent(sf::Event &e) = 0;
+	virtual void handleEvent(sf::Event &) = 0;
 };
